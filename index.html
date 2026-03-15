@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion Video Editor | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const App = () => {
+            const portfolioItems = [
+                {
+                    id: 1,
+                    title: "L’Oréal Elvive: The Curiosity Hook",
+                    category: "E-commerce",
+                    analysis: "Using controversial hooks to stop the scroll.",
+                    metrics: "High CTR"
+                },
+                {
+                    id: 2,
+                    title: "Charles & Keith: The Problem Solver",
+                    category: "Fashion",
+                    analysis: "Direct demographic targeting in 2 seconds.",
+                    metrics: "Optimized for Sales"
+                },
+                {
+                    id: 3,
+                    title: "Govee Home: The Atmosphere Shift",
+                    category: "Tech/Gadgets",
+                    analysis: "Before/After dopamine hits for viral potential.",
+                    metrics: "High Retention"
+                },
+                {
+                    id: 4,
+                    title: "Derm-Talk: Authority & Trust",
+                    category: "Education",
+                    analysis: "Binary choice format to simplify complex info.",
+                    metrics: "Lead Generation"
+                }
+            ];
+
+            return (
+                <div className="min-h-screen">
+                    <header className="bg-white border-b sticky top-0 z-50 px-6 py-4">
+                        <div className="max-w-5xl mx-auto flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <div className="bg-indigo-600 p-2 rounded-lg text-white">
+                                    <i className="fas fa-bolt"></i>
+                                </div>
+                                <span className="text-xl font-bold">Conversion Editor</span>
+                            </div>
+                            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold">Hire Me</button>
+                        </div>
+                    </header>
+
+                    <main className="max-w-5xl mx-auto px-6 py-12">
+                        <section className="text-center mb-16">
+                            <h1 className="text-4xl md:text-5xl font-black mb-4 text-slate-900">ENGINEERING CONVERSIONS</h1>
+                            <p className="text-slate-500 text-lg">Short-form videos designed to sell.</p>
+                        </section>
+
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {portfolioItems.map(item => (
+                                <div key={item.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all">
+                                    <div className="aspect-[9/16] bg-slate-800 flex items-center justify-center relative">
+                                        <i className="fas fa-play text-white text-4xl opacity-50"></i>
+                                        <div className="absolute top-4 left-4 bg-indigo-600 text-[10px] text-white px-2 py-1 rounded font-bold uppercase">{item.category}</div>
+                                    </div>
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                                        <p className="text-slate-600 text-sm mb-4">{item.analysis}</p>
+                                        <div className="text-xs font-bold text-indigo-600 uppercase tracking-widest">{item.metrics}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
