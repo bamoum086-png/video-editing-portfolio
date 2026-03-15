@@ -1,157 +1,99 @@
-!DOCTYPE html
-html lang=en
-head
-    meta charset=UTF-8
-    meta name=viewport content=width=device-width, initial-scale=1.0
-    titleConversion Video Editor  Portfoliotitle
-    script src=httpscdn.tailwindcss.comscript
-    script src=httpsunpkg.comreact@18umdreact.production.min.jsscript
-    script src=httpsunpkg.comreact-dom@18umdreact-dom.production.min.jsscript
-    script src=httpsunpkg.com@babelstandalonebabel.min.jsscript
-    link rel=stylesheet href=httpscdnjs.cloudflare.comajaxlibsfont-awesome6.0.0cssall.min.css
-    style
-        @import url('httpsfonts.googleapis.comcss2family=Interwght@400;600;700;800&display=swap');
-        body { font-family 'Inter', sans-serif; }
-    style
-head
-body class=bg-slate-50 text-slate-900
-    div id=rootdiv
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion Video Editor | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
 
-    script type=textbabel
+    <script type="text/babel">
         const { useState } = React;
 
-        const App = () = {
+        const App = () => {
             const portfolioItems = [
                 {
-                    id 1,
-                    title L’Oréal Elvive The Curiosity Hook,
-                    category E-commerce,
-                    analysis {
-                        hook Leveraged a controversial text overlay ('L’Oreal wtf did you put in this...') to stop the scroll.,
-                        pacing Used high-energy ASMR audio syncing with the product pour.,
-                        conversion Showcased 'Visual Proof' of hair shine to eliminate buyer doubt.
-                    },
-                    metrics High CTR & Brand Awareness
+                    id: 1,
+                    title: "L’Oréal Elvive: The Curiosity Hook",
+                    category: "E-commerce",
+                    analysis: "Using controversial hooks to stop the scroll.",
+                    metrics: "High CTR"
                 },
                 {
-                    id 2,
-                    title Charles & Keith The Problem Solver,
-                    category Fashion,
-                    analysis {
-                        hook Directly addressed a specific demographic ('The PERFECT uni bag') in 2 seconds.,
-                        pacing Fast-cut 'What's in my bag' sequence to demonstrate utility.,
-                        conversion Close-up shots of hardware to establish perceived luxury value.
-                    },
-                    metrics Optimized for 'Add to Cart'
+                    id: 2,
+                    title: "Charles & Keith: The Problem Solver",
+                    category: "Fashion",
+                    analysis: "Direct demographic targeting in 2 seconds.",
+                    metrics: "Optimized for Sales"
                 },
                 {
-                    id 3,
-                    title Govee Home The Atmosphere Shift,
-                    category TechGadgets,
-                    analysis {
-                        hook The 'Before vs After' transition creates an instant dopamine hit.,
-                        pacing Synced color transitions with the beat for high retention.,
-                        conversion Sold a lifestyle 'Dream Setup' rather than just a product.
-                    },
-                    metrics Viral Potential & Sharing
+                    id: 3,
+                    title: "Govee Home: The Atmosphere Shift",
+                    category: "Tech/Gadgets",
+                    analysis: "Before/After dopamine hits for viral potential.",
+                    metrics: "High Retention"
                 },
                 {
-                    id 4,
-                    title Derm-Talk Authority & Trust,
-                    category Education,
-                    analysis {
-                        hook Used 'Binary Choice' format (Important vs Not Important) to simplify info.,
-                        pacing Text overlays ensure clarity even with the sound off.,
-                        conversion Strategically placed CTA at the peak of trust-building.
-                    },
-                    metrics Lead Gen & Growth
+                    id: 4,
+                    title: "Derm-Talk: Authority & Trust",
+                    category: "Education",
+                    analysis: "Binary choice format to simplify complex info.",
+                    metrics: "Lead Generation"
                 }
             ];
 
             return (
-                div className=min-h-screen
-                    header className=bg-white border-b sticky top-0 z-50
-                        div className=max-w-5xl mx-auto px-6 py-4 flex justify-between items-center
-                            div className=flex items-center gap-2
-                                div className=bg-indigo-600 p-2 rounded-lg text-white
-                                    i className=fas fa-bolti
-                                div
-                                h1 className=text-xl font-boldConversion Editorh1
-                            div
-                            nav className=hidden mdflex gap-6 text-sm font-medium text-slate-600
-                                a href=#work className=hovertext-indigo-600Worka
-                                a href=#strategy className=hovertext-indigo-600Strategya
-                                a href=#contact className=hovertext-indigo-600 text-indigo-600 font-boldHire Mea
-                            nav
-                        div
-                    header
+                <div className="min-h-screen">
+                    <header className="bg-white border-b sticky top-0 z-50 px-6 py-4">
+                        <div className="max-w-5xl mx-auto flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <div className="bg-indigo-600 p-2 rounded-lg text-white">
+                                    <i className="fas fa-bolt"></i>
+                                </div>
+                                <span className="text-xl font-bold">Conversion Editor</span>
+                            </div>
+                            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold">Hire Me</button>
+                        </div>
+                    </header>
 
-                    main className=max-w-5xl mx-auto px-6 py-12
-                        section className=mb-20 text-center
-                            h2 className=text-4xl mdtext-5xl font-extrabold mb-6 text-slate-900
-                                I don't just cut videos. br
-                                span className=text-indigo-600I engineer conversions.span
-                            h2
-                            p className=text-lg text-slate-600 max-w-2xl mx-auto mb-8
-                                Specializing in Short-Form content that hooks attention in span className=font-bold text-slate-9003 secondsspan.
-                            p
-                        section
+                    <main className="max-w-5xl mx-auto px-6 py-12">
+                        <section className="text-center mb-16">
+                            <h1 className="text-4xl md:text-5xl font-black mb-4 text-slate-900">ENGINEERING CONVERSIONS</h1>
+                            <p className="text-slate-500 text-lg">Short-form videos designed to sell.</p>
+                        </section>
 
-                        section id=work className=grid mdgrid-cols-2 gap-8 mb-20
-                            {portfolioItems.map(item = (
-                                div key={item.id} className=bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 flex flex-col hovershadow-md transition-all
-                                    div className=aspect-[916] bg-slate-900 relative flex items-center justify-center group cursor-pointer
-                                        div className=w-16 h-16 bg-white20 rounded-full flex items-center justify-center backdrop-blur-md border border-white30 group-hoverscale-110 transition-transform
-                                            i className=fas fa-play text-white text-xl ml-1i
-                                        div
-                                        div className=absolute top-4 left-4 bg-black40 px-3 py-1 rounded-full text-xs text-white uppercase tracking-widest{item.category}div
-                                    div
-                                    div className=p-6
-                                        h4 className=text-xl font-bold mb-4{item.title}h4
-                                        div className=space-y-4 mb-6
-                                            div
-                                                span className=text-[10px] font-black uppercase text-indigo-600 blockThe Hookspan
-                                                p className=text-sm text-slate-700{item.analysis.hook}p
-                                            div
-                                            div
-                                                span className=text-[10px] font-black uppercase text-indigo-600 blockConversion Logicspan
-                                                p className=text-sm text-slate-700{item.analysis.conversion}p
-                                            div
-                                        div
-                                        div className=pt-4 border-t text-xs font-bold text-slate-400 italicTarget {item.metrics}div
-                                    div
-                                div
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {portfolioItems.map(item => (
+                                <div key={item.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all">
+                                    <div className="aspect-[9/16] bg-slate-800 flex items-center justify-center relative">
+                                        <i className="fas fa-play text-white text-4xl opacity-50"></i>
+                                        <div className="absolute top-4 left-4 bg-indigo-600 text-[10px] text-white px-2 py-1 rounded font-bold uppercase">{item.category}</div>
+                                    </div>
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                                        <p className="text-slate-600 text-sm mb-4">{item.analysis}</p>
+                                        <div className="text-xs font-bold text-indigo-600 uppercase tracking-widest">{item.metrics}</div>
+                                    </div>
+                                </div>
                             ))}
-                        section
-
-                        section id=strategy className=bg-slate-900 text-white rounded-3xl p-10 mb-20
-                            h3 className=text-2xl font-bold mb-8My Workflowh3
-                            div className=grid mdgrid-cols-3 gap-8 text-sm
-                                div
-                                    div className=text-indigo-400 font-bold mb-201. Hookingdiv
-                                    p className=text-slate-400 italicPattern Interrupts to stop the scroll.p
-                                div
-                                div
-                                    div className=text-indigo-400 font-bold mb-202. Pacingdiv
-                                    p className=text-slate-400 italicFast transitions to maintain dopamine.p
-                                div
-                                div
-                                    div className=text-indigo-400 font-bold mb-203. Sellingdiv
-                                    p className=text-slate-400 italicLogical CTAs to drive actions.p
-                                div
-                            div
-                        section
-                    main
-
-                    footer className=text-center py-10 border-t text-slate-400 text-sm
-                        &copy; 2026 Conversion Portfolio. Created for bamoum086-png.
-                    footer
-                div
+                        </div>
+                    </main>
+                </div>
             );
         };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(App );
-    script
-body
-html
+        root.render(<App />);
+    </script>
+</body>
+</html>
