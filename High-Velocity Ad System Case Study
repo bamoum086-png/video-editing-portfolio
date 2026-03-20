@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: The High-Velocity Ad System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #030712; 
+            color: #f8fafc;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(to right, #818cf8, #c084fc, #e879f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .system-grid {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Pulse Animation for Lines */
+        @keyframes pulse-line {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+        .animate-pulse-line {
+            animation: pulse-line 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const App = () => {
+            const myUpworkLink = "https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share";
+            const myWhatsApp = "https://wa.me/21231260192?text=Hello! I'm interested in the 3 Templates for $100 offer.";
+
+            return (
+                <div className="flex flex-col min-h-screen relative z-10 system-grid">
+                    
+                    {/* --- NAVIGATION (BACK TO HOME) --- */}
+                    <nav className="fixed w-full z-50 bg-[#030712]/90 backdrop-blur-lg border-b border-slate-800/50 py-4">
+                        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-black text-sm shadow-lg shadow-indigo-500/20">M</div>
+                                <span className="font-bold text-lg tracking-tight">Mohamed B.</span>
+                            </div>
+                            <a href="index.html" className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group text-sm font-bold">
+                                Back to Portfolio <i className="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </a>
+                        </div>
+                    </nav>
+
+                    {/* --- HERO: THE HOOK --- */}
+                    <header className="pt-40 pb-20 px-6 relative overflow-hidden">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-indigo-600/10 blur-[150px] rounded-full -z-10"></div>
+                        <div className="max-w-4xl mx-auto text-center">
+                            
+                            {/* Skills Badges */}
+                            <div className="flex flex-wrap justify-center gap-2 mb-8">
+                                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-indigo-300">Creative Operations (Ops)</span>
+                                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-purple-300">Ad Scalability Systems</span>
+                                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs font-bold text-pink-300">Conversion Architecture</span>
+                            </div>
+
+                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm font-bold uppercase mb-6 tracking-wider">
+                                <i className="fas fa-cogs"></i> Featured Case Study
+                            </div>
+                            
+                            <h1 className="text-4xl md:text-6xl font-black mb-8 leading-tight tracking-tight">
+                                Transforming Ad Production from 5 Days to <span className="text-gradient">30 Minutes.</span>
+                            </h1>
+                            <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed mb-10">
+                                Building a high-velocity "production machine" and a flexible template system for E-commerce agencies to ensure rapid creative testing without burning out the team.
+                            </p>
+
+                            {/* Hero CTA - Quick Push */}
+                            <a href="#offer" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 hover:from-yellow-500/30 hover:to-amber-500/30 border border-yellow-500/50 rounded-2xl text-yellow-400 font-bold transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] hover:shadow-[0_0_25px_rgba(250,204,21,0.4)]">
+                                <i className="fas fa-rocket"></i> Get 3 Custom Templates for $100
+                            </a>
+                        </div>
+                    </header>
+
+                    {/* --- THE PLAYBOOK FRAMEWORK (NEW FLOWCHART SECTION) --- */}
+                    <section className="py-16 px-6 max-w-7xl mx-auto relative z-20">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-black mb-4">The Conversion Playbook Framework</h2>
+                            <p className="text-slate-400 max-w-2xl mx-auto">My proprietary step-by-step editing architecture based on deep platform psychology, UGC prioritization, and AI integration.</p>
+                        </div>
+
+                        {/* Horizontal Framework Map */}
+                        <div className="flex flex-col md:flex-row gap-4 md:gap-2 items-stretch justify-between relative">
+                            {/* Connecting Line (Desktop) */}
+                            <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-indigo-900 via-purple-900 to-emerald-900 -translate-y-1/2 z-0 animate-pulse-line rounded-full"></div>
+
+                            {/* Step 1: The Hook */}
+                            <div className="glass-card p-6 rounded-2xl relative z-10 flex-1 border-t-4 border-t-pink-500 flex flex-col">
+                                <div className="w-12 h-12 rounded-full bg-pink-500/20 border border-pink-500/50 flex items-center justify-center text-pink-400 text-xl font-black mb-4 mx-auto md:mx-0 shadow-[0_0_15px_rgba(236,72,153,0.3)]">1</div>
+                                <h3 className="text-lg font-bold text-white mb-2 text-center md:text-left">The 3-Sec Hook</h3>
+                                <p className="text-xs text-slate-400 mb-4 text-center md:text-left flex-grow">Pattern interrupts and visual pops. If it doesn't stop the scroll immediately, the rest of the video doesn't matter.</p>
+                                <ul className="text-[10px] text-pink-300 font-medium space-y-1 bg-pink-500/5 p-3 rounded-xl border border-pink-500/10">
+                                    <li><i className="fas fa-check mr-1"></i> Bold Text Hierarchy</li>
+                                    <li><i className="fas fa-check mr-1"></i> Avoid Slow Starts</li>
+                                    <li><i className="fas fa-check mr-1"></i> Fast Movements / SFX</li>
+                                </ul>
+                            </div>
+
+                            {/* Step 2: Visual Engineering */}
+                            <div className="glass-card p-6 rounded-2xl relative z-10 flex-1 border-t-4 border-t-indigo-500 flex flex-col mt-4 md:mt-0">
+                                <div className="w-12 h-12 rounded-full bg-indigo-500/20 border border-indigo-500/50 flex items-center justify-center text-indigo-400 text-xl font-black mb-4 mx-auto md:mx-0 shadow-[0_0_15px_rgba(99,102,241,0.3)]">2</div>
+                                <h3 className="text-lg font-bold text-white mb-2 text-center md:text-left">Visual Engineering</h3>
+                                <p className="text-xs text-slate-400 mb-4 text-center md:text-left flex-grow">Blending authentic UGC with high-end stock and AI elements to maintain high viewer retention.</p>
+                                <ul className="text-[10px] text-indigo-300 font-medium space-y-1 bg-indigo-500/5 p-3 rounded-xl border border-indigo-500/10">
+                                    <li><i className="fas fa-check mr-1"></i> UGC Priority (Relatability)</li>
+                                    <li><i className="fas fa-check mr-1"></i> Synclabs/Arcads AI Avatars</li>
+                                    <li><i className="fas fa-check mr-1"></i> Engaging B-Rolls</li>
+                                </ul>
+                            </div>
+
+                            {/* Step 3: Auditory Sync */}
+                            <div className="glass-card p-6 rounded-2xl relative z-10 flex-1 border-t-4 border-t-purple-500 flex flex-col mt-4 md:mt-0">
+                                <div className="w-12 h-12 rounded-full bg-purple-500/20 border border-purple-500/50 flex items-center justify-center text-purple-400 text-xl font-black mb-4 mx-auto md:mx-0 shadow-[0_0_15px_rgba(168,85,247,0.3)]">3</div>
+                                <h3 className="text-lg font-bold text-white mb-2 text-center md:text-left">Auditory Sync</h3>
+                                <p className="text-xs text-slate-400 mb-4 text-center md:text-left flex-grow">Sound design is 50% of the video. Syncing visuals to the beat and using psychology-driven voiceovers.</p>
+                                <ul className="text-[10px] text-purple-300 font-medium space-y-1 bg-purple-500/5 p-3 rounded-xl border border-purple-500/10">
+                                    <li><i className="fas fa-check mr-1"></i> ElevenLabs AI Voice Clones</li>
+                                    <li><i className="fas fa-check mr-1"></i> Artlist Trending Audio</li>
+                                    <li><i className="fas fa-check mr-1"></i> Reaction SFX (Woosh, Pops)</li>
+                                </ul>
+                            </div>
+
+                            {/* Step 4: Native Conversion */}
+                            <div className="glass-card p-6 rounded-2xl relative z-10 flex-1 border-t-4 border-t-emerald-500 flex flex-col mt-4 md:mt-0">
+                                <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 text-xl font-black mb-4 mx-auto md:mx-0 shadow-[0_0_15px_rgba(16,185,129,0.3)]">4</div>
+                                <h3 className="text-lg font-bold text-white mb-2 text-center md:text-left">Native Conversion</h3>
+                                <p className="text-xs text-slate-400 mb-4 text-center md:text-left flex-grow">Driving action without looking like an ad. Respecting platform UI elements to prevent text-cutoff.</p>
+                                <ul className="text-[10px] text-emerald-300 font-medium space-y-1 bg-emerald-500/5 p-3 rounded-xl border border-emerald-500/10">
+                                    <li><i className="fas fa-check mr-1"></i> TikTok/IG Safe Zones</li>
+                                    <li><i className="fas fa-check mr-1"></i> Value-driven CTA (Shop Now)</li>
+                                    <li><i className="fas fa-check mr-1"></i> Never use "BUY"</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Mid-Section CTA */}
+                        <div className="text-center mt-12">
+                            <a href="#offer" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#14a800]/10 hover:bg-[#14a800]/20 border border-[#14a800]/50 rounded-full text-[#14a800] text-sm font-bold transition-all hover:-translate-y-1 shadow-[0_5px_15px_rgba(20,168,0,0.15)]">
+                                <i className="fas fa-bolt"></i> Apply This Framework to Your Brand for $100
+                            </a>
+                        </div>
+                    </section>
+
+                    {/* --- COMPONENT SYSTEM (SIMPLIFIED & TIKTOK FOCUSED) --- */}
+                    <section className="py-16 px-6 bg-slate-900/50 border-y border-slate-800/50 relative">
+                        <div className="max-w-6xl mx-auto">
+                            <h2 className="text-3xl md:text-4xl font-black mb-4 text-center">The Modular Component System</h2>
+                            <p className="text-slate-400 text-center mb-12 max-w-2xl mx-auto">Simple, platform-native architecture built specifically for TikTok and Instagram Reels. We strictly respect <strong>Safe Zones</strong> to ensure maximum visibility and zero text-cutoff.</p>
+                            
+                            <div className="grid md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
+                                
+                                {/* 1. TikTok/IG Component Library System */}
+                                <div className="glass-card rounded-[2rem] p-8 relative group flex flex-col items-center justify-center border border-slate-700 hover:border-cyan-500/50 transition-colors">
+                                    
+                                    {/* Mobile Phone Wireframe Graphic - BIG & CLEAN */}
+                                    <div className="w-[220px] h-[450px] border-[4px] border-slate-600 rounded-[2.5rem] relative bg-[#030712] overflow-hidden flex flex-col p-3 shadow-2xl">
+                                        
+                                        {/* Fake UI: Top Bar */}
+                                        <div className="h-6 flex justify-between items-center px-2 mb-2 opacity-50">
+                                            <span className="text-[8px] text-white">9:41</span>
+                                            <div className="flex gap-1">
+                                                <i className="fas fa-wifi text-[8px] text-white"></i>
+                                                <i className="fas fa-battery-full text-[8px] text-white"></i>
+                                            </div>
+                                        </div>
+
+                                        {/* Top Hook Zone (Safe Zone) */}
+                                        <div className="h-20 border-2 border-dashed border-pink-500 bg-pink-500/10 rounded-xl mb-3 flex flex-col items-center justify-center relative">
+                                            <div className="absolute -left-24 bg-pink-500 text-white text-[9px] px-2 py-1 rounded shadow-lg font-bold flex items-center gap-1 hidden md:flex">
+                                                <i className="fas fa-arrow-right"></i> Pattern Interrupt Text
+                                            </div>
+                                            <span className="text-[12px] text-pink-400 font-black tracking-widest uppercase">Hook Zone</span>
+                                            <span className="text-[9px] text-pink-500/70 text-center px-2 mt-1">Short Chunks • High Contrast</span>
+                                        </div>
+
+                                        {/* Visual Core */}
+                                        <div className="flex-grow border-2 border-dashed border-indigo-500 bg-indigo-500/10 rounded-xl mb-3 flex items-center justify-center flex-col relative">
+                                            <i className="fas fa-user-circle text-indigo-400 text-4xl mb-2 opacity-60"></i>
+                                            <span className="text-[12px] text-indigo-400 font-black uppercase text-center">UGC / AI Visuals</span>
+                                            <span className="text-[9px] text-indigo-500/70 text-center px-4 mt-1">Faces • Product Demos • B-Roll</span>
+                                        </div>
+
+                                        {/* Bottom CTA Zone */}
+                                        <div className="h-24 mb-6 mr-12 border-2 border-dashed border-emerald-500 bg-emerald-500/10 rounded-xl flex flex-col items-center justify-center relative">
+                                            <div className="absolute -left-24 bg-emerald-500 text-white text-[9px] px-2 py-1 rounded shadow-lg font-bold flex items-center gap-1 hidden md:flex">
+                                                <i className="fas fa-arrow-right"></i> Non-salesy "Shop Now"
+                                            </div>
+                                            <span className="text-[11px] text-emerald-400 font-black uppercase">Caption & CTA</span>
+                                            <span className="text-[8px] text-emerald-500/70">Safe from TikTok UI</span>
+                                        </div>
+                                        
+                                        {/* Fake TikTok UI elements on the right */}
+                                        <div className="absolute right-3 bottom-24 flex flex-col gap-4 items-center opacity-60">
+                                            <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-800"></div>
+                                            <div className="flex flex-col items-center gap-1"><i className="fas fa-heart text-white text-lg"></i><span className="text-[8px] text-white">12K</span></div>
+                                            <div className="flex flex-col items-center gap-1"><i className="fas fa-comment text-white text-lg"></i><span className="text-[8px] text-white">340</span></div>
+                                            <div className="flex flex-col items-center gap-1"><i className="fas fa-share text-white text-lg"></i><span className="text-[8px] text-white">Share</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Text explanation */}
+                                <div className="space-y-6">
+                                    <div className="bg-[#030712] p-6 rounded-2xl border border-slate-800">
+                                        <h4 className="text-xl font-bold text-white mb-2 flex items-center gap-2"><i className="fas fa-crop-alt text-indigo-500"></i> Platform Native First</h4>
+                                        <p className="text-sm text-slate-400">Every template is pre-mapped. We ensure text, pop-ups, and CTAs never overlap with TikTok or Instagram's native buttons (Likes, Comments, Captions).</p>
+                                    </div>
+                                    <div className="bg-[#030712] p-6 rounded-2xl border border-slate-800">
+                                        <h4 className="text-xl font-bold text-white mb-2 flex items-center gap-2"><i className="fas fa-layer-group text-purple-500"></i> Dynamic Overlays</h4>
+                                        <p className="text-sm text-slate-400">Animated tags (e.g., "Gluten-Free", "30-Day Refund") are treated as modular components. We mix and match them based on the script without rebuilding from scratch.</p>
+                                    </div>
+                                    <div className="bg-[#030712] p-6 rounded-2xl border border-slate-800">
+                                        <h4 className="text-xl font-bold text-white mb-2 flex items-center gap-2"><i className="fas fa-tachometer-alt text-emerald-500"></i> The Result? Speed.</h4>
+                                        <p className="text-sm text-slate-400">By keeping the architecture simple and modular, we can generate 3-5 high-quality variations of the same ad in under 30 minutes for rapid A/B testing.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- $100 PILOT OFFER CTA (IRRESISTIBLE OFFER) --- */}
+                    <section id="offer" className="py-20 px-6 max-w-4xl mx-auto w-full z-20 relative">
+                        <div className="bg-gradient-to-br from-[#0a0f1d] to-[#1a1025] backdrop-blur-xl border-2 border-yellow-500/40 rounded-[2.5rem] p-8 md:p-14 text-center relative overflow-hidden shadow-[0_0_60px_rgba(250,204,21,0.15)] group hover:border-yellow-400/80 transition-all duration-500 hover:-translate-y-2">
+                            {/* Glow Effects */}
+                            <div className="absolute top-0 right-0 w-72 h-72 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-yellow-500/20 transition-all duration-700"></div>
+                            <div className="absolute bottom-0 left-0 w-72 h-72 bg-purple-600/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-purple-600/20 transition-all duration-700"></div>
+                            
+                            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/50 text-yellow-400 text-xs font-black uppercase mb-6 tracking-widest shadow-inner">
+                                <i className="fas fa-star animate-pulse"></i> Limited Pilot Offer
+                            </div>
+                            
+                            <h2 className="text-4xl md:text-6xl font-black mb-6 text-white tracking-tight">
+                                Get 3 Custom Ad Templates for Just <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600">$100</span>
+                            </h2>
+                            <p className="text-slate-300 mb-10 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
+                                Not ready for a full retainer? Let me prove the ROI first. I will engineer <strong className="text-yellow-400">3 Platform-Native Templates</strong> specifically for your brand, ready to test on TikTok & Reels today.
+                            </p>
+                            
+                            <div className="flex flex-col sm:flex-row justify-center items-center gap-5 relative z-10">
+                                <a href={myUpworkLink} target="_blank" className="w-full sm:w-auto px-10 py-5 bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-900 rounded-2xl font-black flex items-center justify-center gap-3 transition-all shadow-[0_10px_30px_rgba(250,204,21,0.3)] hover:shadow-[0_15px_40px_rgba(250,204,21,0.5)] transform text-lg hover:scale-105">
+                                    <i className="fas fa-bolt text-xl"></i> Claim 3 Templates Now
+                                </a>
+                            </div>
+                            
+                            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                <span className="flex items-center gap-1"><i className="fas fa-shield-check text-[#14a800]"></i> Delivered via Upwork</span>
+                                <span className="hidden md:inline">•</span>
+                                <span className="flex items-center gap-1"><i className="fas fa-clock text-blue-400"></i> Fast Turnaround</span>
+                                <span className="hidden md:inline">•</span>
+                                <span className="flex items-center gap-1"><i className="fas fa-chart-line text-purple-400"></i> Conversion Focused</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- THE ROI (RESULTS) --- */}
+                    <section className="py-16 px-6 bg-gradient-to-b from-transparent to-[#030712]">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <h2 className="text-3xl md:text-4xl font-black mb-10">The Projected ROI</h2>
+                            
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="glass-card p-10 rounded-[2rem] border-b-4 border-b-indigo-500 relative overflow-hidden">
+                                    <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500 mb-4">300%</div>
+                                    <div className="text-lg font-bold text-indigo-300 mb-2">Increase in Ads Tested</div>
+                                    <p className="text-sm text-slate-400 leading-relaxed">The team successfully launched and tested triple the amount of ad creatives per month, scaling their campaigns efficiently.</p>
+                                </div>
+
+                                <div className="glass-card p-10 rounded-[2rem] border-b-4 border-b-purple-500 relative overflow-hidden">
+                                    <div className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-500 mb-4">20 Hrs</div>
+                                    <div className="text-lg font-bold text-purple-300 mb-2">Saved Per Week</div>
+                                    <p className="text-sm text-slate-400 leading-relaxed">Eliminated repetitive manual tasks, freeing up the team's schedule to focus purely on high-level content strategy.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- CTA (FOOTER) --- */}
+                    <footer className="py-20 px-6 text-center border-t border-slate-800/50 mt-10">
+                        <h2 className="text-3xl md:text-4xl font-black mb-6">Ready to scale your Creative Ops?</h2>
+                        <p className="text-slate-400 mb-10 max-w-xl mx-auto text-lg">
+                            Take advantage of the <strong className="text-white">$100 Pilot Offer</strong> or reach out to discuss a custom system for your agency.
+                        </p>
+                        
+                        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                            <a href={myWhatsApp} target="_blank" className="w-full sm:w-auto px-8 py-4 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/20">
+                                <i className="fab fa-whatsapp text-xl"></i> Chat on WhatsApp
+                            </a>
+                            <a href={myUpworkLink} target="_blank" className="w-full sm:w-auto px-8 py-4 glass-card rounded-2xl font-bold hover:bg-white/5 transition-colors flex items-center justify-center gap-2 text-yellow-400 border border-yellow-500/30">
+                                <i className="fas fa-bolt"></i> Claim $100 Offer on Upwork
+                            </a>
+                        </div>
+                    </footer>
+
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
