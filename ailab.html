@@ -81,6 +81,7 @@
             // State for the interactive workflow container and individual nodes
             const [showWorkflow, setShowWorkflow] = useState(false);
             const [hoveredNode, setHoveredNode] = useState(null);
+            const [activeWorkflowStep, setActiveWorkflowStep] = useState(null);
 
             // Data for the workflow timeline (Flowchart Nodes)
             const workflowSteps = [
@@ -89,7 +90,7 @@
                 { id: 3, title: "Hyper-Realistic Variant", icon: "fa-wand-magic-sparkles", color: "purple", bg: "bg-purple-500/10", dotBg: "bg-purple-400", text: "text-purple-400", border: "border-purple-500/30", hoverBorder: "hover:border-purple-500", glow: "shadow-[0_0_30px_rgba(168,85,247,0.4)]", desc: "Enhancing the base avatar with skin textures, micro-expressions, and ultra-realistic 4K details using Midjourney & Freepik assets." },
                 { id: 4, title: "Voice & Audio Cloning", icon: "fa-microphone-lines", color: "pink", bg: "bg-pink-500/10", dotBg: "bg-pink-400", text: "text-pink-400", border: "border-pink-500/30", hoverBorder: "hover:border-pink-500", glow: "shadow-[0_0_30px_rgba(236,72,153,0.4)]", desc: "Generating emotional, human-like voiceovers using ElevenLabs and mapping exact audio frequencies for flawless delivery." },
                 { id: 5, title: "Environment & Lighting", icon: "fa-lightbulb", color: "rose", bg: "bg-rose-500/10", dotBg: "bg-rose-400", text: "text-rose-400", border: "border-rose-500/30", hoverBorder: "hover:border-rose-500", glow: "shadow-[0_0_30px_rgba(244,63,94,0.4)]", desc: "Standardizing the scenarios, studio lighting, and backgrounds to ensure a premium, cohesive brand aesthetic across all content." },
-                { id: 6, title: "Avatar Consistency", icon: "fa-face-viewfinder", color: "emerald", bg: "bg-emerald-500/10", dotBg: "bg-emerald-400", text: "text-emerald-400", border: "border-emerald-500/30", hoverBorder: "hover:border-emerald-500", glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]", desc: "Locking facial features using Colab Pro+ and Reactor Nodes so the influencer never 'morphs' or changes between scenes." },
+                { id: 6, title: "Avatar Consistency", icon: "fa-user-shield", color: "emerald", bg: "bg-emerald-500/10", dotBg: "bg-emerald-400", text: "text-emerald-400", border: "border-emerald-500/30", hoverBorder: "hover:border-emerald-500", glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]", desc: "Locking facial features using Colab Pro+ and Reactor Nodes so the influencer never 'morphs' or changes between scenes." },
                 { id: 7, title: "High-Volume Output", icon: "fa-layer-group", color: "amber", bg: "bg-amber-500/10", dotBg: "bg-amber-400", text: "text-amber-400", border: "border-amber-500/30", hoverBorder: "hover:border-amber-500", glow: "shadow-[0_0_30px_rgba(245,158,11,0.4)]", desc: "Scaling the production pipeline to deliver a massive volume of perfectly synced, ready-to-post clips every single month." }
             ];
 
