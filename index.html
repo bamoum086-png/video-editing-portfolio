@@ -86,10 +86,10 @@
             }, []);
 
             // User Data
-            const portfolioLink = "https://drive.google.com/file/d/1W7vO39GT3utTP9nyOpBcyE2UngQLQUm7/view?usp=drive_link";
             const iraqiGuideUpworkLink = "https://www.upwork.com/freelancers/~0182de24aaaf87d777?p=2024825438540349440";
-            // الرابط الجديد الذي طلبته لصفحة دراسة الحالة
             const caseStudyUrl = "https://bamoum086-png.github.io/video-editing-portfolio/high-velocity-ad-system.html";
+            // تم تحديث الرابط هنا ليطبق على الزر وشريط التنقل معاً
+            const aiLabUrl = "https://bamoum086-png.github.io/video-editing-portfolio/ailab.html";
 
             const stats = [
                 { value: "15M+", label: "Total Views Generated", icon: "fa-eye" },
@@ -119,14 +119,13 @@
                 }
             ];
 
-            // Case Study Data from the PDF with REAL LINKS
+            // Case Study Data
             const iraqiGuideProjects = [
                 {
                     title: "The Rawanduz Outlook",
                     category: "Nature & Perception",
                     hook: "Do you think this is Switzerland or the Alps?",
                     analysis: "Perception shift using world-class benchmarks & safety assurances to cater to the diaspora.",
-                    videoUrl: "https://www.instagram.com/reels/DTp9mg_gUiJ/", 
                     igLink: "https://www.instagram.com/reels/DTp9mg_gUiJ/", 
                     ttLink: "https://www.tiktok.com/@the.iraqi.guide/video/7596712694812626187"  
                 },
@@ -135,7 +134,6 @@
                     category: "High-End Tourism",
                     hook: "Comparing Erbil to Dubai's luxury.",
                     analysis: "Targeting 'Luxury Tourism' by validating service quality with global brands and 360-degree views.",
-                    videoUrl: "https://www.instagram.com/reels/DTvChwEgbGM/", 
                     igLink: "https://www.instagram.com/reels/DTvChwEgbGM/", 
                     ttLink: "https://www.tiktok.com/@the.iraqi.guide/video/7597442622398958860"  
                 },
@@ -144,7 +142,6 @@
                     category: "Exploration & History",
                     hook: "Rarely discovered gems in Basra & Anbar.",
                     analysis: "Using visual analogies (Basra to Mars) and blending ancient history with modern leisure.",
-                    videoUrl: "https://www.instagram.com/reels/DTyIjCLDX1c/", 
                     igLink: "https://www.instagram.com/reels/DTyIjCLDX1c/", 
                     ttLink: "https://www.tiktok.com/@the.iraqi.guide/video/7597889542963645708"  
                 }
@@ -164,7 +161,9 @@
                                 <a href="#agency" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Meta Trend</a>
                                 <a href="#value" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Strategy</a>
                                 <a href="#showcase" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Showcase</a>
-                                <a href="#ai" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">AI Marketing</a>
+                                <a href={aiLabUrl} className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition-colors flex items-center gap-1">
+                                    <i className="fas fa-robot"></i> AI Lab
+                                </a>
                                 <a href="#work" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">Case Studies</a>
                             </div>
                         </div>
@@ -173,10 +172,8 @@
                     {/* --- HERO SECTION --- */}
                     <header className="pt-40 pb-20 px-6">
                         <div className="max-w-4xl mx-auto text-center">
-                            {/* Badge */}
                             <a href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-400 border border-yellow-200 text-slate-900 text-sm font-black tracking-widest uppercase mb-8 shadow-[0_0_25px_rgba(250,204,21,0.6)] hover:shadow-[0_0_45px_rgba(250,204,21,0.9)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
                                 <span className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] group-hover:left-[200%] transition-all duration-1000"></span>
-                                
                                 <span className="relative flex h-2.5 w-2.5">
                                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
@@ -184,18 +181,15 @@
                                 HIRE ME
                             </a>
                             
-                            {/* Headline */}
                             <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
                                 Turning Views into <br className="hidden md:block" />
                                 <span className="text-gradient">Profitable Sales Engines</span>
                             </h1>
                             
-                            {/* Subheadline */}
                             <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed">
                                 As a Content Strategist & Video Editor, I don't just "edit videos". I transform your digital presence from a cost center into a high-converting machine.
                             </p>
                             
-                            {/* CTAs */}
                             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                                 <a href="#work" className="w-full sm:w-auto px-8 py-4 bg-white text-[#030712] rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-105 transition-transform">
                                     <i className="fas fa-chart-line"></i> View Case Studies
@@ -220,7 +214,6 @@
                                         <h3 className="text-3xl md:text-4xl font-black text-white mb-2">High-Velocity Ad System</h3>
                                         <p className="text-slate-400 max-w-md">Transform your ad production from 5 days to 30 minutes with my proprietary template architecture.</p>
                                     </div>
-                                    {/* تحديث الرابط هنا للزر الذي أرسلت صورته */}
                                     <a href={caseStudyUrl} className="group/btn relative inline-flex items-center gap-4 px-10 py-5 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-900 rounded-2xl font-black text-lg shadow-[0_0_30px_rgba(250,204,21,0.3)] hover:shadow-[0_0_50px_rgba(250,204,21,0.5)] transition-all overflow-hidden shrink-0 hover:scale-105">
                                         <span className="absolute top-0 left-[-100%] w-full h-full bg-white/20 skew-x-[-20deg] group-hover/btn:left-[100%] transition-all duration-1000"></span>
                                         View System <i className="fas fa-arrow-right group-hover/btn:translate-x-1 transition-transform"></i>
@@ -241,13 +234,12 @@
                                 Discover how we leverage market trends and strategic editing to build high-converting content engines. Watch the results speak for themselves.
                             </p>
 
-                            {/* حاوية الفيديو مع الإطار السفلي المضيء */}
                             <div className="relative max-w-4xl mx-auto">
                                 <div className="relative z-10 rounded-3xl overflow-hidden bg-[#030712] border-t border-x border-slate-800 border-b-4 border-b-indigo-500 shadow-[0_25px_60px_-10px_rgba(99,102,241,0.5)] transition-all hover:shadow-[0_25px_80px_-10px_rgba(99,102,241,0.7)]">
-                                    <div className="aspect-video w-full relative bg-black">
+                                    <div className="aspect-video w-full relative bg-black flex items-center justify-center">
                                         <iframe 
                                             src="https://drive.google.com/file/d/1Ys0_Oa0ozNh1UsSEvjp_aXOdOwZ1Ecuj/preview" 
-                                            className="absolute top-0 left-0 w-full h-full border-0"
+                                            className="absolute top-1/2 left-1/2 w-[105%] h-[105%] -translate-x-1/2 -translate-y-1/2 border-0"
                                             allow="autoplay"
                                             allowFullScreen
                                         ></iframe>
@@ -255,7 +247,6 @@
                                 </div>
                             </div>
 
-                            {/* زر التوظيف الإضافي أسفل الفيديو */}
                             <div className="mt-12">
                                 <a href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-orange-400 border border-yellow-200 text-slate-900 text-sm font-black tracking-widest uppercase shadow-[0_0_25px_rgba(250,204,21,0.4)] hover:shadow-[0_0_45px_rgba(250,204,21,0.8)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
                                     <span className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] group-hover:left-[200%] transition-all duration-1000"></span>
@@ -322,20 +313,20 @@
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                                 <div className="glass-card p-4 md:p-6 rounded-[2rem] shadow-2xl shadow-indigo-500/10 relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10">
-                                        <iframe src="https://drive.google.com/file/d/15SYQIWVDL3RJSDsL8ovZEz8wZ_4HPFa4/preview" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay" allowFullScreen></iframe>
+                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10 flex items-center justify-center">
+                                        <iframe src="https://drive.google.com/file/d/15SYQIWVDL3RJSDsL8ovZEz8wZ_4HPFa4/preview" className="absolute top-1/2 left-1/2 w-[105%] h-[105%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                 </div>
                                 <div className="glass-card p-4 md:p-6 rounded-[2rem] shadow-2xl shadow-purple-500/10 relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10">
-                                        <iframe src="https://drive.google.com/file/d/1W7vO39GT3utTP9nyOpBcyE2UngQLQUm7/preview" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay" allowFullScreen></iframe>
+                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10 flex items-center justify-center">
+                                        <iframe src="https://drive.google.com/file/d/1W7vO39GT3utTP9nyOpBcyE2UngQLQUm7/preview" className="absolute top-1/2 left-1/2 w-[105%] h-[105%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                 </div>
                                 <div className="glass-card p-4 md:p-6 rounded-[2rem] shadow-2xl shadow-cyan-500/10 relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10">
-                                        <iframe src="https://drive.google.com/file/d/1FfMGULnF7xJQ5HnXzmT3hziKDOv96owf/preview" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay" allowFullScreen></iframe>
+                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10 flex items-center justify-center">
+                                        <iframe src="https://drive.google.com/file/d/1FfMGULnF7xJQ5HnXzmT3hziKDOv96owf/preview" className="absolute top-1/2 left-1/2 w-[105%] h-[105%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                 </div>
                             </div>
@@ -356,22 +347,28 @@
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                                 <div className="glass-card p-4 md:p-6 rounded-[2rem] shadow-2xl shadow-emerald-500/10 relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10">
-                                        <iframe src="https://drive.google.com/file/d/1rYamzwTkdsWH8P2CaM0T1m2YhmVz0y9X/preview" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay" allowFullScreen></iframe>
+                                    <div className="aspect-[9/16] w-full max-w-[300px] mx-auto rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10 flex items-center justify-center">
+                                        <iframe src="https://drive.google.com/file/d/1rYamzwTkdsWH8P2CaM0T1m2YhmVz0y9X/preview" className="absolute top-1/2 left-1/2 w-[108%] h-[108%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                 </div>
                                 <div className="glass-card p-4 md:p-6 rounded-[2rem] shadow-2xl shadow-teal-500/10 relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10">
-                                        <iframe src="https://drive.google.com/file/d/11fMQcUFi4UObPzhkE_hSGCGcKuvfefBL/preview" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay" allowFullScreen></iframe>
+                                    <div className="aspect-[9/16] w-full max-w-[300px] mx-auto rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10 flex items-center justify-center">
+                                        <iframe src="https://drive.google.com/file/d/11fMQcUFi4UObPzhkE_hSGCGcKuvfefBL/preview" className="absolute top-1/2 left-1/2 w-[108%] h-[108%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                 </div>
                                 <div className="glass-card p-4 md:p-6 rounded-[2rem] shadow-2xl shadow-cyan-500/10 relative group">
                                     <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10">
-                                        <iframe src="https://drive.google.com/file/d/13NqEUyGmjiY64IsMMWJ1J-EpFcKByWsS/preview" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay" allowFullScreen></iframe>
+                                    <div className="aspect-[9/16] w-full max-w-[300px] mx-auto rounded-2xl overflow-hidden bg-black relative border border-slate-800 z-10 flex items-center justify-center">
+                                        <iframe src="https://drive.google.com/file/d/13NqEUyGmjiY64IsMMWJ1J-EpFcKByWsS/preview" className="absolute top-1/2 left-1/2 w-[108%] h-[108%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <div className="text-center mt-12">
+                                <a href={aiLabUrl} className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-bold hover:bg-cyan-500/20 hover:scale-105 transition-all">
+                                    <i className="fas fa-microchip"></i> Explore My Complete AI Influencer Workflow
+                                </a>
                             </div>
                         </div>
                     </section>
