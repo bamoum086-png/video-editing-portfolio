@@ -46,7 +46,7 @@
             background-position: center center;
         }
 
-        /* Animated Glowing Lines for Workflow */
+        /* Animated Glowing Lines */
         @keyframes flow {
             0% { stroke-dashoffset: 24; }
             100% { stroke-dashoffset: 0; }
@@ -78,22 +78,29 @@
             const myUpworkLink = "https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share";
             const mainPortfolioUrl = "index.html";
 
-            // State for the interactive accordion workflow
-            const [activeWorkflowStep, setActiveWorkflowStep] = useState(null);
+            // State for the interactive workflow container and individual nodes
+            const [showWorkflow, setShowWorkflow] = useState(false);
+            const [hoveredNode, setHoveredNode] = useState(null);
 
-            // Data for the workflow timeline
+            // Data for the workflow timeline (Flowchart Nodes)
             const workflowSteps = [
-                { id: 1, title: "Product & Scripting", icon: "fa-pen-nib", color: "cyan", desc: "Analyzing the brand's product and crafting conversion-focused scripts engineered specifically for short-form retention." },
-                { id: 2, title: "Base Avatar Creation", icon: "fa-user-astronaut", color: "blue", desc: "Designing the foundational look of the AI Influencer tailored perfectly to the target demographic's preferences." },
-                { id: 3, title: "Hyper-Realistic Variant", icon: "fa-wand-magic-sparkles", color: "purple", desc: "Enhancing the base avatar with skin textures, micro-expressions, and ultra-realistic 4K details using Midjourney & Freepik assets." },
-                { id: 4, title: "Voice & Audio Cloning", icon: "fa-microphone-lines", color: "pink", desc: "Generating emotional, human-like voiceovers using ElevenLabs and mapping exact audio frequencies for flawless delivery." },
-                { id: 5, title: "Environment & Lighting Standardization", icon: "fa-lightbulb", color: "rose", desc: "Standardizing the scenarios, studio lighting, and backgrounds to ensure a premium, cohesive brand aesthetic across all content." },
-                { id: 6, title: "Avatar Consistency Control", icon: "fa-face-viewfinder", color: "emerald", desc: "Locking facial features using Colab Pro+ and Reactor Nodes so the influencer never 'morphs' or changes between scenes." },
-                { id: 7, title: "High-Volume Monthly Output", icon: "fa-layer-group", color: "teal", desc: "Scaling the production pipeline to deliver a massive volume of perfectly synced, ready-to-post clips every single month." }
+                { id: 1, title: "Product & Scripting", icon: "fa-pen-nib", color: "cyan", bg: "bg-cyan-500/10", dotBg: "bg-cyan-400", text: "text-cyan-400", border: "border-cyan-500/30", hoverBorder: "hover:border-cyan-500", glow: "shadow-[0_0_30px_rgba(6,182,212,0.4)]", desc: "Analyzing the brand's product and crafting conversion-focused scripts engineered specifically for short-form retention." },
+                { id: 2, title: "Base Avatar Creation", icon: "fa-user-astronaut", color: "blue", bg: "bg-blue-500/10", dotBg: "bg-blue-400", text: "text-blue-400", border: "border-blue-500/30", hoverBorder: "hover:border-blue-500", glow: "shadow-[0_0_30px_rgba(59,130,246,0.4)]", desc: "Designing the foundational look of the AI Influencer tailored perfectly to the target demographic's preferences." },
+                { id: 3, title: "Hyper-Realistic Variant", icon: "fa-wand-magic-sparkles", color: "purple", bg: "bg-purple-500/10", dotBg: "bg-purple-400", text: "text-purple-400", border: "border-purple-500/30", hoverBorder: "hover:border-purple-500", glow: "shadow-[0_0_30px_rgba(168,85,247,0.4)]", desc: "Enhancing the base avatar with skin textures, micro-expressions, and ultra-realistic 4K details using Midjourney & Freepik assets." },
+                { id: 4, title: "Voice & Audio Cloning", icon: "fa-microphone-lines", color: "pink", bg: "bg-pink-500/10", dotBg: "bg-pink-400", text: "text-pink-400", border: "border-pink-500/30", hoverBorder: "hover:border-pink-500", glow: "shadow-[0_0_30px_rgba(236,72,153,0.4)]", desc: "Generating emotional, human-like voiceovers using ElevenLabs and mapping exact audio frequencies for flawless delivery." },
+                { id: 5, title: "Environment & Lighting", icon: "fa-lightbulb", color: "rose", bg: "bg-rose-500/10", dotBg: "bg-rose-400", text: "text-rose-400", border: "border-rose-500/30", hoverBorder: "hover:border-rose-500", glow: "shadow-[0_0_30px_rgba(244,63,94,0.4)]", desc: "Standardizing the scenarios, studio lighting, and backgrounds to ensure a premium, cohesive brand aesthetic across all content." },
+                { id: 6, title: "Avatar Consistency", icon: "fa-face-viewfinder", color: "emerald", bg: "bg-emerald-500/10", dotBg: "bg-emerald-400", text: "text-emerald-400", border: "border-emerald-500/30", hoverBorder: "hover:border-emerald-500", glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]", desc: "Locking facial features using Colab Pro+ and Reactor Nodes so the influencer never 'morphs' or changes between scenes." },
+                { id: 7, title: "High-Volume Output", icon: "fa-layer-group", color: "amber", bg: "bg-amber-500/10", dotBg: "bg-amber-400", text: "text-amber-400", border: "border-amber-500/30", hoverBorder: "hover:border-amber-500", glow: "shadow-[0_0_30px_rgba(245,158,11,0.4)]", desc: "Scaling the production pipeline to deliver a massive volume of perfectly synced, ready-to-post clips every single month." }
             ];
 
-            const handleWorkflowClick = () => {
-                setActiveWorkflowStep(1);
+            const handleWorkflowClick = (e) => {
+                e.preventDefault();
+                setShowWorkflow(!showWorkflow);
+                if (!showWorkflow) {
+                    setTimeout(() => {
+                        document.getElementById('interactive-pipeline-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
             };
 
             return (
@@ -120,7 +127,6 @@
                     <header className="pt-40 pb-20 px-6 relative">
                         <div className="max-w-5xl mx-auto text-center">
                             
-                            {/* The Magic Word */}
                             <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-black tracking-[0.2em] uppercase mb-8 shadow-[0_0_20px_rgba(0,242,254,0.2)] animate-pulse">
                                 <i className="fas fa-fingerprint"></i> LIFT Framework
                             </div>
@@ -161,7 +167,7 @@
                         </div>
                     </header>
 
-                    {/* --- THE WORKFLOW ARCHITECTURE --- */}
+                    {/* --- THE WORKFLOW ARCHITECTURE (PREVIOUS 4 NODES - KEPT FOR SEO/CONTEXT) --- */}
                     <section className="py-24 px-6 relative z-20 bg-[#020408]/80 border-t border-white/5">
                         <div className="max-w-7xl mx-auto">
                             <div className="text-center mb-20">
@@ -169,165 +175,243 @@
                                 <p className="text-slate-400 max-w-2xl mx-auto text-lg">A production-grade pipeline utilizing advanced cloud nodes and proprietary workflows to ensure unparalleled realism and lip-sync accuracy.</p>
                             </div>
 
-                            {/* Flowchart Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-                                
-                                {/* Connecting Lines (Desktop Only) */}
                                 <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-slate-800 -translate-y-1/2 z-0">
                                     <div className="h-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 w-full opacity-50"></div>
                                 </div>
 
-                                {/* Node 1: Generation */}
                                 <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(0,242,254,0.15)] hover:border-cyan-500/50 cursor-crosshair text-center flex flex-col items-center">
                                     <div className="w-16 h-16 rounded-2xl bg-cyan-950/50 border border-cyan-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
                                         <i className="fas fa-image text-2xl text-cyan-400 group-hover:text-white"></i>
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">1. Base Asset Generation</h3>
                                     <p className="text-sm text-slate-400 mb-6 flex-grow">Establishing the high-end beauty aesthetic using structured prompts and reference images.</p>
-                                    
-                                    <div className="w-full bg-[#050505] rounded-xl p-4 border border-white/5 group-hover:border-cyan-500/30 transition-colors">
-                                        <div className="text-[10px] uppercase tracking-widest text-cyan-500 font-bold mb-2">Tools Used</div>
-                                        <div className="flex justify-center gap-2 flex-wrap">
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">Midjourney V6</span>
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">Freepik Assets</span>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                {/* Node 2: Consistency */}
                                 <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)] hover:border-purple-500/50 cursor-crosshair text-center flex flex-col items-center">
                                     <div className="w-16 h-16 rounded-2xl bg-purple-950/50 border border-purple-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
                                         <i className="fas fa-users-viewfinder text-2xl text-purple-400 group-hover:text-white"></i>
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">2. Strict Consistency</h3>
                                     <p className="text-sm text-slate-400 mb-6 flex-grow">Locking facial features across different angles and lighting using custom AI workflows and exact seed numbers.</p>
-                                    
-                                    <div className="w-full bg-[#050505] rounded-xl p-4 border border-white/5 group-hover:border-purple-500/30 transition-colors">
-                                        <div className="text-[10px] uppercase tracking-widest text-purple-500 font-bold mb-2">Cloud Nodes</div>
-                                        <div className="flex justify-center gap-2 flex-wrap">
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">Colab Pro+</span>
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">Banana.dev</span>
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">Reactor Node</span>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                {/* Node 3: Animation (WITH CUSTOM LIPS SVG) */}
                                 <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(236,72,153,0.15)] hover:border-pink-500/50 cursor-crosshair text-center flex flex-col items-center">
                                     <div className="w-16 h-16 rounded-2xl bg-pink-950/50 border border-pink-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                                        {/* Custom Lips Icon SVG */}
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-pink-400 group-hover:text-white transition-colors">
                                             <path d="M12 4.06c-2.4 0-5.1.8-7.7 2.6-2.2 1.5-3.1 3.5-3.3 4.4-.1.8.2 1.6.8 2.2 1.8 1.8 4.7 2.8 7.7 3.3 1.5.3 3 .3 4.5 0 3-.5 5.9-1.5 7.7-3.3.6-.6.9-1.4.8-2.2-.2-.9-1.1-2.9-3.3-4.4-2.6-1.8-5.3-2.6-7.7-2.6zm0 15c-3 0-5.9-.6-8-2-.5-.3-1-.9-.8-1.5.2-.6.9-.9 1.5-.7 1.8.9 4.3 1.5 7.3 1.5s5.5-.6 7.3-1.5c.6-.3 1.3 0 1.5.7.2.6-.3 1.2-.8 1.5-2.1 1.4-5 2-8 2z"/>
                                         </svg>
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">3. Voice & Lip-Sync</h3>
                                     <p className="text-sm text-slate-400 mb-6 flex-grow">Cloning hyper-realistic voices and mapping 4K lip movements to match exact audio frequencies.</p>
-                                    
-                                    <div className="w-full bg-[#050505] rounded-xl p-4 border border-white/5 group-hover:border-pink-500/30 transition-colors">
-                                        <div className="text-[10px] uppercase tracking-widest text-pink-500 font-bold mb-2">Audio/Visual Engine</div>
-                                        <div className="flex justify-center gap-2 flex-wrap">
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">ElevenLabs</span>
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">HeyGen</span>
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">LivePortrait</span>
-                                        </div>
-                                    </div>
                                 </div>
 
-                                {/* Node 4: Retention Edit */}
                                 <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/50 cursor-crosshair text-center flex flex-col items-center">
                                     <div className="w-16 h-16 rounded-2xl bg-emerald-950/50 border border-emerald-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
                                         <i className="fas fa-video text-2xl text-emerald-400 group-hover:text-white"></i>
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">4. The Retention Edit</h3>
                                     <p className="text-sm text-slate-400 mb-6 flex-grow">Adding dynamic b-roll, pacing cuts, and SFX to ensure the video dominates the algorithm.</p>
-                                    
-                                    <div className="w-full bg-[#050505] rounded-xl p-4 border border-white/5 group-hover:border-emerald-500/30 transition-colors">
-                                        <div className="text-[10px] uppercase tracking-widest text-emerald-500 font-bold mb-2">Post-Production</div>
-                                        <div className="flex justify-center gap-2 flex-wrap">
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">Pattern Interrupts</span>
-                                            <span className="text-xs bg-white/10 px-2 py-1 rounded text-white">Micro-Pacing</span>
-                                        </div>
-                                    </div>
                                 </div>
-
                             </div>
                         </div>
 
-                        {/* --- NEW BUTTON: CLICK HERE TO SEE WORKFLOW --- */}
-                        <div className="mt-20 text-center max-w-xl mx-auto">
+                        {/* --- THE MASTER BUTTON: TOGGLES FLOWCHART & DASHBOARD --- */}
+                        <div className="mt-20 text-center max-w-xl mx-auto relative z-20">
                             <a 
-                                href="#interactive-pipeline" 
+                                href="#interactive-pipeline-container" 
                                 onClick={handleWorkflowClick}
-                                className="inline-flex items-center gap-3 px-8 py-5 w-full md:w-auto rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-lg tracking-wide uppercase shadow-[0_0_20px_rgba(0,242,254,0.4)] hover:shadow-[0_0_40px_rgba(0,242,254,0.6)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group"
+                                className={`inline-flex items-center gap-3 px-8 py-5 w-full md:w-auto rounded-full transition-all duration-300 relative overflow-hidden group ${showWorkflow ? 'bg-slate-800 hover:bg-slate-700 shadow-[0_0_20px_rgba(255,255,255,0.1)] text-white' : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_20px_rgba(0,242,254,0.4)] hover:shadow-[0_0_40px_rgba(0,242,254,0.6)] text-white font-black text-lg tracking-wide uppercase'}`}
                             >
-                                <span className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] group-hover:left-[200%] transition-all duration-1000"></span>
-                                <i className="fas fa-project-diagram text-2xl"></i> Click Here To See My Workflow
+                                {!showWorkflow && <span className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] group-hover:left-[200%] transition-all duration-1000"></span>}
+                                <i className={`fas ${showWorkflow ? 'fa-times' : 'fa-project-diagram'} text-xl relative z-10`}></i> 
+                                <span className={`relative z-10 ${showWorkflow ? 'font-bold text-sm' : 'font-black'}`}>
+                                    {showWorkflow ? 'Close Workflow Details' : 'CLICK HERE TO SEE MY WORKFLOW'}
+                                </span>
                             </a>
                         </div>
                     </section>
 
-                    {/* --- THE PRODUCTION PIPELINE (INTERACTIVE ACCORDION) --- */}
-                    <section id="interactive-pipeline" className="py-24 px-6 relative z-20 bg-[#070b14] border-y border-white/5">
-                        <div className="max-w-4xl mx-auto">
-                            <div className="text-center mb-16">
-                                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase mb-4 tracking-widest">
-                                    <i className="fas fa-sitemap"></i> Scalable Infrastructure
+                    {/* --- EXPANDABLE CONTAINER (FLOWCHART + HEALTH HUB) --- */}
+                    <div id="interactive-pipeline-container" className={`transition-all duration-1000 ease-in-out overflow-hidden relative z-30 ${showWorkflow ? 'max-h-[8000px] opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0 pointer-events-none'}`}>
+                        
+                        {/* --- THE PRODUCTION PIPELINE (VERTICAL FLOWCHART) --- */}
+                        <section className="pt-24 pb-12 px-6 relative bg-[#070b14] border-t border-white/5 rounded-t-[3rem]">
+                            <div className="max-w-5xl mx-auto">
+                                <div className="text-center mb-16">
+                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase mb-4 tracking-widest">
+                                        <i className="fas fa-sitemap"></i> Scalable Infrastructure
+                                    </div>
+                                    <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">The Production Pipeline</h2>
+                                    <p className="text-slate-400 max-w-2xl mx-auto text-lg">Hover over any node to explore the master plan for generating hyper-realistic content at scale.</p>
                                 </div>
-                                <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">The Production Pipeline</h2>
-                                <p className="text-slate-400 max-w-2xl mx-auto text-lg">Click on each phase below to explore my step-by-step master plan for generating a massive volume of consistent, hyper-realistic content.</p>
-                            </div>
 
-                            {/* Accordion Container */}
-                            <div className="space-y-4">
-                                {workflowSteps.map((step) => (
-                                    <div 
-                                        key={step.id} 
-                                        className={`glass-card rounded-2xl overflow-hidden transition-all duration-500 border ${activeWorkflowStep === step.id ? 'border-cyan-500/50 shadow-[0_0_30px_rgba(0,242,254,0.15)] bg-[#0c1427]' : 'border-white/5 hover:border-white/20 hover:bg-white/5'}`}
-                                    >
-                                        <button 
-                                            onClick={() => setActiveWorkflowStep(activeWorkflowStep === step.id ? null : step.id)}
-                                            className="w-full px-6 py-5 flex items-center justify-between focus:outline-none cursor-pointer"
-                                        >
-                                            <div className="flex items-center gap-4">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center border transition-colors duration-300 font-black ${activeWorkflowStep === step.id ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-slate-800/50 border-slate-700 text-slate-400'}`}>
-                                                    {step.id}
-                                                </div>
-                                                <h3 className={`text-lg md:text-xl font-bold text-left transition-colors duration-300 ${activeWorkflowStep === step.id ? 'text-white' : 'text-slate-300'}`}>
-                                                    {step.title}
-                                                </h3>
+                                {/* Vertical Timeline Flowchart */}
+                                <div className="relative max-w-4xl mx-auto py-10">
+                                    {/* Central Glowing Line */}
+                                    <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 via-purple-500 to-amber-500 rounded-full opacity-30 shadow-[0_0_15px_rgba(6,182,212,0.8)]"></div>
+                                    
+                                    {workflowSteps.map((step, idx) => (
+                                        <div key={step.id} className={`relative flex items-center mb-16 md:mb-24 ${idx % 2 === 0 ? 'md:justify-start' : 'md:justify-end'}`}>
+                                            {/* Center Node Dot */}
+                                            <div className={`absolute left-8 md:left-1/2 w-10 h-10 rounded-full bg-[#050505] border-4 ${step.border} -translate-x-1/2 flex items-center justify-center z-20 shadow-[0_0_20px_rgba(0,0,0,1)] ${hoveredNode === step.id ? step.glow : ''} transition-all duration-300`}>
+                                                <div className={`w-3 h-3 rounded-full ${step.dotBg} animate-pulse`}></div>
                                             </div>
-                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-500 ${activeWorkflowStep === step.id ? 'rotate-180 bg-cyan-500/20 text-cyan-400' : 'bg-white/5 text-slate-400'}`}>
-                                                <i className="fas fa-chevron-down"></i>
-                                            </div>
-                                        </button>
-
-                                        <div 
-                                            className={`transition-all duration-500 ease-in-out overflow-hidden ${activeWorkflowStep === step.id ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}
-                                        >
-                                            <div className="p-6 pt-0 border-t border-white/5 flex flex-col md:flex-row gap-6 items-start mt-4">
-                                                <div className={`hidden md:flex w-16 h-16 rounded-2xl bg-[#0a0f1d] border border-${step.color}-500/30 items-center justify-center shrink-0 shadow-inner`}>
-                                                    <i className={`fas ${step.icon} text-3xl text-${step.color}-400`}></i>
-                                                </div>
-                                                <div>
-                                                    <p className="text-slate-300 leading-relaxed text-lg mb-4">{step.desc}</p>
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
-                                                            <i className="fas fa-check-circle"></i> Phase {step.id} Engineered
-                                                        </span>
+                                            
+                                            {/* Card Content */}
+                                            <div className={`w-full md:w-1/2 pl-20 pr-4 ${idx % 2 === 0 ? 'md:pr-12 md:pl-4' : 'md:pl-12 md:pr-4'} flex`}>
+                                                <div 
+                                                    className={`w-full glass-card rounded-[2rem] p-6 md:p-8 cursor-crosshair transition-all duration-500 border ${hoveredNode === step.id ? `${step.hoverBorder} ${step.glow} scale-105 -translate-y-2` : 'border-white/10 hover:border-white/30'} ${hoveredNode && hoveredNode !== step.id ? 'opacity-40 blur-[2px]' : 'opacity-100 z-30'}`}
+                                                    onMouseEnter={() => setHoveredNode(step.id)}
+                                                    onMouseLeave={() => setHoveredNode(null)}
+                                                >
+                                                    <div className="flex items-center gap-4 mb-2">
+                                                        <div className={`w-14 h-14 rounded-2xl ${step.bg} ${step.border} border flex items-center justify-center shrink-0 shadow-inner`}>
+                                                            <i className={`fas ${step.icon} text-2xl ${step.text}`}></i>
+                                                        </div>
+                                                        <div>
+                                                            <div className={`text-xs font-black uppercase tracking-widest ${step.text} mb-1`}>Phase {step.id}</div>
+                                                            <h3 className="text-lg md:text-xl font-bold text-white leading-tight">{step.title}</h3>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Expanding Description on Hover */}
+                                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${hoveredNode === step.id ? 'max-h-[200px] opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
+                                                        <p className="text-slate-300 leading-relaxed text-sm pt-4 border-t border-white/10">
+                                                            {step.desc}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
 
-                    {/* --- VIRAL CASE STUDY: FITNESS AI (NEW SECTION) --- */}
+                        {/* --- BUSINESS HEALTH HUB (DATA DASHBOARD) --- */}
+                        <section className="pt-12 pb-24 px-6 relative bg-gradient-to-b from-[#0a0f1d] to-[#050505] border-b border-white/5 rounded-b-[3rem] shadow-2xl mb-12">
+                            <div className="max-w-7xl mx-auto">
+                                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b border-white/10 pb-8">
+                                    <div>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-4 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                                            <i className="fas fa-chart-pie"></i> Business Health Hub
+                                        </div>
+                                        <h2 className="text-3xl md:text-5xl font-black text-white">AI Performance Analytics</h2>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        {['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
+                                            <button key={q} className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${q === 'Q1' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10'}`}>
+                                                {q}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    {/* Profit Margins */}
+                                    <div className="glass-card p-8 rounded-[2rem] border border-white/10 hover:border-pink-500/30 transition-colors group">
+                                        <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-8 text-center flex items-center justify-center gap-2">
+                                            <i className="fas fa-chart-bar text-pink-400"></i> Profit Margins
+                                        </h3>
+                                        <div className="space-y-8">
+                                            <div>
+                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Gross Margin</span><span className="text-pink-400 font-black">85%</span></div>
+                                                <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-pink-600 to-pink-400 w-[85%] shadow-[0_0_10px_rgba(244,114,182,0.5)]"></div></div>
+                                            </div>
+                                            <div>
+                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Operating Margin</span><span className="text-blue-400 font-black">62%</span></div>
+                                                <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 w-[62%] shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div></div>
+                                            </div>
+                                            <div>
+                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Net Margin</span><span className="text-amber-400 font-black">48%</span></div>
+                                                <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 w-[48%] shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* KPI Scoreboard */}
+                                    <div className="glass-card p-8 rounded-[2rem] border border-white/10 hover:border-emerald-500/30 transition-colors group">
+                                        <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-8 text-center flex items-center justify-center gap-2">
+                                            <i className="fas fa-list-check text-emerald-400"></i> KPI Scoreboard
+                                        </h3>
+                                        <div className="space-y-4">
+                                            {[
+                                                { name: "Avatar Consistency", val: "99.8%", status: "Optimal", color: "bg-emerald-500", glow: "shadow-[0_0_10px_rgba(16,185,129,0.8)]" },
+                                                { name: "Lip-Sync Accuracy", val: "4K Render", status: "Strong", color: "bg-emerald-500", glow: "shadow-[0_0_10px_rgba(16,185,129,0.8)]" },
+                                                { name: "Audience Retention", val: "68% > 3s", status: "High", color: "bg-cyan-500", glow: "shadow-[0_0_10px_rgba(6,182,212,0.8)]" },
+                                                { name: "Production Cost", val: "Decreased", status: "OK", color: "bg-amber-400", glow: "shadow-[0_0_10px_rgba(245,158,11,0.8)]" },
+                                            ].map((kpi, idx) => (
+                                                <div key={idx} className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+                                                    <span className="text-sm font-bold text-slate-300">{kpi.name}</span>
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="text-xs font-black text-slate-400">{kpi.val}</span>
+                                                        <div className={`w-3 h-3 rounded-full ${kpi.color} ${kpi.glow}`}></div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Quarterly Summary (Horizontal Stacked Bars) */}
+                                    <div className="glass-card p-8 rounded-[2rem] border border-white/10 hover:border-cyan-500/30 transition-colors group">
+                                        <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-8 text-center flex items-center justify-center gap-2">
+                                            <i className="fas fa-bullseye text-cyan-400"></i> Quarterly Summary
+                                        </h3>
+                                        <div className="flex justify-center gap-4 mb-6">
+                                            <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-cyan-500"></span> Completed</span>
+                                            <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Remaining</span>
+                                        </div>
+                                        <div className="space-y-6">
+                                            {[
+                                                { label: "Revenue Target", c: 80, r: 20 },
+                                                { label: "Profit Target", c: 55, r: 45 },
+                                                { label: "Retention Goal", c: 100, r: 0 }
+                                            ].map((target, idx) => (
+                                                <div key={idx}>
+                                                    <div className="text-xs font-bold text-slate-300 mb-2 uppercase tracking-wide">{target.label}</div>
+                                                    <div className="flex h-6 w-full rounded-lg overflow-hidden border border-white/10">
+                                                        <div className="bg-gradient-to-r from-cyan-600 to-cyan-400 flex items-center justify-center text-[10px] font-black text-white" style={{ width: `${target.c}%` }}>{target.c > 10 ? `${target.c}%` : ''}</div>
+                                                        <div className="bg-gradient-to-r from-emerald-600 to-emerald-400 flex items-center justify-center text-[10px] font-black text-white" style={{ width: `${target.r}%` }}>{target.r > 10 ? `${target.r}%` : ''}</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Insights & Action Steps */}
+                                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="bg-indigo-500/10 border border-indigo-500/20 p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 transition-transform shadow-[0_5px_15px_rgba(99,102,241,0.1)]">
+                                        <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0 text-xl"><i className="fas fa-exclamation-triangle"></i></div>
+                                        <div>
+                                            <h4 className="text-white text-sm font-black mb-1">Marketing Spend</h4>
+                                            <p className="text-xs text-indigo-300/80 font-medium">Scaling budget aligns perfectly with ROI growth.</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-emerald-500/10 border border-emerald-500/20 p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 transition-transform shadow-[0_5px_15px_rgba(16,185,129,0.1)]">
+                                        <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 text-xl"><i className="fas fa-check-circle"></i></div>
+                                        <div>
+                                            <h4 className="text-white text-sm font-black mb-1">Workflow Automation</h4>
+                                            <p className="text-xs text-emerald-300/80 font-medium">Pipeline efficiency tested and verified at 98%.</p>
+                                        </div>
+                                    </div>
+                                    <div className="bg-pink-500/10 border border-pink-500/20 p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 transition-transform shadow-[0_5px_15px_rgba(236,72,153,0.1)]">
+                                        <div className="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 shrink-0 text-xl"><i className="fas fa-star"></i></div>
+                                        <div>
+                                            <h4 className="text-white text-sm font-black mb-1">Retention Goal</h4>
+                                            <p className="text-xs text-pink-300/80 font-medium">Projected +15% boost expected in Q2 assets.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    {/* --- END OF EXPANDABLE CONTAINER --- */}
+
+                    {/* --- VIRAL CASE STUDY: FITNESS AI --- */}
                     <section className="py-24 px-6 relative z-20 bg-[#050505] border-y border-white/5">
                         <div className="max-w-7xl mx-auto">
-                            {/* Header */}
                             <div className="text-center mb-16">
                                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase mb-4 tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.2)]">
                                     <i className="fas fa-chart-line"></i> Viral Case Study
@@ -336,7 +420,6 @@
                                 <p className="text-slate-400 max-w-2xl mx-auto text-lg">How a faceless fitness AI generated millions of views and drove high-ticket traffic with only 15 posts.</p>
                             </div>
 
-                            {/* Stats Row */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                                 <div className="glass-card p-8 rounded-[2rem] text-center border-t-4 border-t-emerald-500 relative overflow-hidden group">
                                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-500/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-emerald-500/20 transition-colors"></div>
@@ -360,9 +443,7 @@
                                 </div>
                             </div>
 
-                            {/* The Secret Sauce Grid */}
                             <div className="bg-gradient-to-br from-[#0a0f1d] to-[#050812] border border-white/5 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden shadow-2xl">
-                                {/* Decorative elements */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none"></div>
                                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none"></div>
                                 
@@ -371,7 +452,6 @@
                                 </h3>
                                 
                                 <div className="grid md:grid-cols-2 gap-x-10 gap-y-12 relative z-10">
-                                    {/* Point 1 */}
                                     <div className="flex gap-5 group">
                                         <div className="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center shrink-0 group-hover:bg-pink-500/20 transition-colors shadow-inner">
                                             <i className="fas fa-eye text-2xl text-pink-400"></i>
@@ -381,8 +461,6 @@
                                             <p className="text-sm text-slate-400 leading-relaxed">The content leverages extreme visual contrast. Showing a dramatic transformation creates an instant scroll-stopper that skyrockets viewer retention and completion rates.</p>
                                         </div>
                                     </div>
-
-                                    {/* Point 2 */}
                                     <div className="flex gap-5 group">
                                         <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shrink-0 group-hover:bg-cyan-500/20 transition-colors shadow-inner">
                                             <i className="fas fa-tv text-2xl text-cyan-400"></i>
@@ -392,8 +470,6 @@
                                             <p className="text-sm text-slate-400 leading-relaxed">The AI lighting, skin textures, and muscle definition are rendered in flawless 4K/HD. Social algorithms automatically favor and boost high-resolution, visually striking content.</p>
                                         </div>
                                     </div>
-
-                                    {/* Point 3 */}
                                     <div className="flex gap-5 group">
                                         <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center shrink-0 group-hover:bg-purple-500/20 transition-colors shadow-inner">
                                             <i className="fas fa-id-badge text-2xl text-purple-400"></i>
@@ -403,8 +479,6 @@
                                             <p className="text-sm text-slate-400 leading-relaxed">The AI model's face remains absolutely identical across all videos. This establishes a real "Brand Persona," building psychological trust and making the influencer feel authentic.</p>
                                         </div>
                                     </div>
-
-                                    {/* Point 4 */}
                                     <div className="flex gap-5 group">
                                         <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:bg-emerald-500/20 transition-colors shadow-inner">
                                             <i className="fas fa-money-bill-trend-up text-2xl text-emerald-400"></i>
@@ -438,12 +512,11 @@
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                
                                 {/* Video 1: Cosmetics UGC */}
                                 <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-cyan-500/50 flex flex-col">
                                     <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
                                     <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1c-iwrkF0hocNVl2_61STNy60G0Wh6NPa/preview" className="absolute top-1/2 left-1/2 w-[108%] h-[108%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
+                                        <iframe src="https://drive.google.com/file/d/1c-iwrkF0hocNVl2_61STNy60G0Wh6NPa/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                     <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
                                         <h4 className="text-white font-bold text-base mb-2">Cosmetics UGC</h4>
@@ -459,7 +532,7 @@
                                 <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-purple-500/50 flex flex-col">
                                     <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
                                     <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1-w_LOD5Tl03EmSvKPkfryoW32I--lSF2/preview" className="absolute top-1/2 left-1/2 w-[108%] h-[108%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
+                                        <iframe src="https://drive.google.com/file/d/1-w_LOD5Tl03EmSvKPkfryoW32I--lSF2/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                     <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
                                         <h4 className="text-white font-bold text-base mb-2">High-Ticket Gadget</h4>
@@ -475,7 +548,7 @@
                                 <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-emerald-500/50 flex flex-col">
                                     <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
                                     <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1wr1zo3PD7Xw4AjFLpYj4k2UBcCuAW-MA/preview" className="absolute top-1/2 left-1/2 w-[108%] h-[108%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
+                                        <iframe src="https://drive.google.com/file/d/1wr1zo3PD7Xw4AjFLpYj4k2UBcCuAW-MA/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                     <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
                                         <h4 className="text-white font-bold text-base mb-2">App Promo (Emotion)</h4>
@@ -491,7 +564,7 @@
                                 <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-pink-500/50 flex flex-col">
                                     <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
                                     <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1W7vO39GT3utTP9nyOpBcyE2UngQLQUm7/preview" className="absolute top-1/2 left-1/2 w-[108%] h-[108%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
+                                        <iframe src="https://drive.google.com/file/d/1W7vO39GT3utTP9nyOpBcyE2UngQLQUm7/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
                                     </div>
                                     <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
                                         <h4 className="text-white font-bold text-base mb-2">E-Com Mixed Reality</h4>
