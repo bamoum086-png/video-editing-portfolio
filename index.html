@@ -197,7 +197,7 @@
         <header class="pt-32 pb-16 px-6 min-h-screen flex flex-col justify-center relative">
             <div class="max-w-4xl mx-auto text-center relative z-10 w-full mt-10 md:mt-0">
                 
-                <!-- Status & Experience Badges -->
+                <!-- Status & Experience Badges (تم دمج 4 سنوات خبرة هنا بشكل أنيق) -->
                 <div class="flex flex-wrap justify-center items-center gap-3 mb-6">
                     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] md:text-xs font-bold uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Available for Projects
@@ -273,13 +273,15 @@
                 <!-- شارة مؤقت FOMO -->
                 <div class="relative mx-auto w-full max-w-[280px] md:max-w-sm flex flex-col items-center mt-12 md:mt-16 mb-8" id="badge-container">
                     <div class="relative group w-full">
-                        <div id="badge-glow" class="absolute -inset-1 bg-gradient-to-r from-red-600 to-orange-500 rounded-full blur opacity-50 group-hover:opacity-100 animate-pulse transition duration-500"></div>
-                        <div id="badge-inner" class="relative flex items-center justify-center bg-[#030712] border border-red-500/60 rounded-full shadow-[0_0_15px_rgba(239,68,68,0.2)] overflow-hidden transition-all duration-300 w-full">
+                        <!-- توهج أحمر خارجي قوي بنسبة 100% -->
+                        <div id="badge-glow" class="absolute -inset-1.5 bg-gradient-to-r from-red-600 to-red-500 rounded-full blur-md opacity-100 animate-pulse transition duration-500"></div>
+                        <!-- الزر أحمر صلب مع حدود وتظليل مضيء -->
+                        <div id="badge-inner" class="relative flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 border-2 border-red-400 rounded-full shadow-[0_0_40px_rgba(220,38,38,0.8)] overflow-hidden transition-all duration-300 w-full">
                             
-                            <a href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" id="badge-timer" class="flex items-center gap-2 md:gap-3 px-4 py-3 md:px-6 md:py-3 justify-center w-full bg-red-600/10 hover:bg-red-600/20 transition-colors">
-                                <i class="fas fa-hourglass-half text-red-500 animate-spin-slow text-sm md:text-base"></i>
-                                <span class="text-red-400 font-bold text-[11px] md:text-sm tracking-wide uppercase">
-                                    Hire before timer ends: <span id="time-left" class="text-white text-sm md:text-lg font-mono bg-red-500/30 px-1.5 md:px-2 py-0.5 rounded ml-1">15</span>
+                            <a href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" id="badge-timer" class="flex items-center gap-2 md:gap-3 px-4 py-3 md:px-6 md:py-3 justify-center w-full hover:brightness-110 transition-all">
+                                <i class="fas fa-stopwatch text-white animate-bounce text-base md:text-xl"></i>
+                                <span class="text-white font-black text-[12px] md:text-sm tracking-wide uppercase drop-shadow-md">
+                                    Hire before timer ends: <span id="time-left" class="text-red-700 text-base md:text-xl font-black bg-white px-2 md:px-2.5 py-0.5 md:py-1 rounded shadow-inner ml-1">15</span>
                                 </span>
                             </a>
                             
@@ -339,7 +341,7 @@
         <section id="portfolio-sections" class="px-6 pb-24">
             <div class="max-w-4xl mx-auto space-y-6">
 
-                <!-- 1. AI Marketing Accordion -->
+                <!-- 1. AI Marketing Accordion (مفتوحة افتراضياً) - UX Upgraded -->
                 <details class="glass-card rounded-[2rem] group border-l-4 border-l-cyan-500" open>
                     <summary class="p-6 md:p-8 text-xl md:text-2xl font-black cursor-pointer flex justify-between items-center hover:bg-white/5 transition-colors rounded-[2rem]">
                         <div class="flex items-center gap-4">
@@ -357,6 +359,7 @@
                     </summary>
                     <div class="p-6 md:p-10 pt-0 border-t border-slate-800/50 mt-2">
                         
+                        <!-- Header for the AI section -->
                         <div class="text-center max-w-2xl mx-auto mb-10 pt-8">
                             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-bold uppercase tracking-widest mb-4 border border-cyan-500/20">
                                 <i class="fas fa-microchip"></i> Next-Gen Production
@@ -368,9 +371,12 @@
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto relative items-stretch">
+                            <!-- Background decorative element -->
                             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-cyan-500/5 blur-3xl rounded-full pointer-events-none"></div>
 
+                            <!-- Video 1: Tech Card -->
                             <div class="bg-[#030712] p-5 md:p-6 rounded-[2.5rem] relative group/aicard flex flex-col h-full border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] hover:-translate-y-2">
+                                <!-- decorative tech corners -->
                                 <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-500/30 rounded-tl-[2.5rem] transition-colors group-hover/aicard:border-cyan-400"></div>
                                 <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-500/30 rounded-br-[2.5rem] transition-colors group-hover/aicard:border-cyan-400"></div>
 
@@ -381,20 +387,28 @@
                                     <span class="text-slate-500 text-[10px] font-mono">SYS_v1.0</span>
                                 </div>
 
+                                <!-- إطار الهاتف المتطابق لمنع الديكالاج -->
                                 <div class="w-full max-w-[260px] mx-auto relative z-10 shrink-0">
+                                    <!-- إطار يحاكي شكل شاشة الموبايل -->
                                     <div class="aspect-[9/16] w-full rounded-[2rem] overflow-hidden bg-black shadow-[0_15px_30px_-5px_rgba(0,0,0,0.8)] border-[6px] border-slate-800 relative z-10 group-hover/aicard:border-slate-700 transition-colors">
                                         <iframe src="https://player.vimeo.com/video/1177662721?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" class="absolute top-0 left-0 w-full h-full" title="AI Video 1"></iframe>
+                                        <!-- Scanning line animation -->
                                         <div class="absolute left-0 w-full h-1 bg-cyan-400/50 shadow-[0_0_10px_#22d3ee] animate-laser-scan pointer-events-none z-20"></div>
                                     </div>
                                 </div>
                                 
+                                <!-- منطقة النص مفصولة ومهندسة لتكون متساوية الارتفاع دائماً -->
                                 <div class="relative z-10 mt-8 flex-grow flex flex-col px-2 text-left">
+                                    <!-- تثبيت ارتفاع العنوان لمنع تفاوت السطور -->
                                     <div class="min-h-[56px] flex items-start">
                                         <h4 class="text-white font-bold text-xl group-hover/aicard:text-cyan-300 transition-colors leading-tight">AI to Reality Integration</h4>
                                     </div>
+                                    
                                     <p class="text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
                                         Seamlessly blending AI-generated ultra-realistic models with physical products in stunning 4K resolution.
                                     </p>
+                                    
+                                    <!-- المنطقة السفلية مثبتة عبر mt-auto -->
                                     <div class="mt-auto grid grid-cols-2 gap-3 border-t border-slate-800 pt-5">
                                         <div class="bg-slate-900/50 rounded-xl p-3 text-center border border-slate-800/50">
                                             <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Resolution</div>
@@ -408,6 +422,7 @@
                                 </div>
                             </div>
 
+                            <!-- Video 2: Tech Card -->
                             <div class="bg-[#030712] p-5 md:p-6 rounded-[2.5rem] relative group/aicard flex flex-col h-full border border-slate-800 hover:border-blue-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] hover:-translate-y-2">
                                 <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-blue-500/30 rounded-tl-[2.5rem] transition-colors group-hover/aicard:border-blue-400"></div>
                                 <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-blue-500/30 rounded-br-[2.5rem] transition-colors group-hover/aicard:border-blue-400"></div>
@@ -419,6 +434,7 @@
                                     <span class="text-slate-500 text-[10px] font-mono">SYS_v2.1</span>
                                 </div>
 
+                                <!-- إطار الهاتف المتطابق لمنع الديكالاج -->
                                 <div class="w-full max-w-[260px] mx-auto relative z-10 shrink-0">
                                     <div class="aspect-[9/16] w-full rounded-[2rem] overflow-hidden bg-black shadow-[0_15px_30px_-5px_rgba(0,0,0,0.8)] border-[6px] border-slate-800 relative z-10 group-hover/aicard:border-slate-700 transition-colors">
                                         <iframe src="https://player.vimeo.com/video/1177662687?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" class="absolute top-0 left-0 w-full h-full" title="AI Video 2"></iframe>
@@ -426,13 +442,18 @@
                                     </div>
                                 </div>
                                 
+                                <!-- منطقة النص مفصولة ومهندسة لتكون متساوية الارتفاع دائماً -->
                                 <div class="relative z-10 mt-8 flex-grow flex flex-col px-2 text-left">
+                                    <!-- تثبيت ارتفاع العنوان -->
                                     <div class="min-h-[56px] flex items-start">
                                         <h4 class="text-white font-bold text-xl group-hover/aicard:text-blue-300 transition-colors leading-tight">Hyper-Realistic Avatars</h4>
                                     </div>
+                                    
                                     <p class="text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
                                         Generating consistent, lifelike AI influencers designed to build trust and scale brand presence economically.
                                     </p>
+                                    
+                                    <!-- المنطقة السفلية مثبتة عبر mt-auto -->
                                     <div class="mt-auto grid grid-cols-2 gap-3 border-t border-slate-800 pt-5">
                                         <div class="bg-slate-900/50 rounded-xl p-3 text-center border border-slate-800/50">
                                             <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Consistency</div>
@@ -447,7 +468,9 @@
                             </div>
                         </div>
 
+                        <!-- Banner for Workflow CTA -->
                         <div class="mt-12 bg-gradient-to-br from-slate-900 to-[#030712] border border-slate-800 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+                            <!-- Hover Glow -->
                             <div class="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                             
                             <div class="text-center md:text-left relative z-10 max-w-xl">
@@ -483,17 +506,23 @@
                         <p class="text-slate-400 mb-10 pt-4 text-center max-w-2xl mx-auto">Watch how smooth transitions, motion graphics, and audio syncing come together to create high-retention content tailored for different niches.</p>
                         
                         <div class="flex flex-col gap-8 md:gap-12 max-w-5xl mx-auto">
-                            <!-- Video 1 -->
+                            
+                            <!-- Video 1: GCC Fitness Startup -->
                             <div class="bg-slate-900/40 p-5 md:p-8 rounded-[2.5rem] border border-slate-800 hover:border-purple-500/50 transition-all hover:shadow-[0_0_40px_rgba(168,85,247,0.15)] flex flex-col md:flex-row gap-8 md:gap-12 items-center group/card">
+                                
+                                <!-- Video Container with specific visual cues -->
                                 <div class="relative w-full max-w-[280px] shrink-0">
                                     <div class="absolute -inset-2 bg-gradient-to-tr from-purple-600/20 to-pink-600/20 rounded-[2rem] blur-xl group-hover/card:opacity-100 opacity-50 transition-opacity duration-500"></div>
                                     <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-slate-700/50 relative z-10 group-hover/card:-translate-y-2 transition-transform duration-500">
                                         <iframe src="https://player.vimeo.com/video/1177665327?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" class="absolute top-0 left-0 w-full h-full" title="GCC Fitness Startup"></iframe>
                                     </div>
+                                    <!-- Floating Element -->
                                     <div class="absolute -right-4 -bottom-4 bg-slate-900 border border-purple-500/30 px-3 py-2 rounded-xl text-xs font-bold text-white shadow-lg z-20 hidden md:flex items-center gap-2 animate-bounce" style="animation-duration: 3s;">
                                         <i class="fas fa-arrow-up-right-dots text-purple-400"></i> High Retention
                                     </div>
                                 </div>
+
+                                <!-- Content Section -->
                                 <div class="text-left flex-grow">
                                     <div class="flex flex-wrap items-center gap-3 mb-4">
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-500/10 text-purple-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-purple-500/20">
@@ -501,10 +530,13 @@
                                         </span>
                                         <span class="text-xs font-medium text-slate-500">Target: GCC Region</span>
                                     </div>
+                                    
                                     <h4 class="text-white font-black text-2xl md:text-3xl mb-4 group-hover/card:text-purple-300 transition-colors">GCC Fitness Startup</h4>
+                                    
                                     <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-6 border-l-2 border-slate-700 pl-4">
                                         Designed specifically for fitness coaches in the Gulf region. This edit features high-energy pacing, dynamic text animations, and aggressive cuts to keep viewers engaged and drive app downloads.
                                     </p>
+                                    
                                     <div class="flex flex-wrap gap-2">
                                         <span class="text-xs font-bold text-slate-300 bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
                                             <i class="fas fa-bolt text-yellow-400"></i> Fast-Paced Cuts
@@ -519,8 +551,9 @@
                                 </div>
                             </div>
 
-                            <!-- Video 2 -->
+                            <!-- Video 2: Luxury Watch Brand (Reversed Layout) -->
                             <div class="bg-slate-900/40 p-5 md:p-8 rounded-[2.5rem] border border-slate-800 hover:border-amber-500/50 transition-all hover:shadow-[0_0_40px_rgba(245,158,11,0.15)] flex flex-col md:flex-row-reverse gap-8 md:gap-12 items-center group/card">
+                                
                                 <div class="relative w-full max-w-[280px] shrink-0">
                                     <div class="absolute -inset-2 bg-gradient-to-tr from-amber-600/20 to-orange-600/20 rounded-[2rem] blur-xl group-hover/card:opacity-100 opacity-50 transition-opacity duration-500"></div>
                                     <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-slate-700/50 relative z-10 group-hover/card:-translate-y-2 transition-transform duration-500">
@@ -530,6 +563,7 @@
                                         <i class="fas fa-gem text-amber-400"></i> Premium Feel
                                     </div>
                                 </div>
+
                                 <div class="text-left md:text-right flex-grow">
                                     <div class="flex flex-wrap items-center gap-3 mb-4 md:justify-end">
                                         <span class="text-xs font-medium text-slate-500">Target: High-Net-Worth Buyers</span>
@@ -537,10 +571,13 @@
                                             <i class="fas fa-store"></i> Luxury E-Commerce
                                         </span>
                                     </div>
+                                    
                                     <h4 class="text-white font-black text-2xl md:text-3xl mb-4 group-hover/card:text-amber-300 transition-colors">Global Luxury Watches</h4>
+                                    
                                     <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-6 border-l-2 md:border-l-0 md:border-r-2 border-slate-700 pl-4 md:pl-0 md:pr-4">
                                         Premium aesthetic meets direct-response marketing. This ad utilizes an aggressive psychological hook at the start, followed by sleek, fast-paced transitions and high-end visual effects.
                                     </p>
+                                    
                                     <div class="flex flex-wrap gap-2 md:justify-end">
                                         <span class="text-xs font-bold text-slate-300 bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
                                             <i class="fas fa-fish text-rose-400"></i> Psycho Hook
@@ -555,8 +592,9 @@
                                 </div>
                             </div>
 
-                            <!-- Video 3 -->
+                            <!-- Video 3: Medical Product -->
                             <div class="bg-slate-900/40 p-5 md:p-8 rounded-[2.5rem] border border-slate-800 hover:border-pink-500/50 transition-all hover:shadow-[0_0_40px_rgba(236,72,153,0.15)] flex flex-col md:flex-row gap-8 md:gap-12 items-center group/card">
+                                
                                 <div class="relative w-full max-w-[280px] shrink-0">
                                     <div class="absolute -inset-2 bg-gradient-to-tr from-pink-600/20 to-rose-600/20 rounded-[2rem] blur-xl group-hover/card:opacity-100 opacity-50 transition-opacity duration-500"></div>
                                     <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-slate-700/50 relative z-10 group-hover/card:-translate-y-2 transition-transform duration-500">
@@ -566,6 +604,7 @@
                                         <i class="fas fa-heart text-pink-400"></i> High Trust
                                     </div>
                                 </div>
+
                                 <div class="text-left flex-grow">
                                     <div class="flex flex-wrap items-center gap-3 mb-4">
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-pink-500/10 text-pink-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-pink-500/20">
@@ -573,10 +612,13 @@
                                         </span>
                                         <span class="text-xs font-medium text-slate-500">Format: Hybrid Ad</span>
                                     </div>
+                                    
                                     <h4 class="text-white font-black text-2xl md:text-3xl mb-4 group-hover/card:text-pink-300 transition-colors">Women's Medical Product</h4>
+                                    
                                     <p class="text-slate-400 text-sm md:text-base leading-relaxed mb-6 border-l-2 border-slate-700 pl-4">
                                         A highly converting hybrid ad. Blending native "TikTok style" organic feel with advanced AI elements and professional VFX to build trust while maximizing the click-through rate.
                                     </p>
+                                    
                                     <div class="flex flex-wrap gap-2">
                                         <span class="text-xs font-bold text-slate-300 bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
                                             <i class="fab fa-tiktok text-white"></i> Native Style
@@ -614,6 +656,7 @@
                     
                     <div class="p-6 md:p-8 pt-0 border-t border-slate-800/50 mt-2">
                         <div class="pt-8">
+                            <!-- الهيدر الجذاب للموضوع -->
                             <div class="text-center max-w-3xl mx-auto mb-12">
                                 <h3 class="text-3xl md:text-4xl font-black text-white mb-6 leading-tight">
                                     Quality Over Quantity: <br/> 
@@ -624,9 +667,13 @@
                                 </p>
                             </div>
 
+                            <!-- لوحة التحكم التفاعلية (Minimalist UX Dashboard) -->
                             <div class="relative bg-[#030712] p-8 md:p-12 rounded-[2.5rem] border border-slate-800 shadow-2xl flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 mb-12 overflow-hidden">
+                                
+                                <!-- إضاءة خلفية للوحة -->
                                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 blur-3xl pointer-events-none"></div>
 
+                                <!-- الصندوق الأول: المدخلات (15 فيديو) -->
                                 <div class="flex flex-col items-center z-10 w-full md:w-auto">
                                     <div class="w-20 h-20 rounded-full bg-slate-900 border-2 border-slate-700 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                                         <i class="fas fa-file-video text-slate-400 text-3xl"></i>
@@ -637,17 +684,20 @@
                                     </div>
                                 </div>
 
+                                <!-- السهم المضاعف (The Multiplier) -->
                                 <div class="flex flex-col items-center justify-center w-full md:w-40 h-20 md:h-auto z-10 relative my-4 md:my-0">
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
                                             <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 w-full origin-left animate-laser-flow"></div>
                                         </div>
                                     </div>
+                                    <!-- شارة الاستراتيجية -->
                                     <div class="bg-[#030712] px-4 py-2.5 rounded-full border border-emerald-500/40 text-emerald-400 text-xs font-black uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(16,185,129,0.3)] animate-pulse whitespace-nowrap">
                                         High-ROI Edits
                                     </div>
                                 </div>
 
+                                <!-- الصندوق الثاني: المخرجات (500K+ مشاهدة) -->
                                 <div class="flex flex-col items-center z-10 w-full md:w-auto">
                                     <div class="w-24 h-24 rounded-full bg-[#030712] border-4 border-emerald-500 flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(16,185,129,0.5)]">
                                         <i class="fas fa-rocket text-emerald-400 text-4xl"></i>
@@ -659,6 +709,7 @@
                                 </div>
                             </div>
 
+                            <!-- زر الإثبات (Verify on Upwork) -->
                             <div class="flex justify-center">
                                 <a href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?p=2024825438540349440" target="_blank" class="group/upwv relative px-10 py-5 bg-[#14a800]/10 text-[#14a800] border-2 border-[#14a800] rounded-2xl font-black text-base md:text-lg transition-all duration-300 hover:bg-[#14a800] hover:text-white hover:shadow-[0_0_40px_rgba(20,168,0,0.6)] hover:-translate-y-2 flex items-center justify-center gap-3 overflow-hidden w-full md:w-auto">
                                     <span class="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] group-hover/upwv:left-[200%] transition-all duration-1000"></span>
@@ -927,10 +978,12 @@
                     expiredBadge.classList.remove("hidden");
                     expiredBadge.classList.add("flex");
                     
-                    badgeGlow.classList.remove("from-red-600", "to-orange-500", "animate-pulse");
-                    badgeGlow.classList.add("from-slate-800", "to-slate-900", "opacity-20");
-                    badgeInner.classList.remove("border-red-500/60");
-                    badgeInner.classList.add("border-slate-800");
+                    // إطفاء اللون الأحمر الساطع وتحويله للرمادي الباهت برمجياً
+                    badgeGlow.classList.remove("from-red-600", "to-red-500", "animate-pulse", "opacity-100", "blur-md", "-inset-1.5");
+                    badgeGlow.classList.add("from-slate-800", "to-slate-900", "opacity-20", "blur", "-inset-1");
+                    
+                    badgeInner.classList.remove("bg-gradient-to-r", "from-red-600", "to-red-700", "border-red-400", "border-2", "shadow-[0_0_40px_rgba(220,38,38,0.8)]");
+                    badgeInner.classList.add("bg-[#030712]", "border-slate-800", "border");
 
                     // إظهار رسالة الكشف بنعومة
                     if(revealSection) {
