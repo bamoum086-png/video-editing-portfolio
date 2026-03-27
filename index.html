@@ -223,45 +223,48 @@
                     </a>
                 </div>
                 
-                <!-- The Creative Timeline Animation (تمت زيادة المسافة العلوية بشكل كبير لمنع التصادم) -->
-                <div class="flex flex-col items-center justify-center w-full max-w-lg md:max-w-2xl mx-auto px-10 md:px-14 mb-20 mt-28 md:mt-36 relative z-0">
+                <!-- The Creative Timeline Animation (تم إصلاح التناسق للشاشات الصغيرة) -->
+                <div class="flex flex-col items-center justify-center w-full max-w-lg md:max-w-2xl mx-auto px-12 sm:px-16 md:px-14 mb-20 mt-28 md:mt-36 relative z-0">
                     <div class="relative w-full h-1.5 md:h-2 bg-slate-800 rounded-full">
                         <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 via-sky-400 to-cyan-400 rounded-full animate-progress-bar origin-left z-0"></div>
 
-                        <div class="absolute top-1/2 left-[0%] w-2.5 h-2.5 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
-                        <span class="absolute top-full left-[0%] -translate-x-1/2 text-xs md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2022</span>
+                        <!-- النقاط والسنوات (تم تصغير الخط للموبايل) -->
+                        <div class="absolute top-1/2 left-[0%] w-2 h-2 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
+                        <span class="absolute top-full left-[0%] -translate-x-1/2 text-[10px] md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2022</span>
 
-                        <div class="absolute top-1/2 left-[25%] w-2.5 h-2.5 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
-                        <span class="absolute top-full left-[25%] -translate-x-1/2 text-xs md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2023</span>
+                        <div class="absolute top-1/2 left-[25%] w-2 h-2 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
+                        <span class="absolute top-full left-[25%] -translate-x-1/2 text-[10px] md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2023</span>
 
-                        <div class="absolute top-1/2 left-[50%] w-2.5 h-2.5 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
-                        <span class="absolute top-full left-[50%] -translate-x-1/2 text-xs md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2024</span>
+                        <div class="absolute top-1/2 left-[50%] w-2 h-2 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
+                        <span class="absolute top-full left-[50%] -translate-x-1/2 text-[10px] md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2024</span>
 
-                        <div class="absolute top-1/2 left-[75%] w-2.5 h-2.5 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
-                        <span class="absolute top-full left-[75%] -translate-x-1/2 text-xs md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2025</span>
+                        <div class="absolute top-1/2 left-[75%] w-2 h-2 md:w-3 md:h-3 bg-slate-700 border-2 border-[#030712] rounded-full -translate-y-1/2 -translate-x-1/2 z-0"></div>
+                        <span class="absolute top-full left-[75%] -translate-x-1/2 text-[10px] md:text-sm font-bold text-slate-500 mt-4 md:mt-5">2025</span>
 
-                        <div class="absolute top-1/2 left-[100%] z-10 w-20 h-20 md:w-24 md:h-24 bg-[#030712] border-[3px] md:border-4 rounded-full flex items-center justify-center -translate-x-1/2 -translate-y-1/2 animate-frame-glow transition-all duration-300">
+                        <!-- الهدف النهائي (تم تصغير الدائرة والأيقونات لتكون أنيقة ومتناسقة مع التايم لاين) -->
+                        <div class="absolute top-1/2 left-[100%] z-10 w-14 h-14 md:w-16 md:h-16 bg-[#030712] border-[3px] rounded-full flex items-center justify-center -translate-x-1/2 -translate-y-1/2 animate-frame-glow transition-all duration-300">
                             <div class="absolute flex items-center justify-center animate-hide-laptop text-slate-500">
-                                <i class="fas fa-display text-3xl md:text-4xl"></i>
-                                <i class="fas fa-microchip absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-[10px] md:text-sm"></i>
+                                <i class="fas fa-display text-xl md:text-2xl"></i>
+                                <i class="fas fa-microchip absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-[6px] md:text-[8px]"></i>
                             </div>
                             <div class="absolute flex items-center justify-center w-full h-full opacity-0 animate-show-emoji">
-                                <i class="fas fa-face-grin-stars text-4xl md:text-5xl"></i>
+                                <i class="fas fa-face-grin-stars text-2xl md:text-3xl"></i>
                             </div>
                         </div>
                         
-                        <span class="absolute top-full left-[100%] animate-year-glow text-xs md:text-sm font-black mt-10 md:mt-12 transition-colors duration-300">2026</span>
+                        <span class="absolute top-full left-[100%] animate-year-glow text-[10px] md:text-sm font-black mt-8 md:mt-10 transition-colors duration-300">2026</span>
 
+                        <!-- حركة الرجل والنصوص العائمة -->
                         <div class="absolute top-1/2 left-0 animate-runner z-20 flex flex-col items-center">
-                            <!-- منطقة الكلمات المرتفعة -->
-                            <div class="absolute bottom-full mb-3 md:mb-5 w-48 text-center pointer-events-none">
-                                <span class="absolute bottom-0 left-1/2 text-xs md:text-sm font-black uppercase tracking-widest text-yellow-400 animate-label-1 drop-shadow-md">Beginner</span>
-                                <span class="absolute bottom-0 left-1/2 text-xs md:text-sm font-black uppercase tracking-widest text-amber-400 animate-label-2 opacity-0 drop-shadow-md">Skilled</span>
-                                <span class="absolute bottom-0 left-1/2 text-xs md:text-sm font-black uppercase tracking-widest text-orange-400 animate-label-3 opacity-0 drop-shadow-md">Pro Editor</span>
-                                <span class="absolute bottom-0 left-1/2 text-xs md:text-sm font-black uppercase tracking-widest text-sky-400 animate-label-4 opacity-0 drop-shadow-md">Strategist</span>
-                                <span class="absolute bottom-0 left-1/2 text-xs md:text-sm font-black uppercase tracking-widest text-cyan-300 animate-label-5 opacity-0 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">AI Expert</span>
+                            <!-- منطقة الكلمات المرتفعة (تم إضافة whitespace-nowrap لمنع انكسار الكلمات وتصغير العرض) -->
+                            <div class="absolute bottom-full mb-2 md:mb-5 w-32 md:w-48 text-center pointer-events-none">
+                                <span class="absolute bottom-0 left-1/2 text-[10px] md:text-sm font-black uppercase tracking-widest text-yellow-400 animate-label-1 drop-shadow-md whitespace-nowrap">Beginner</span>
+                                <span class="absolute bottom-0 left-1/2 text-[10px] md:text-sm font-black uppercase tracking-widest text-amber-400 animate-label-2 opacity-0 drop-shadow-md whitespace-nowrap">Skilled</span>
+                                <span class="absolute bottom-0 left-1/2 text-[10px] md:text-sm font-black uppercase tracking-widest text-orange-400 animate-label-3 opacity-0 drop-shadow-md whitespace-nowrap">Pro Editor</span>
+                                <span class="absolute bottom-0 left-1/2 text-[10px] md:text-sm font-black uppercase tracking-widest text-sky-400 animate-label-4 opacity-0 drop-shadow-md whitespace-nowrap">Strategist</span>
+                                <span class="absolute bottom-0 left-1/2 text-[10px] md:text-sm font-black uppercase tracking-widest text-cyan-300 animate-label-5 opacity-0 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] whitespace-nowrap">AI Expert</span>
                             </div>
-                            <i class="fas fa-person-running text-3xl md:text-5xl drop-shadow-[0_0_10px_currentColor] animate-hide-runner"></i>
+                            <i class="fas fa-person-running text-2xl md:text-5xl drop-shadow-[0_0_10px_currentColor] animate-hide-runner"></i>
                         </div>
                     </div>
                 </div>
