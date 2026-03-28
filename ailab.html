@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI Influencer Architecture | Mohamed B.</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,6 +21,7 @@
             background-color: #050505; 
             color: #f8fafc;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent; /* يمنع الوميض الأزرق عند النقر في الهاتف */
         }
         
         .text-gradient-ai {
@@ -35,7 +36,7 @@
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .ai-grid {
@@ -65,6 +66,52 @@
         .animate-float {
             animation: float 4s ease-in-out infinite;
         }
+
+        /* --- UX Animations --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        .btn-glare {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-glare::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            animation: glare 3s infinite;
+        }
+        @keyframes glare {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        /* Mobile Scroll UX */
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-cyan-500 selection:text-white">
@@ -72,18 +119,69 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect, useRef } = React;
+
+        const AnimatedCounter = ({ end, suffix = "", duration = 2000, decimals = 0 }) => {
+            const [count, setCount] = useState(0);
+            const ref = useRef(null);
+            const [isVisible, setIsVisible] = useState(false);
+
+            useEffect(() => {
+                const observer = new IntersectionObserver(
+                    ([entry]) => {
+                        if (entry.isIntersecting) {
+                            setIsVisible(true);
+                            observer.disconnect();
+                        }
+                    },
+                    { threshold: 0.1 }
+                );
+                if (ref.current) observer.observe(ref.current);
+                return () => observer.disconnect();
+            }, []);
+
+            useEffect(() => {
+                if (!isVisible) return;
+                let startTime = null;
+                const step = (timestamp) => {
+                    if (!startTime) startTime = timestamp;
+                    const progress = Math.min((timestamp - startTime) / duration, 1);
+                    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                    setCount(easeOutQuart * end);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        setCount(end);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }, [isVisible, end, duration]);
+
+            return <span ref={ref}>{count.toFixed(decimals)}{suffix}</span>;
+        };
 
         const App = () => {
             const myUpworkLink = "https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share";
             const mainPortfolioUrl = "index.html";
 
-            // State for the interactive workflow container and individual nodes
             const [showWorkflow, setShowWorkflow] = useState(false);
             const [hoveredNode, setHoveredNode] = useState(null);
-            const [activeWorkflowStep, setActiveWorkflowStep] = useState(null);
 
-            // Data for the workflow timeline (Flowchart Nodes)
+            useEffect(() => {
+                const revealElements = document.querySelectorAll('.reveal');
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+                revealElements.forEach(el => revealObserver.observe(el));
+                return () => revealObserver.disconnect();
+            }, []);
+
             const workflowSteps = [
                 { id: 1, title: "Product & Scripting", icon: "fa-pen-nib", color: "cyan", bg: "bg-cyan-500/10", dotBg: "bg-cyan-400", text: "text-cyan-400", border: "border-cyan-500/30", hoverBorder: "hover:border-cyan-500", glow: "shadow-[0_0_30px_rgba(6,182,212,0.4)]", desc: "Analyzing the brand's product and crafting conversion-focused scripts engineered specifically for short-form retention." },
                 { id: 2, title: "Base Avatar Creation", icon: "fa-user-astronaut", color: "blue", bg: "bg-blue-500/10", dotBg: "bg-blue-400", text: "text-blue-400", border: "border-blue-500/30", hoverBorder: "hover:border-blue-500", glow: "shadow-[0_0_30px_rgba(59,130,246,0.4)]", desc: "Designing the foundational look of the AI Influencer tailored perfectly to the target demographic's preferences." },
@@ -108,177 +206,254 @@
                 <div className="flex flex-col min-h-screen relative z-10 ai-grid">
                     
                     {/* Background Orbs */}
-                    <div className="fixed top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-cyan-600/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
-                    <div className="fixed bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-purple-600/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
+                    <div className="fixed top-[-20%] left-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-cyan-600/10 blur-[100px] md:blur-[150px] rounded-full pointer-events-none -z-10 animate-pulse" style={{animationDuration: '8s'}}></div>
+                    <div className="fixed bottom-[-20%] right-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-purple-600/10 blur-[100px] md:blur-[150px] rounded-full pointer-events-none -z-10 animate-pulse" style={{animationDuration: '12s'}}></div>
 
                     {/* --- NAVIGATION --- */}
-                    <nav className="fixed w-full z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 py-4">
+                    <nav className="fixed w-full z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 py-4 transition-all duration-300">
                         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center font-black text-sm shadow-[0_0_15px_rgba(0,242,254,0.4)]">M</div>
-                                <span className="font-bold text-lg tracking-wide uppercase">AI Lab</span>
+                            <div className="flex items-center gap-3 group cursor-pointer">
+                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center font-black text-sm shadow-[0_0_15px_rgba(0,242,254,0.4)] group-hover:rotate-12 transition-transform">M</div>
+                                <span className="font-bold text-lg tracking-wide uppercase group-hover:text-cyan-400 transition-colors hidden sm:block">AI Lab</span>
                             </div>
-                            <a href={mainPortfolioUrl} className="flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 transition-all group">
+                            <a href={mainPortfolioUrl} className="flex items-center gap-2 px-4 md:px-5 py-2 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 transition-all group hover:border-cyan-500/30">
                                 <i className="fas fa-arrow-left group-hover:-translate-x-1 transition-transform text-cyan-400"></i> Main Portfolio
                             </a>
                         </div>
                     </nav>
 
                     {/* --- HERO SECTION: THE HOOK --- */}
-                    <header className="pt-40 pb-20 px-6 relative">
+                    <header className="pt-36 md:pt-40 pb-16 md:pb-20 px-4 md:px-6 relative reveal">
                         <div className="max-w-5xl mx-auto text-center">
                             
-                            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-black tracking-[0.2em] uppercase mb-8 shadow-[0_0_20px_rgba(0,242,254,0.2)] animate-pulse">
+                            <div className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-5 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs md:text-sm font-black tracking-[0.2em] uppercase mb-6 md:mb-8 shadow-[0_0_20px_rgba(0,242,254,0.2)] animate-float">
                                 <i className="fas fa-fingerprint"></i> LIFT Framework
                             </div>
                             
-                            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+                            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black mb-4 md:mb-6 leading-tight tracking-tight px-2">
                                 Flawless AI Influencers.<br/>
-                                <span className="text-gradient-ai">Retention-First Performance.</span>
+                                <span className="text-gradient-ai inline-block transform hover:scale-105 transition-transform duration-500 cursor-default">Retention-First Performance.</span>
                             </h1>
                             
-                            <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-12 font-light">
+                            <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10 md:mb-12 font-light px-4">
                                 While most creators focus purely on how the AI <em className="text-white font-semibold">looks</em>, I focus on how the AI <em className="text-white font-semibold">performs</em>. My strategy guarantees 100% facial consistency while keeping viewers hooked past the 3-second mark.
                             </p>
 
                             {/* Client Pain Point Counters */}
-                            <div className="flex flex-wrap justify-center gap-4 md:gap-8 max-w-4xl mx-auto">
-                                <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-2xl border border-white/10">
-                                    <i className="fas fa-face-smile-beam text-2xl text-purple-400"></i>
+                            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 md:gap-8 max-w-4xl mx-auto px-4">
+                                <div className="flex items-center gap-3 bg-white/5 px-5 md:px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-default w-full sm:w-auto justify-center sm:justify-start">
+                                    <i className="fas fa-face-smile-beam text-xl md:text-2xl text-purple-400"></i>
                                     <div className="text-left">
-                                        <div className="text-white font-bold">100% Consistent</div>
-                                        <div className="text-xs text-slate-400">Zero face morphing</div>
+                                        <div className="text-white font-bold text-sm md:text-base">100% Consistent</div>
+                                        <div className="text-[10px] md:text-xs text-slate-400">Zero face morphing</div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-2xl border border-white/10">
-                                    <i className="fas fa-magnet text-2xl text-cyan-400"></i>
+                                <div className="flex items-center gap-3 bg-white/5 px-5 md:px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-default w-full sm:w-auto justify-center sm:justify-start">
+                                    <i className="fas fa-magnet text-xl md:text-2xl text-cyan-400"></i>
                                     <div className="text-left">
-                                        <div className="text-white font-bold">High Retention</div>
-                                        <div className="text-xs text-slate-400">Optimized for algorithm</div>
+                                        <div className="text-white font-bold text-sm md:text-base">High Retention</div>
+                                        <div className="text-[10px] md:text-xs text-slate-400">Optimized for algorithm</div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-2xl border border-white/10">
-                                    <i className="fas fa-crown text-2xl text-pink-400"></i>
+                                <div className="flex items-center gap-3 bg-white/5 px-5 md:px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-default w-full sm:w-auto justify-center sm:justify-start">
+                                    <i className="fas fa-crown text-xl md:text-2xl text-pink-400"></i>
                                     <div className="text-left">
-                                        <div className="text-white font-bold">High-End Beauty</div>
-                                        <div className="text-xs text-slate-400">Premium brand aesthetics</div>
+                                        <div className="text-white font-bold text-sm md:text-base">High-End Beauty</div>
+                                        <div className="text-[10px] md:text-xs text-slate-400">Premium brand aesthetics</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </header>
 
-                    {/* --- THE WORKFLOW ARCHITECTURE (PREVIOUS 4 NODES - KEPT FOR SEO/CONTEXT) --- */}
-                    <section className="py-24 px-6 relative z-20 bg-[#020408]/80 border-t border-white/5">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="text-center mb-20">
-                                <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">The Tech Stack Architecture</h2>
-                                <p className="text-slate-400 max-w-2xl mx-auto text-lg">A production-grade pipeline utilizing advanced cloud nodes and proprietary workflows to ensure unparalleled realism and lip-sync accuracy.</p>
+                    {/* --- معرض الأعمال (AI INFLUENCER SHOWCASE) --- */}
+                    <section className="py-16 md:py-24 relative z-30 bg-[#050505] border-b border-white/5 shadow-2xl reveal overflow-hidden">
+                        <div className="max-w-7xl mx-auto px-0 md:px-6">
+                            <div className="text-center mb-8 md:mb-16 px-6">
+                                <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">AI Influencer Showcase</h2>
+                                <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-lg">Examples of consistent, high-retention AI characters created for premium brands.</p>
+                                {/* Mobile swipe indicator */}
+                                <div className="md:hidden mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold animate-pulse">
+                                    <i className="fas fa-hand-pointer"></i> Swipe to explore <i className="fas fa-arrow-right"></i>
+                                </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+                            {/* Mobile Horizontal Scroll Container (Edge-to-Edge bleed) */}
+                            <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-8 md:pb-0 snap-x snap-mandatory hide-scrollbar px-6 md:px-0">
+                                
+                                {/* Video 1 */}
+                                <div className="w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 glass-card p-3 md:p-4 rounded-[2rem] relative group border border-white/10 hover:border-cyan-500/50 flex flex-col hover:-translate-y-2 transition-all duration-300">
+                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
+                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#020202] relative z-10 border border-slate-800 flex items-center justify-center group-hover:border-cyan-500/30 transition-colors">
+                                        <iframe src="https://player.vimeo.com/video/1177969101?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0" loading="lazy" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
+                                    </div>
+                                    <div className="mt-4 md:mt-5 mb-1 md:mb-2 px-2 flex flex-col flex-grow relative z-10">
+                                        <h4 className="text-white font-bold text-sm md:text-base mb-1 md:mb-2 group-hover:text-cyan-400 transition-colors">Cosmetics UGC</h4>
+                                        <p className="text-[11px] md:text-xs text-slate-400 mb-3 md:mb-4 flex-grow">Women's cosmetic product integrating authentic UGC feel.</p>
+                                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
+                                            <span className="bg-cyan-500/20 text-cyan-300 text-[9px] md:text-[10px] px-2 py-1 rounded border border-cyan-500/30">Beauty</span>
+                                            <span className="bg-white/10 text-white text-[9px] md:text-[10px] px-2 py-1 rounded">UGC Style</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Video 2 */}
+                                <div className="w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 glass-card p-3 md:p-4 rounded-[2rem] relative group border border-white/10 hover:border-emerald-500/50 flex flex-col hover:-translate-y-2 transition-all duration-300 md:delay-100">
+                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
+                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#020202] relative z-10 border border-slate-800 flex items-center justify-center group-hover:border-emerald-500/30 transition-colors">
+                                        <iframe src="https://player.vimeo.com/video/1177969028?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0" loading="lazy" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
+                                    </div>
+                                    <div className="mt-4 md:mt-5 mb-1 md:mb-2 px-2 flex flex-col flex-grow relative z-10">
+                                        <h4 className="text-white font-bold text-sm md:text-base mb-1 md:mb-2 group-hover:text-emerald-400 transition-colors">App Promo (Emotion)</h4>
+                                        <p className="text-[11px] md:text-xs text-slate-400 mb-3 md:mb-4 flex-grow">Betting app ad demonstrating strong AI-generated emotional reactions.</p>
+                                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
+                                            <span className="bg-emerald-500/20 text-emerald-300 text-[9px] md:text-[10px] px-2 py-1 rounded border border-emerald-500/30">App Promo</span>
+                                            <span className="bg-white/10 text-white text-[9px] md:text-[10px] px-2 py-1 rounded">High Emotion</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Video 3 */}
+                                <div className="w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 glass-card p-3 md:p-4 rounded-[2rem] relative group border border-white/10 hover:border-purple-500/50 flex flex-col hover:-translate-y-2 transition-all duration-300 md:delay-200">
+                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
+                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#020202] relative z-10 border border-slate-800 flex items-center justify-center group-hover:border-purple-500/30 transition-colors">
+                                        <iframe src="https://player.vimeo.com/video/1177963191?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0" loading="lazy" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
+                                    </div>
+                                    <div className="mt-4 md:mt-5 mb-1 md:mb-2 px-2 flex flex-col flex-grow relative z-10">
+                                        <h4 className="text-white font-bold text-sm md:text-base mb-1 md:mb-2 group-hover:text-purple-400 transition-colors">High-Ticket Gadget</h4>
+                                        <p className="text-[11px] md:text-xs text-slate-400 mb-3 md:mb-4 flex-grow">Hard-to-film gadgets rendered with hyper-realistic sales appeal.</p>
+                                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
+                                            <span className="bg-purple-500/20 text-purple-300 text-[9px] md:text-[10px] px-2 py-1 rounded border border-purple-500/30">Tech</span>
+                                            <span className="bg-white/10 text-white text-[9px] md:text-[10px] px-2 py-1 rounded">Ultra-Realism</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Video 4 */}
+                                <div className="w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 glass-card p-3 md:p-4 rounded-[2rem] relative group border border-white/10 hover:border-pink-500/50 flex flex-col hover:-translate-y-2 transition-all duration-300 md:delay-300">
+                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
+                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#020202] relative z-10 border border-slate-800 flex items-center justify-center group-hover:border-pink-500/30 transition-colors">
+                                        <iframe src="https://player.vimeo.com/video/1177969846?autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0" loading="lazy" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
+                                    </div>
+                                    <div className="mt-4 md:mt-5 mb-1 md:mb-2 px-2 flex flex-col flex-grow relative z-10">
+                                        <h4 className="text-white font-bold text-sm md:text-base mb-1 md:mb-2 group-hover:text-pink-400 transition-colors">Medical Mixed Reality</h4>
+                                        <p className="text-[11px] md:text-xs text-slate-400 mb-3 md:mb-4 flex-grow">Blending real medical/physical products with AI environments.</p>
+                                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
+                                            <span className="bg-pink-500/20 text-pink-300 text-[9px] md:text-[10px] px-2 py-1 rounded border border-pink-500/30">Medical & E-Com</span>
+                                            <span className="bg-white/10 text-white text-[9px] md:text-[10px] px-2 py-1 rounded">Mixed Reality</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Empty spacer to ensure last card scrolls fully to the left */}
+                                <div className="w-1 md:hidden shrink-0"></div>
+
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* --- THE TECH STACK ARCHITECTURE --- */}
+                    <section className="py-20 md:py-24 px-6 relative z-20 bg-[#020408]/80 border-t border-white/5 reveal">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="text-center mb-12 md:mb-20">
+                                <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">The Tech Stack Architecture</h2>
+                                <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-lg">A production-grade pipeline utilizing advanced cloud nodes and proprietary workflows.</p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 relative">
                                 <div className="hidden md:block absolute top-1/2 left-0 w-full h-[2px] bg-slate-800 -translate-y-1/2 z-0">
-                                    <div className="h-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 w-full opacity-50"></div>
+                                    <div className="h-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 w-full opacity-50 flow-line"></div>
                                 </div>
 
-                                <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(0,242,254,0.15)] hover:border-cyan-500/50 cursor-crosshair text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 rounded-2xl bg-cyan-950/50 border border-cyan-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                                        <i className="fas fa-image text-2xl text-cyan-400 group-hover:text-white"></i>
+                                <div className="glass-card rounded-[2rem] p-6 md:p-8 relative z-10 group hover:-translate-y-2 md:hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(0,242,254,0.15)] hover:border-cyan-500/50 text-center flex flex-col items-center md:delay-100">
+                                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-cyan-950/50 border border-cyan-500/30 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-inner">
+                                        <i className="fas fa-image text-xl md:text-2xl text-cyan-400 group-hover:text-white"></i>
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-2">1. Base Asset Generation</h3>
-                                    <p className="text-sm text-slate-400 mb-6 flex-grow">Establishing the high-end beauty aesthetic using structured prompts and reference images.</p>
+                                    <h3 className="text-lg md:text-xl font-bold text-white mb-2">1. Base Asset Generation</h3>
+                                    <p className="text-[11px] md:text-sm text-slate-400 flex-grow">Establishing the high-end beauty aesthetic using structured prompts.</p>
                                 </div>
 
-                                <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)] hover:border-purple-500/50 cursor-crosshair text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 rounded-2xl bg-purple-950/50 border border-purple-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                                        <i className="fas fa-users-viewfinder text-2xl text-purple-400 group-hover:text-white"></i>
+                                <div className="glass-card rounded-[2rem] p-6 md:p-8 relative z-10 group hover:-translate-y-2 md:hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)] hover:border-purple-500/50 text-center flex flex-col items-center md:delay-200">
+                                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-purple-950/50 border border-purple-500/30 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shadow-inner">
+                                        <i className="fas fa-users-viewfinder text-xl md:text-2xl text-purple-400 group-hover:text-white"></i>
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-2">2. Strict Consistency</h3>
-                                    <p className="text-sm text-slate-400 mb-6 flex-grow">Locking facial features across different angles and lighting using custom AI workflows and exact seed numbers.</p>
+                                    <h3 className="text-lg md:text-xl font-bold text-white mb-2">2. Strict Consistency</h3>
+                                    <p className="text-[11px] md:text-sm text-slate-400 flex-grow">Locking facial features across angles using custom workflows.</p>
                                 </div>
 
-                                <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(236,72,153,0.15)] hover:border-pink-500/50 cursor-crosshair text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 rounded-2xl bg-pink-950/50 border border-pink-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8 text-pink-400 group-hover:text-white transition-colors">
-                                            <path d="M12 4.06c-2.4 0-5.1.8-7.7 2.6-2.2 1.5-3.1 3.5-3.3 4.4-.1.8.2 1.6.8 2.2 1.8 1.8 4.7 2.8 7.7 3.3 1.5.3 3 .3 4.5 0 3-.5 5.9-1.5 7.7-3.3.6-.6.9-1.4.8-2.2-.2-.9-1.1-2.9-3.3-4.4-2.6-1.8-5.3-2.6-7.7-2.6zm0 15c-3 0-5.9-.6-8-2-.5-.3-1-.9-.8-1.5.2-.6.9-.9 1.5-.7 1.8.9 4.3 1.5 7.3 1.5s5.5-.6 7.3-1.5c.6-.3 1.3 0 1.5.7.2.6-.3 1.2-.8 1.5-2.1 1.4-5 2-8 2z"/>
-                                        </svg>
+                                <div className="glass-card rounded-[2rem] p-6 md:p-8 relative z-10 group hover:-translate-y-2 md:hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(236,72,153,0.15)] hover:border-pink-500/50 text-center flex flex-col items-center md:delay-300">
+                                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-pink-950/50 border border-pink-500/30 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-inner">
+                                        <i className="fas fa-microphone-lines text-xl md:text-2xl text-pink-400 group-hover:text-white transition-colors"></i>
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-2">3. Voice & Lip-Sync</h3>
-                                    <p className="text-sm text-slate-400 mb-6 flex-grow">Cloning hyper-realistic voices and mapping 4K lip movements to match exact audio frequencies.</p>
+                                    <h3 className="text-lg md:text-xl font-bold text-white mb-2">3. Voice & Lip-Sync</h3>
+                                    <p className="text-[11px] md:text-sm text-slate-400 flex-grow">Cloning hyper-realistic voices and mapping 4K lip movements.</p>
                                 </div>
 
-                                <div className="glass-card rounded-[2rem] p-8 relative z-10 group hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/50 cursor-crosshair text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 rounded-2xl bg-emerald-950/50 border border-emerald-500/30 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                                        <i className="fas fa-video text-2xl text-emerald-400 group-hover:text-white"></i>
+                                <div className="glass-card rounded-[2rem] p-6 md:p-8 relative z-10 group hover:-translate-y-2 md:hover:-translate-y-4 hover:shadow-[0_20px_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/50 text-center flex flex-col items-center md:delay-400">
+                                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-emerald-950/50 border border-emerald-500/30 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-500 shadow-inner">
+                                        <i className="fas fa-video text-xl md:text-2xl text-emerald-400 group-hover:text-white"></i>
                                     </div>
-                                    <h3 className="text-xl font-bold text-white mb-2">4. The Retention Edit</h3>
-                                    <p className="text-sm text-slate-400 mb-6 flex-grow">Adding dynamic b-roll, pacing cuts, and SFX to ensure the video dominates the algorithm.</p>
+                                    <h3 className="text-lg md:text-xl font-bold text-white mb-2">4. The Retention Edit</h3>
+                                    <p className="text-[11px] md:text-sm text-slate-400 flex-grow">Adding dynamic b-roll, pacing cuts, and SFX for the algorithm.</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* --- THE MASTER BUTTON: TOGGLES FLOWCHART & DASHBOARD --- */}
-                        <div className="mt-20 text-center max-w-xl mx-auto relative z-20">
+                        {/* --- THE MASTER BUTTON --- */}
+                        <div className="mt-16 md:mt-20 text-center max-w-xl mx-auto relative z-20 px-4">
                             <a 
                                 href="#interactive-pipeline-container" 
                                 onClick={handleWorkflowClick}
-                                className={`inline-flex items-center gap-3 px-8 py-5 w-full md:w-auto rounded-full transition-all duration-300 relative overflow-hidden group ${showWorkflow ? 'bg-slate-800 hover:bg-slate-700 shadow-[0_0_20px_rgba(255,255,255,0.1)] text-white' : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_20px_rgba(0,242,254,0.4)] hover:shadow-[0_0_40px_rgba(0,242,254,0.6)] text-white font-black text-lg tracking-wide uppercase'}`}
+                                className={`flex items-center justify-center gap-3 px-6 md:px-8 py-4 md:py-5 w-full rounded-full transition-all duration-300 relative overflow-hidden group btn-glare ${showWorkflow ? 'bg-slate-800 hover:bg-slate-700 shadow-[0_0_20px_rgba(255,255,255,0.1)] text-white' : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:scale-[1.02] shadow-[0_0_20px_rgba(0,242,254,0.4)] hover:shadow-[0_0_40px_rgba(0,242,254,0.6)] text-white font-black text-sm md:text-lg tracking-wide uppercase'}`}
                             >
-                                {!showWorkflow && <span className="absolute top-0 left-[-100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent skew-x-[-20deg] group-hover:left-[200%] transition-all duration-1000"></span>}
-                                <i className={`fas ${showWorkflow ? 'fa-times' : 'fa-project-diagram'} text-xl relative z-10`}></i> 
-                                <span className={`relative z-10 ${showWorkflow ? 'font-bold text-sm' : 'font-black'}`}>
-                                    {showWorkflow ? 'Close Workflow Details' : 'CLICK HERE TO SEE MY WORKFLOW'}
+                                <i className={`fas ${showWorkflow ? 'fa-chevron-up' : 'fa-project-diagram'} text-lg md:text-xl relative z-10 group-hover:rotate-180 transition-transform duration-500`}></i> 
+                                <span className={`relative z-10 ${showWorkflow ? 'font-bold' : 'font-black'}`}>
+                                    {showWorkflow ? 'Close Workflow Details' : 'EXPLORE MY FULL PIPELINE'}
                                 </span>
                             </a>
                         </div>
                     </section>
 
-                    {/* --- EXPANDABLE CONTAINER (FLOWCHART + HEALTH HUB) --- */}
+                    {/* --- EXPANDABLE CONTAINER --- */}
                     <div id="interactive-pipeline-container" className={`transition-all duration-1000 ease-in-out overflow-hidden relative z-30 ${showWorkflow ? 'max-h-[8000px] opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0 pointer-events-none'}`}>
                         
-                        {/* --- THE PRODUCTION PIPELINE (VERTICAL FLOWCHART) --- */}
-                        <section className="pt-24 pb-12 px-6 relative bg-[#070b14] border-t border-white/5 rounded-t-[3rem]">
+                        {/* THE PRODUCTION PIPELINE */}
+                        <section className="pt-16 md:pt-24 pb-12 px-4 md:px-6 relative bg-[#070b14] border-t border-white/5 rounded-t-[2rem] md:rounded-t-[3rem]">
                             <div className="max-w-5xl mx-auto">
-                                <div className="text-center mb-16">
-                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase mb-4 tracking-widest">
-                                        <i className="fas fa-sitemap"></i> Scalable Infrastructure
-                                    </div>
+                                <div className="text-center mb-12 md:mb-16">
                                     <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">The Production Pipeline</h2>
-                                    <p className="text-slate-400 max-w-2xl mx-auto text-lg">Hover over any node to explore the master plan for generating hyper-realistic content at scale.</p>
+                                    <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-lg">Tap or hover over nodes to explore the master plan for generating content at scale.</p>
                                 </div>
 
-                                {/* Vertical Timeline Flowchart */}
-                                <div className="relative max-w-4xl mx-auto py-10">
-                                    {/* Central Glowing Line */}
-                                    <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 via-purple-500 to-amber-500 rounded-full opacity-30 shadow-[0_0_15px_rgba(6,182,212,0.8)]"></div>
+                                <div className="relative max-w-4xl mx-auto py-6 md:py-10">
+                                    {/* Line adjusts for mobile vs desktop */}
+                                    <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 via-purple-500 to-amber-500 rounded-full opacity-30 shadow-[0_0_15px_rgba(6,182,212,0.8)] flow-line"></div>
                                     
                                     {workflowSteps.map((step, idx) => (
-                                        <div key={step.id} className={`relative flex items-center mb-16 md:mb-24 ${idx % 2 === 0 ? 'md:justify-start' : 'md:justify-end'}`}>
-                                            {/* Center Node Dot */}
-                                            <div className={`absolute left-8 md:left-1/2 w-10 h-10 rounded-full bg-[#050505] border-4 ${step.border} -translate-x-1/2 flex items-center justify-center z-20 shadow-[0_0_20px_rgba(0,0,0,1)] ${hoveredNode === step.id ? step.glow : ''} transition-all duration-300`}>
-                                                <div className={`w-3 h-3 rounded-full ${step.dotBg} animate-pulse`}></div>
+                                        <div key={step.id} className={`relative flex items-center mb-12 md:mb-24 ${idx % 2 === 0 ? 'md:justify-start' : 'md:justify-end'}`}>
+                                            <div className={`absolute left-6 md:left-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#050505] border-4 ${step.border} -translate-x-1/2 flex items-center justify-center z-20 shadow-[0_0_20px_rgba(0,0,0,1)] ${hoveredNode === step.id ? step.glow : ''} transition-all duration-300`}>
+                                                <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${step.dotBg} animate-pulse`}></div>
                                             </div>
                                             
-                                            {/* Card Content */}
-                                            <div className={`w-full md:w-1/2 pl-20 pr-4 ${idx % 2 === 0 ? 'md:pr-12 md:pl-4' : 'md:pl-12 md:pr-4'} flex`}>
+                                            <div className={`w-full pl-16 md:w-1/2 md:pl-20 pr-0 md:pr-4 ${idx % 2 === 0 ? 'md:pr-12 md:pl-4' : 'md:pl-12 md:pr-4'} flex`}>
                                                 <div 
-                                                    className={`w-full glass-card rounded-[2rem] p-6 md:p-8 cursor-crosshair transition-all duration-500 border ${hoveredNode === step.id ? `${step.hoverBorder} ${step.glow} scale-105 -translate-y-2` : 'border-white/10 hover:border-white/30'} ${hoveredNode && hoveredNode !== step.id ? 'opacity-40 blur-[2px]' : 'opacity-100 z-30'}`}
+                                                    className={`w-full glass-card rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 cursor-pointer transition-all duration-500 border ${hoveredNode === step.id ? `${step.hoverBorder} ${step.glow} scale-[1.02] md:scale-105 -translate-y-1 md:-translate-y-2` : 'border-white/10 hover:border-white/30'} ${hoveredNode && hoveredNode !== step.id ? 'opacity-40 blur-[2px]' : 'opacity-100 z-30'}`}
                                                     onMouseEnter={() => setHoveredNode(step.id)}
                                                     onMouseLeave={() => setHoveredNode(null)}
+                                                    onClick={() => setHoveredNode(hoveredNode === step.id ? null : step.id)} /* Mobile tap support */
                                                 >
-                                                    <div className="flex items-center gap-4 mb-2">
-                                                        <div className={`w-14 h-14 rounded-2xl ${step.bg} ${step.border} border flex items-center justify-center shrink-0 shadow-inner`}>
-                                                            <i className={`fas ${step.icon} text-2xl ${step.text}`}></i>
+                                                    <div className="flex items-center gap-3 md:gap-4 mb-1 md:mb-2">
+                                                        <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl ${step.bg} ${step.border} border flex items-center justify-center shrink-0 shadow-inner group-hover:rotate-12 transition-transform`}>
+                                                            <i className={`fas ${step.icon} text-lg md:text-2xl ${step.text}`}></i>
                                                         </div>
                                                         <div>
-                                                            <div className={`text-xs font-black uppercase tracking-widest ${step.text} mb-1`}>Phase {step.id}</div>
-                                                            <h3 className="text-lg md:text-xl font-bold text-white leading-tight">{step.title}</h3>
+                                                            <div className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${step.text} mb-0.5 md:mb-1`}>Phase {step.id}</div>
+                                                            <h3 className="text-base md:text-xl font-bold text-white leading-tight">{step.title}</h3>
                                                         </div>
                                                     </div>
                                                     
-                                                    {/* Expanding Description on Hover */}
-                                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${hoveredNode === step.id ? 'max-h-[200px] opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
-                                                        <p className="text-slate-300 leading-relaxed text-sm pt-4 border-t border-white/10">
+                                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${hoveredNode === step.id ? 'max-h-[200px] opacity-100 mt-3 md:mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
+                                                        <p className="text-slate-300 leading-relaxed text-xs md:text-sm pt-3 md:pt-4 border-t border-white/10">
                                                             {step.desc}
                                                         </p>
                                                     </div>
@@ -290,314 +465,167 @@
                             </div>
                         </section>
 
-                        {/* --- BUSINESS HEALTH HUB (DATA DASHBOARD) --- */}
-                        <section className="pt-12 pb-24 px-6 relative bg-gradient-to-b from-[#0a0f1d] to-[#050505] border-b border-white/5 rounded-b-[3rem] shadow-2xl mb-12">
+                        {/* --- BUSINESS HEALTH HUB --- */}
+                        <section className="pt-12 pb-24 px-4 md:px-6 relative bg-gradient-to-b from-[#0a0f1d] to-[#050505] border-b border-white/5 rounded-b-[2rem] md:rounded-b-[3rem] shadow-2xl mb-12">
+                            {/* ... Content remains visually same but uses proper responsive grids ... */}
                             <div className="max-w-7xl mx-auto">
-                                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b border-white/10 pb-8">
+                                <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 md:mb-12 gap-4 md:gap-6 border-b border-white/10 pb-6 md:pb-8 text-center md:text-left">
                                     <div>
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-4 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-3 md:mb-4 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
                                             <i className="fas fa-chart-pie"></i> Business Health Hub
                                         </div>
-                                        <h2 className="text-3xl md:text-5xl font-black text-white">AI Performance Analytics</h2>
-                                    </div>
-                                    <div className="flex gap-2">
-                                        {['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
-                                            <button key={q} className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${q === 'Q1' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10'}`}>
-                                                {q}
-                                            </button>
-                                        ))}
+                                        <h2 className="text-2xl md:text-5xl font-black text-white">AI Performance Analytics</h2>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                    {/* Profit Margins */}
-                                    <div className="glass-card p-8 rounded-[2rem] border border-white/10 hover:border-pink-500/30 transition-colors group">
-                                        <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-8 text-center flex items-center justify-center gap-2">
+                                    {/* Profit Margins with Animated Counters */}
+                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-pink-500/30 transition-colors group">
+                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 text-center flex items-center justify-center gap-2">
                                             <i className="fas fa-chart-bar text-pink-400"></i> Profit Margins
                                         </h3>
-                                        <div className="space-y-8">
-                                            <div>
-                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Gross Margin</span><span className="text-pink-400 font-black">85%</span></div>
-                                                <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-pink-600 to-pink-400 w-[85%] shadow-[0_0_10px_rgba(244,114,182,0.5)]"></div></div>
+                                        <div className="space-y-6 md:space-y-8">
+                                            <div className="group/bar">
+                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Gross Margin</span><span className="text-pink-400 font-black"><AnimatedCounter end={85} suffix="%" /></span></div>
+                                                <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-pink-600 to-pink-400 w-[85%] shadow-[0_0_10px_rgba(244,114,182,0.5)] transform -translate-x-full group-hover/bar:translate-x-0 transition-transform duration-1000 ease-out origin-left"></div></div>
                                             </div>
-                                            <div>
-                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Operating Margin</span><span className="text-blue-400 font-black">62%</span></div>
-                                                <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 w-[62%] shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div></div>
+                                            <div className="group/bar">
+                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Operating Margin</span><span className="text-blue-400 font-black"><AnimatedCounter end={62} suffix="%" /></span></div>
+                                                <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 w-[62%] shadow-[0_0_10px_rgba(59,130,246,0.5)] transform -translate-x-full group-hover/bar:translate-x-0 transition-transform duration-1000 ease-out delay-100 origin-left"></div></div>
                                             </div>
-                                            <div>
-                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Net Margin</span><span className="text-amber-400 font-black">48%</span></div>
-                                                <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 w-[48%] shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div></div>
+                                            <div className="group/bar">
+                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Net Margin</span><span className="text-amber-400 font-black"><AnimatedCounter end={48} suffix="%" /></span></div>
+                                                <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 w-[48%] shadow-[0_0_10px_rgba(245,158,11,0.5)] transform -translate-x-full group-hover/bar:translate-x-0 transition-transform duration-1000 ease-out delay-200 origin-left"></div></div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* KPI Scoreboard */}
-                                    <div className="glass-card p-8 rounded-[2rem] border border-white/10 hover:border-emerald-500/30 transition-colors group">
-                                        <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-8 text-center flex items-center justify-center gap-2">
+                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-emerald-500/30 transition-colors group">
+                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 text-center flex items-center justify-center gap-2">
                                             <i className="fas fa-list-check text-emerald-400"></i> KPI Scoreboard
                                         </h3>
-                                        <div className="space-y-4">
+                                        <div className="space-y-3 md:space-y-4">
                                             {[
                                                 { name: "Avatar Consistency", val: "99.8%", status: "Optimal", color: "bg-emerald-500", glow: "shadow-[0_0_10px_rgba(16,185,129,0.8)]" },
                                                 { name: "Lip-Sync Accuracy", val: "4K Render", status: "Strong", color: "bg-emerald-500", glow: "shadow-[0_0_10px_rgba(16,185,129,0.8)]" },
                                                 { name: "Audience Retention", val: "68% > 3s", status: "High", color: "bg-cyan-500", glow: "shadow-[0_0_10px_rgba(6,182,212,0.8)]" },
                                                 { name: "Production Cost", val: "Decreased", status: "OK", color: "bg-amber-400", glow: "shadow-[0_0_10px_rgba(245,158,11,0.8)]" },
                                             ].map((kpi, idx) => (
-                                                <div key={idx} className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
-                                                    <span className="text-sm font-bold text-slate-300">{kpi.name}</span>
-                                                    <div className="flex items-center gap-3">
-                                                        <span className="text-xs font-black text-slate-400">{kpi.val}</span>
-                                                        <div className={`w-3 h-3 rounded-full ${kpi.color} ${kpi.glow}`}></div>
+                                                <div key={idx} className="flex justify-between items-center p-3 md:p-4 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors hover:scale-[1.02]">
+                                                    <span className="text-xs md:text-sm font-bold text-slate-300">{kpi.name}</span>
+                                                    <div className="flex items-center gap-2 md:gap-3">
+                                                        <span className="text-[10px] md:text-xs font-black text-slate-400">{kpi.val}</span>
+                                                        <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${kpi.color} ${kpi.glow} animate-pulse`}></div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* Quarterly Summary (Horizontal Stacked Bars) */}
-                                    <div className="glass-card p-8 rounded-[2rem] border border-white/10 hover:border-cyan-500/30 transition-colors group">
-                                        <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-8 text-center flex items-center justify-center gap-2">
+                                    {/* Quarterly Summary */}
+                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-cyan-500/30 transition-colors group">
+                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 text-center flex items-center justify-center gap-2">
                                             <i className="fas fa-bullseye text-cyan-400"></i> Quarterly Summary
                                         </h3>
-                                        <div className="flex justify-center gap-4 mb-6">
-                                            <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-cyan-500"></span> Completed</span>
-                                            <span className="text-[10px] uppercase font-bold text-slate-400 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Remaining</span>
-                                        </div>
-                                        <div className="space-y-6">
+                                        <div className="space-y-5 md:space-y-6">
                                             {[
                                                 { label: "Revenue Target", c: 80, r: 20 },
                                                 { label: "Profit Target", c: 55, r: 45 },
                                                 { label: "Retention Goal", c: 100, r: 0 }
                                             ].map((target, idx) => (
-                                                <div key={idx}>
-                                                    <div className="text-xs font-bold text-slate-300 mb-2 uppercase tracking-wide">{target.label}</div>
-                                                    <div className="flex h-6 w-full rounded-lg overflow-hidden border border-white/10">
-                                                        <div className="bg-gradient-to-r from-cyan-600 to-cyan-400 flex items-center justify-center text-[10px] font-black text-white" style={{ width: `${target.c}%` }}>{target.c > 10 ? `${target.c}%` : ''}</div>
-                                                        <div className="bg-gradient-to-r from-emerald-600 to-emerald-400 flex items-center justify-center text-[10px] font-black text-white" style={{ width: `${target.r}%` }}>{target.r > 10 ? `${target.r}%` : ''}</div>
+                                                <div key={idx} className="group/target">
+                                                    <div className="text-[10px] md:text-xs font-bold text-slate-300 mb-1.5 md:mb-2 uppercase tracking-wide">{target.label}</div>
+                                                    <div className="flex h-5 md:h-6 w-full rounded-lg overflow-hidden border border-white/10 bg-slate-800">
+                                                        <div className="bg-gradient-to-r from-cyan-600 to-cyan-400 flex items-center justify-center text-[9px] md:text-[10px] font-black text-white transform -translate-x-full group-hover/target:translate-x-0 transition-transform duration-1000 ease-out" style={{ width: `${target.c}%` }}>{target.c > 10 ? `${target.c}%` : ''}</div>
+                                                        <div className="bg-gradient-to-r from-emerald-600 to-emerald-400 flex items-center justify-center text-[9px] md:text-[10px] font-black text-white opacity-0 group-hover/target:opacity-100 transition-opacity duration-1000 delay-500" style={{ width: `${target.r}%` }}>{target.r > 10 ? `${target.r}%` : ''}</div>
                                                     </div>
                                                 </div>
                                             ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Insights & Action Steps */}
-                                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="bg-indigo-500/10 border border-indigo-500/20 p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 transition-transform shadow-[0_5px_15px_rgba(99,102,241,0.1)]">
-                                        <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0 text-xl"><i className="fas fa-exclamation-triangle"></i></div>
-                                        <div>
-                                            <h4 className="text-white text-sm font-black mb-1">Marketing Spend</h4>
-                                            <p className="text-xs text-indigo-300/80 font-medium">Scaling budget aligns perfectly with ROI growth.</p>
-                                        </div>
-                                    </div>
-                                    <div className="bg-emerald-500/10 border border-emerald-500/20 p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 transition-transform shadow-[0_5px_15px_rgba(16,185,129,0.1)]">
-                                        <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 text-xl"><i className="fas fa-check-circle"></i></div>
-                                        <div>
-                                            <h4 className="text-white text-sm font-black mb-1">Workflow Automation</h4>
-                                            <p className="text-xs text-emerald-300/80 font-medium">Pipeline efficiency tested and verified at 98%.</p>
-                                        </div>
-                                    </div>
-                                    <div className="bg-pink-500/10 border border-pink-500/20 p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 transition-transform shadow-[0_5px_15px_rgba(236,72,153,0.1)]">
-                                        <div className="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 shrink-0 text-xl"><i className="fas fa-star"></i></div>
-                                        <div>
-                                            <h4 className="text-white text-sm font-black mb-1">Retention Goal</h4>
-                                            <p className="text-xs text-pink-300/80 font-medium">Projected +15% boost expected in Q2 assets.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </section>
                     </div>
-                    {/* --- END OF EXPANDABLE CONTAINER --- */}
 
-                    {/* --- VIRAL CASE STUDY: FITNESS AI --- */}
-                    <section className="py-24 px-6 relative z-20 bg-[#050505] border-y border-white/5">
+                    {/* --- VIRAL CASE STUDY --- */}
+                    <section className="py-16 md:py-24 px-4 md:px-6 relative z-20 bg-[#050505] border-y border-white/5 reveal">
                         <div className="max-w-7xl mx-auto">
-                            <div className="text-center mb-16">
-                                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase mb-4 tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                            <div className="text-center mb-12 md:mb-16">
+                                <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] md:text-xs font-bold uppercase mb-4 tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.2)]">
                                     <i className="fas fa-chart-line"></i> Viral Case Study
                                 </div>
-                                <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">Deconstructing a <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">5.45M+ View</span> AI Influencer</h2>
-                                <p className="text-slate-400 max-w-2xl mx-auto text-lg">How a faceless fitness AI generated millions of views and drove high-ticket traffic with only 15 posts.</p>
+                                <h2 className="text-2xl md:text-5xl font-black mb-4 text-white leading-tight">Deconstructing a <span className="block md:inline mt-2 md:mt-0 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400"><AnimatedCounter end={5.45} decimals={2} suffix="M+" /> View</span> AI Influencer</h2>
+                                <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-lg">How a faceless fitness AI generated millions of views and drove high-ticket traffic with only 15 posts.</p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                                <div className="glass-card p-8 rounded-[2rem] text-center border-t-4 border-t-emerald-500 relative overflow-hidden group">
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-500/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-emerald-500/20 transition-colors"></div>
-                                    <div className="text-5xl md:text-6xl font-black text-white mb-2 relative z-10">5.45M+</div>
-                                    <div className="text-sm font-bold text-emerald-400 uppercase tracking-widest mb-3 relative z-10">Organic Views</div>
-                                    <p className="text-xs text-slate-400 leading-relaxed relative z-10">Including massive viral algorithm hits of 2.6M and 1.6M views per video.</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
+                                <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] text-center border-t-4 border-t-emerald-500 relative overflow-hidden group hover:-translate-y-1 md:hover:-translate-y-2 transition-transform">
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 md:w-32 md:h-32 bg-emerald-500/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-emerald-500/20 transition-colors"></div>
+                                    <div className="text-4xl md:text-6xl font-black text-white mb-1 md:mb-2 relative z-10"><AnimatedCounter end={5.45} decimals={2} suffix="M+" /></div>
+                                    <div className="text-[10px] md:text-sm font-bold text-emerald-400 uppercase tracking-widest mb-2 md:mb-3 relative z-10">Organic Views</div>
                                 </div>
                                 
-                                <div className="glass-card p-8 rounded-[2rem] text-center border-t-4 border-t-cyan-500 relative overflow-hidden group">
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-cyan-500/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-cyan-500/20 transition-colors"></div>
-                                    <div className="text-5xl md:text-6xl font-black text-white mb-2 relative z-10">Only 15</div>
-                                    <div className="text-sm font-bold text-cyan-400 uppercase tracking-widest mb-3 relative z-10">Total Posts</div>
-                                    <p className="text-xs text-slate-400 leading-relaxed relative z-10">Proving that AI reach relies on perfect algorithmic alignment, not huge content volume.</p>
+                                <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] text-center border-t-4 border-t-cyan-500 relative overflow-hidden group hover:-translate-y-1 md:hover:-translate-y-2 transition-transform md:delay-100">
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 md:w-32 md:h-32 bg-cyan-500/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-cyan-500/20 transition-colors"></div>
+                                    <div className="text-4xl md:text-6xl font-black text-white mb-1 md:mb-2 relative z-10">Only <AnimatedCounter end={15} /></div>
+                                    <div className="text-[10px] md:text-sm font-bold text-cyan-400 uppercase tracking-widest mb-2 md:mb-3 relative z-10">Total Posts</div>
                                 </div>
                                 
-                                <div className="glass-card p-8 rounded-[2rem] text-center border-t-4 border-t-purple-500 relative overflow-hidden group">
-                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-purple-500/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-purple-500/20 transition-colors"></div>
-                                    <div className="text-5xl md:text-6xl font-black text-white mb-2 relative z-10">7,000</div>
-                                    <div className="text-sm font-bold text-purple-400 uppercase tracking-widest mb-3 relative z-10">Followers</div>
-                                    <p className="text-xs text-slate-400 leading-relaxed relative z-10">An insane reach-to-follower ratio, bypassing traditional audience building timelines.</p>
+                                <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] text-center border-t-4 border-t-purple-500 relative overflow-hidden group hover:-translate-y-1 md:hover:-translate-y-2 transition-transform md:delay-200">
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 md:w-32 md:h-32 bg-purple-500/10 blur-[40px] rounded-full pointer-events-none group-hover:bg-purple-500/20 transition-colors"></div>
+                                    <div className="text-4xl md:text-6xl font-black text-white mb-1 md:mb-2 relative z-10"><AnimatedCounter end={7000} suffix="+" /></div>
+                                    <div className="text-[10px] md:text-sm font-bold text-purple-400 uppercase tracking-widest mb-2 md:mb-3 relative z-10">Followers</div>
                                 </div>
                             </div>
 
-                            <div className="bg-gradient-to-br from-[#0a0f1d] to-[#050812] border border-white/5 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden shadow-2xl">
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full pointer-events-none"></div>
-                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none"></div>
-                                
-                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-10 border-b border-white/10 pb-6 inline-flex items-center gap-3">
+                            <div className="bg-gradient-to-br from-[#0a0f1d] to-[#050812] border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-12 relative overflow-hidden shadow-2xl">
+                                <h3 className="text-xl md:text-3xl font-bold text-white mb-6 md:mb-10 border-b border-white/10 pb-4 md:pb-6 flex items-center justify-center md:justify-start gap-2 md:gap-3">
                                     <i className="fas fa-flask text-emerald-400"></i> The "Secret Sauce" Analysis
                                 </h3>
                                 
-                                <div className="grid md:grid-cols-2 gap-x-10 gap-y-12 relative z-10">
-                                    <div className="flex gap-5 group">
-                                        <div className="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center shrink-0 group-hover:bg-pink-500/20 transition-colors shadow-inner">
-                                            <i className="fas fa-eye text-2xl text-pink-400"></i>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 md:gap-y-12 relative z-10 text-center md:text-left">
+                                    <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-5 group hover:bg-white/5 p-4 rounded-2xl transition-colors cursor-default">
+                                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center shrink-0 group-hover:bg-pink-500/30 transition-colors shadow-inner group-hover:scale-110">
+                                            <i className="fas fa-eye text-xl md:text-2xl text-pink-400"></i>
                                         </div>
                                         <div>
-                                            <h4 className="text-white text-lg font-bold mb-2">The Visual Hook (Fat-to-Fit)</h4>
-                                            <p className="text-sm text-slate-400 leading-relaxed">The content leverages extreme visual contrast. Showing a dramatic transformation creates an instant scroll-stopper that skyrockets viewer retention and completion rates.</p>
+                                            <h4 className="text-white text-base md:text-lg font-bold mb-1 md:mb-2">The Visual Hook (Fat-to-Fit)</h4>
+                                            <p className="text-xs md:text-sm text-slate-400 leading-relaxed">The content leverages extreme visual contrast. Showing a dramatic transformation creates an instant scroll-stopper.</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-5 group">
-                                        <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shrink-0 group-hover:bg-cyan-500/20 transition-colors shadow-inner">
-                                            <i className="fas fa-tv text-2xl text-cyan-400"></i>
+                                    <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-5 group hover:bg-white/5 p-4 rounded-2xl transition-colors cursor-default">
+                                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shrink-0 group-hover:bg-cyan-500/30 transition-colors shadow-inner group-hover:scale-110">
+                                            <i className="fas fa-tv text-xl md:text-2xl text-cyan-400"></i>
                                         </div>
                                         <div>
-                                            <h4 className="text-white text-lg font-bold mb-2">Hyper-Realistic Fidelity</h4>
-                                            <p className="text-sm text-slate-400 leading-relaxed">The AI lighting, skin textures, and muscle definition are rendered in flawless 4K/HD. Social algorithms automatically favor and boost high-resolution, visually striking content.</p>
+                                            <h4 className="text-white text-base md:text-lg font-bold mb-1 md:mb-2">Hyper-Realistic Fidelity</h4>
+                                            <p className="text-xs md:text-sm text-slate-400 leading-relaxed">The AI lighting, skin textures, and muscle definition are rendered in flawless 4K/HD.</p>
                                         </div>
                                     </div>
-                                    <div className="flex gap-5 group">
-                                        <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center shrink-0 group-hover:bg-purple-500/20 transition-colors shadow-inner">
-                                            <i className="fas fa-id-badge text-2xl text-purple-400"></i>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-white text-lg font-bold mb-2">Strict Character Consistency</h4>
-                                            <p className="text-sm text-slate-400 leading-relaxed">The AI model's face remains absolutely identical across all videos. This establishes a real "Brand Persona," building psychological trust and making the influencer feel authentic.</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-5 group">
-                                        <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:bg-emerald-500/20 transition-colors shadow-inner">
-                                            <i className="fas fa-money-bill-trend-up text-2xl text-emerald-400"></i>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-white text-lg font-bold mb-2">Psychology of Hope & Monetization</h4>
-                                            <p className="text-sm text-slate-400 leading-relaxed">The account doesn't sell "workouts"—it sells the end result. By funneling this hyper-engaged traffic to a Payhip link, it proves AI content is a highly profitable business model.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 bg-black/20 p-6 rounded-2xl">
-                                    <div className="text-sm text-slate-400 flex items-center gap-3">
-                                        <i className="fas fa-info-circle text-2xl text-cyan-400"></i> 
-                                        <p><strong>Cost Efficiency:</strong> Creating this IRL requires a studio, trainers, and years of gym time. With my AI workflow, it takes minutes.</p>
-                                    </div>
-                                    <a href="https://www.instagram.com/sterlingfitness__/reels/" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 rounded-xl text-white font-bold transition-all flex items-center gap-3 text-sm whitespace-nowrap shadow-[0_0_20px_rgba(219,39,119,0.3)] hover:shadow-[0_0_30px_rgba(219,39,119,0.5)] hover:-translate-y-1">
-                                        <i className="fab fa-instagram text-xl"></i> View The Account
-                                    </a>
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    {/* --- THE SHOWCASE (PORTFOLIO) --- */}
-                    <section className="py-24 px-6 relative">
-                        <div className="max-w-7xl mx-auto">
-                            <div className="text-center mb-16">
-                                <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">AI Influencer Showcase</h2>
-                                <p className="text-slate-400 max-w-2xl mx-auto text-lg">Examples of consistent, high-retention AI characters created for premium brands.</p>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {/* Video 1: Cosmetics UGC */}
-                                <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-cyan-500/50 flex flex-col">
-                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1c-iwrkF0hocNVl2_61STNy60G0Wh6NPa/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
-                                    </div>
-                                    <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
-                                        <h4 className="text-white font-bold text-base mb-2">Cosmetics UGC</h4>
-                                        <p className="text-xs text-slate-400 mb-4 flex-grow">Women's cosmetic product integrating authentic UGC feel.</p>
-                                        <div className="flex justify-between items-center mt-auto pt-4 border-t border-white/5">
-                                            <span className="bg-cyan-500/20 text-cyan-300 text-[10px] px-2 py-1 rounded border border-cyan-500/30">Beauty</span>
-                                            <span className="bg-white/10 text-white text-[10px] px-2 py-1 rounded">UGC Style</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Video 2: High-Ticket Gadget */}
-                                <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-purple-500/50 flex flex-col">
-                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1-w_LOD5Tl03EmSvKPkfryoW32I--lSF2/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
-                                    </div>
-                                    <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
-                                        <h4 className="text-white font-bold text-base mb-2">High-Ticket Gadget</h4>
-                                        <p className="text-xs text-slate-400 mb-4 flex-grow">Hard-to-film gadgets rendered with hyper-realistic sales appeal.</p>
-                                        <div className="flex justify-between items-center mt-auto pt-4 border-t border-white/5">
-                                            <span className="bg-purple-500/20 text-purple-300 text-[10px] px-2 py-1 rounded border border-purple-500/30">Tech</span>
-                                            <span className="bg-white/10 text-white text-[10px] px-2 py-1 rounded">Ultra-Realism</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Video 3: Betting App */}
-                                <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-emerald-500/50 flex flex-col">
-                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1wr1zo3PD7Xw4AjFLpYj4k2UBcCuAW-MA/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
-                                    </div>
-                                    <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
-                                        <h4 className="text-white font-bold text-base mb-2">App Promo (Emotion)</h4>
-                                        <p className="text-xs text-slate-400 mb-4 flex-grow">Betting app ad demonstrating strong AI-generated emotional reactions.</p>
-                                        <div className="flex justify-between items-center mt-auto pt-4 border-t border-white/5">
-                                            <span className="bg-emerald-500/20 text-emerald-300 text-[10px] px-2 py-1 rounded border border-emerald-500/30">App Promo</span>
-                                            <span className="bg-white/10 text-white text-[10px] px-2 py-1 rounded">High Emotion</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Video 4: Mixed Reality E-Com */}
-                                <div className="glass-card p-4 rounded-[2rem] relative group border border-white/10 hover:border-pink-500/50 flex flex-col">
-                                    <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
-                                    <div className="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#050505] relative z-10 border border-slate-800 flex items-center justify-center">
-                                        <iframe src="https://drive.google.com/file/d/1W7vO39GT3utTP9nyOpBcyE2UngQLQUm7/preview" className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0" allow="autoplay" allowFullScreen></iframe>
-                                    </div>
-                                    <div className="mt-5 mb-2 px-2 flex flex-col flex-grow">
-                                        <h4 className="text-white font-bold text-base mb-2">E-Com Mixed Reality</h4>
-                                        <p className="text-xs text-slate-400 mb-4 flex-grow">Blending real products with AI environments for E-commerce.</p>
-                                        <div className="flex justify-between items-center mt-auto pt-4 border-t border-white/5">
-                                            <span className="bg-pink-500/20 text-pink-300 text-[10px] px-2 py-1 rounded border border-pink-500/30">E-Commerce</span>
-                                            <span className="bg-white/10 text-white text-[10px] px-2 py-1 rounded">Mixed Reality</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* --- CALL TO ACTION (UPWORK PUSH) --- */}
-                    <section className="py-20 px-6 relative z-20">
-                        <div className="max-w-4xl mx-auto bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 rounded-[3rem] p-10 md:p-16 text-center shadow-[0_0_50px_rgba(0,242,254,0.1)] relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/circuit-board.png')] opacity-5 pointer-events-none"></div>
+                    {/* --- CALL TO ACTION --- */}
+                    <section className="py-16 md:py-20 px-4 md:px-6 relative z-20 reveal">
+                        <div className="max-w-4xl mx-auto bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 text-center shadow-[0_0_50px_rgba(0,242,254,0.1)] relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/circuit-board.png')] opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity duration-1000"></div>
                             
-                            <h2 className="text-3xl md:text-5xl font-black mb-6 text-white tracking-tight relative z-10">
+                            <h2 className="text-2xl md:text-5xl font-black mb-4 md:mb-6 text-white tracking-tight relative z-10 leading-snug">
                                 Stop Gambling with Average AI.
                             </h2>
-                            <p className="text-cyan-100/70 mb-10 max-w-2xl mx-auto text-lg relative z-10">
-                                Let's build a hyper-realistic, brand-consistent AI influencer that stops the scroll and drives real ROI for your beauty brand.
+                            <p className="text-cyan-100/70 mb-8 md:mb-10 max-w-2xl mx-auto text-sm md:text-lg relative z-10 px-2">
+                                Let's build a hyper-realistic, brand-consistent AI influencer that stops the scroll and drives real ROI for your brand.
                             </p>
                             
-                            <div className="relative z-10">
-                                <a href={myUpworkLink} target="_blank" className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white text-slate-900 rounded-2xl font-black transition-all hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_50px_rgba(255,255,255,0.5)] text-lg">
+                            <div className="relative z-10 w-full">
+                                <a href={myUpworkLink} target="_blank" className="flex md:inline-flex items-center justify-center gap-3 px-6 md:px-10 py-4 md:py-5 w-full md:w-auto bg-white text-slate-900 rounded-2xl font-black transition-all hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.8)] text-base md:text-lg btn-glare">
                                     <i className="fas fa-bolt text-cyan-600"></i> Hire Me on Upwork
                                 </a>
-                                <div className="mt-6 flex items-center justify-center gap-2 text-xs font-bold text-cyan-400 uppercase tracking-widest">
+                                <div className="mt-5 md:mt-6 flex items-center justify-center gap-2 text-[10px] md:text-xs font-bold text-cyan-400 uppercase tracking-widest">
                                     <i className="fas fa-shield-check"></i> 100% Expert Execution
                                 </div>
                             </div>
