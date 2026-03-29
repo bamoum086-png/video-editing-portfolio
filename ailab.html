@@ -171,6 +171,25 @@
             animation: redGlow 2s infinite ease-in-out;
         }
 
+        /* New simplified dashboard animations */
+        @keyframes fillBar {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .animate-fill-bar {
+            animation: fillBar 1.5s ease-out forwards;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate-slide-in {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+
         /* Mobile Scroll UX */
         .hide-scrollbar {
             -ms-overflow-style: none;
@@ -188,7 +207,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        const AnimatedCounter = ({ end, suffix = "", duration = 2000, decimals = 0 }) => {
+        const AnimatedCounter = ({ end, suffix = "", prefix = "", duration = 2000, decimals = 0 }) => {
             const [count, setCount] = useState(0);
             const ref = useRef(null);
             const [isVisible, setIsVisible] = useState(false);
@@ -224,7 +243,7 @@
                 window.requestAnimationFrame(step);
             }, [isVisible, end, duration]);
 
-            return <span ref={ref}>{count.toFixed(decimals)}{suffix}</span>;
+            return <span ref={ref}>{prefix}{count.toFixed(decimals)}{suffix}</span>;
         };
 
         const App = () => {
@@ -237,8 +256,9 @@
             // --- حالة اختيار النسخة للتحليل ---
             const [activeVariant, setActiveVariant] = useState(null);
             const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
+            const [playStatsAnim, setPlayStatsAnim] = useState(false); 
 
-            // بيانات النسخ الأربعة المُنتجة بالروابط الجديدة
+            // بيانات النسخ الأربعة المُنتجة
             const outputVariants = [
                 { id: 'v1', title: "Variant 01", vimeoId: "1178041937", hook: "71%", retention: "Steady", ctr: "4.2%", roas: "3.1x", color: "cyan" },
                 { id: 'v2', title: "Variant 02", vimeoId: "1178041915", hook: "65%", retention: "Spike", ctr: "5.1%", roas: "3.8x", color: "emerald" },
@@ -259,6 +279,23 @@
 
                 revealElements.forEach(el => revealObserver.observe(el));
                 return () => revealObserver.disconnect();
+            }, []);
+
+            useEffect(() => {
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        if (entries[0].isIntersecting) {
+                            setPlayStatsAnim(true);
+                            observer.disconnect();
+                        }
+                    },
+                    { threshold: 0.2 }
+                );
+                
+                const statsSection = document.getElementById('portfolio-metrics-section');
+                if (statsSection) observer.observe(statsSection);
+                
+                return () => observer.disconnect();
             }, []);
 
             const workflowSteps = [
@@ -303,14 +340,20 @@
 
                     {/* --- NAVIGATION --- */}
                     <nav className="fixed w-full z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 py-4 transition-all duration-300">
-                        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
                             <div className="flex items-center gap-3 group cursor-pointer">
                                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center font-black text-sm shadow-[0_0_15px_rgba(0,242,254,0.4)] group-hover:rotate-12 transition-transform">M</div>
                                 <span className="font-bold text-lg tracking-wide uppercase group-hover:text-cyan-400 transition-colors hidden sm:block">AI Lab</span>
                             </div>
-                            <a href={mainPortfolioUrl} className="flex items-center gap-2 px-4 md:px-5 py-2 rounded-full bg-white/5 border border-white/10 text-xs md:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 transition-all group hover:border-cyan-500/30">
-                                <i className="fas fa-arrow-left group-hover:-translate-x-1 transition-transform text-cyan-400"></i> Main Portfolio
-                            </a>
+                            
+                            <div className="flex items-center gap-2 md:gap-4">
+                                <a href={mainPortfolioUrl} className="flex items-center gap-2 px-3 md:px-5 py-1.5 md:py-2 rounded-full bg-white/5 border border-white/10 text-[10px] md:text-sm font-bold text-slate-300 hover:text-white hover:bg-white/10 transition-all group hover:border-cyan-500/30">
+                                    <i className="fas fa-arrow-left group-hover:-translate-x-1 transition-transform text-cyan-400"></i> <span className="hidden sm:inline">Portfolio</span>
+                                </a>
+                                <a href={myUpworkLink} target="_blank" className="flex items-center gap-2 px-4 md:px-6 py-1.5 md:py-2 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-500 text-[10px] md:text-sm font-black text-slate-900 hover:scale-105 transition-transform shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                                    Hire Me <i className="fas fa-bolt text-slate-800"></i>
+                                </a>
+                            </div>
                         </div>
                     </nav>
 
@@ -370,7 +413,6 @@
                             </div>
 
                             <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-8 md:pb-0 snap-x snap-mandatory hide-scrollbar px-6 md:px-0">
-                                
                                 {/* Video 1 */}
                                 <div className="w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 glass-card p-3 md:p-4 rounded-[2rem] relative group border border-white/10 hover:border-cyan-500/50 flex flex-col hover:-translate-y-2 transition-all duration-300">
                                     <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none"></div>
@@ -686,9 +728,9 @@
                             </section>
                         </div>
 
-                        {/* --- [RESTORED] BUSINESS HEALTH HUB (GENERAL DASHBOARD) --- */}
-                        <section className="pt-16 pb-24 px-4 md:px-6 relative bg-gradient-to-b from-[#0a0f1d] to-[#050505] rounded-b-[2rem] md:rounded-b-[3rem] shadow-2xl mb-12">
-                            <div className="max-w-7xl mx-auto">
+                        {/* --- [RESTORED] NEW CREATIVE BUSINESS HEALTH HUB --- */}
+                        <section id="portfolio-metrics-section" className="pt-16 pb-24 px-4 md:px-6 relative bg-gradient-to-b from-[#0a0f1d] to-[#050505] rounded-b-[2rem] md:rounded-b-[3rem] shadow-2xl mb-12 overflow-hidden">
+                            <div className="max-w-7xl mx-auto relative z-10">
                                 <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 md:mb-12 gap-4 md:gap-6 border-b border-white/10 pb-6 md:pb-8 text-center md:text-left">
                                     <div>
                                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-3 md:mb-4 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
@@ -698,7 +740,7 @@
                                     </div>
                                     <div className="flex gap-2">
                                         {['Q1', 'Q2', 'Q3', 'Q4'].map(q => (
-                                            <button key={q} className={`px-4 py-1.5 md:px-5 md:py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${q === 'Q1' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10'}`}>
+                                            <button key={q} className={`px-4 py-1.5 md:px-5 md:py-2 rounded-xl text-xs md:text-sm font-bold transition-all ${q === 'Q1' ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:scale-105' : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/10'}`}>
                                                 {q}
                                             </button>
                                         ))}
@@ -706,66 +748,93 @@
                                 </div>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                    {/* Profit Margins */}
-                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-pink-500/30 transition-colors group">
-                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 text-center flex items-center justify-center gap-2">
-                                            <i className="fas fa-chart-bar text-pink-400"></i> Profit Margins
-                                        </h3>
-                                        <div className="space-y-6 md:space-y-8">
-                                            <div className="group/bar">
-                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Gross Margin</span><span className="text-pink-400 font-black"><AnimatedCounter end={85} suffix="%" /></span></div>
-                                                <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-pink-600 to-pink-400 w-[85%] shadow-[0_0_10px_rgba(244,114,182,0.5)] transform -translate-x-full group-hover/bar:translate-x-0 transition-transform duration-1000 ease-out origin-left"></div></div>
+                                    
+                                    {/* 1. Creative Profit Margins */}
+                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-pink-500/50 transition-all duration-500 hover:-translate-y-2 group shadow-lg">
+                                        <div className="flex justify-between items-center mb-8">
+                                            <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                                <i className="fas fa-chart-bar text-pink-400 group-hover:animate-bounce"></i> Profit Margins
+                                            </h3>
+                                            <span className="text-pink-400 bg-pink-400/10 px-2 py-1 rounded-md text-[10px] font-bold">High Yield</span>
+                                        </div>
+                                        
+                                        <div className="space-y-6">
+                                            <div className="relative">
+                                                <div className="flex justify-between text-xs font-bold mb-2 z-10 relative"><span className="text-slate-300">Gross Margin</span><span className="text-pink-400 font-black"><AnimatedCounter end={85} suffix="%" /></span></div>
+                                                <div className="h-10 w-full bg-slate-800/50 rounded-xl overflow-hidden relative border border-white/5">
+                                                    {playStatsAnim && <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-pink-600/80 to-pink-400/80 shadow-[0_0_15px_rgba(244,114,182,0.6)] animate-fill-bar" style={{width: '85%'}}></div>}
+                                                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-stripes.png')] opacity-20 pointer-events-none"></div>
+                                                </div>
                                             </div>
-                                            <div className="group/bar">
-                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Operating Margin</span><span className="text-blue-400 font-black"><AnimatedCounter end={62} suffix="%" /></span></div>
-                                                <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-600 to-blue-400 w-[62%] shadow-[0_0_10px_rgba(59,130,246,0.5)] transform -translate-x-full group-hover/bar:translate-x-0 transition-transform duration-1000 ease-out delay-100 origin-left"></div></div>
+                                            <div className="relative">
+                                                <div className="flex justify-between text-xs font-bold mb-2 z-10 relative"><span className="text-slate-300">Operating Margin</span><span className="text-blue-400 font-black"><AnimatedCounter end={62} suffix="%" /></span></div>
+                                                <div className="h-8 w-full bg-slate-800/50 rounded-lg overflow-hidden relative border border-white/5">
+                                                    {playStatsAnim && <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-600/80 to-blue-400/80 shadow-[0_0_15px_rgba(59,130,246,0.6)] animate-fill-bar" style={{width: '62%', animationDelay: '200ms'}}></div>}
+                                                </div>
                                             </div>
-                                            <div className="group/bar">
-                                                <div className="flex justify-between text-xs font-bold mb-2"><span className="text-slate-400">Net Margin</span><span className="text-amber-400 font-black"><AnimatedCounter end={48} suffix="%" /></span></div>
-                                                <div className="h-2 md:h-3 w-full bg-slate-800 rounded-full overflow-hidden"><div className="h-full bg-gradient-to-r from-amber-600 to-amber-400 w-[48%] shadow-[0_0_10px_rgba(245,158,11,0.5)] transform -translate-x-full group-hover/bar:translate-x-0 transition-transform duration-1000 ease-out delay-200 origin-left"></div></div>
+                                            <div className="relative">
+                                                <div className="flex justify-between text-xs font-bold mb-2 z-10 relative"><span className="text-slate-300">Net Margin</span><span className="text-amber-400 font-black"><AnimatedCounter end={48} suffix="%" /></span></div>
+                                                <div className="h-8 w-full bg-slate-800/50 rounded-lg overflow-hidden relative border border-white/5">
+                                                    {playStatsAnim && <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-amber-600/80 to-amber-400/80 shadow-[0_0_15px_rgba(245,158,11,0.6)] animate-fill-bar" style={{width: '48%', animationDelay: '400ms'}}></div>}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* KPI Scoreboard */}
-                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-emerald-500/30 transition-colors group">
-                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 text-center flex items-center justify-center gap-2">
-                                            <i className="fas fa-list-check text-emerald-400"></i> KPI Scoreboard
+                                    {/* 2. KPI Scoreboard - Creative Layout */}
+                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-emerald-500/50 transition-all duration-500 hover:-translate-y-2 group shadow-lg">
+                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 flex items-center gap-2">
+                                            <i className="fas fa-list-check text-emerald-400 group-hover:rotate-12 transition-transform"></i> KPI Scoreboard
                                         </h3>
-                                        <div className="space-y-3 md:space-y-4">
+                                        <div className="grid grid-cols-2 gap-3 md:gap-4">
                                             {[
-                                                { name: "Avatar Consistency", val: "99.8%", status: "Optimal", color: "bg-emerald-500", glow: "shadow-[0_0_10px_rgba(16,185,129,0.8)]" },
-                                                { name: "Lip-Sync Accuracy", val: "4K Render", status: "Strong", color: "bg-emerald-500", glow: "shadow-[0_0_10px_rgba(16,185,129,0.8)]" },
-                                                { name: "Audience Retention", val: "68% > 3s", status: "High", color: "bg-cyan-500", glow: "shadow-[0_0_10px_rgba(6,182,212,0.8)]" },
-                                                { name: "Production Cost", val: "Decreased", status: "OK", color: "bg-amber-400", glow: "shadow-[0_0_10px_rgba(245,158,11,0.8)]" },
+                                                { name: "Consistency", val: "99.8%", status: "Optimal", color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
+                                                { name: "Lip-Sync", val: "4K Render", status: "Strong", color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
+                                                { name: "Retention", val: "68% > 3s", status: "High", color: "text-cyan-400", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
+                                                { name: "Cost", val: "Decreased", status: "OK", color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/20" },
                                             ].map((kpi, idx) => (
-                                                <div key={idx} className="flex justify-between items-center p-3 md:p-4 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors hover:scale-[1.02]">
-                                                    <span className="text-xs md:text-sm font-bold text-slate-300">{kpi.name}</span>
-                                                    <div className="flex items-center gap-2 md:gap-3">
-                                                        <span className="text-[10px] md:text-xs font-black text-slate-400">{kpi.val}</span>
-                                                        <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${kpi.color} ${kpi.glow} animate-pulse`}></div>
-                                                    </div>
+                                                <div key={idx} className={`p-4 ${kpi.bg} rounded-2xl border ${kpi.border} flex flex-col items-center justify-center text-center hover:scale-105 transition-transform ${playStatsAnim ? 'animate-slide-in' : 'opacity-0'}`} style={{ animationDelay: `${idx * 150}ms` }}>
+                                                    <span className={`text-xl md:text-2xl font-black ${kpi.color} mb-1 drop-shadow-md`}>{kpi.val}</span>
+                                                    <span className="text-[10px] md:text-xs font-bold text-slate-300 uppercase tracking-wider">{kpi.name}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* Quarterly Summary */}
-                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-cyan-500/30 transition-colors group">
-                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 text-center flex items-center justify-center gap-2">
-                                            <i className="fas fa-bullseye text-cyan-400"></i> Quarterly Summary
+                                    {/* 3. Quarterly Summary - Radar / Target Style */}
+                                    <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-2 group shadow-lg flex flex-col">
+                                        <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 flex items-center justify-between">
+                                            <span className="flex items-center gap-2"><i className="fas fa-bullseye text-cyan-400 group-hover:animate-pulse"></i> Quarterly Targets</span>
+                                            <span className="text-[10px] bg-white/10 px-2 py-1 rounded text-slate-300">Q1 Progress</span>
                                         </h3>
-                                        <div className="space-y-5 md:space-y-6">
+                                        
+                                        <div className="flex-grow flex flex-col justify-center space-y-6">
                                             {[
                                                 { label: "Revenue Target", c: 80, r: 20 },
                                                 { label: "Profit Target", c: 55, r: 45 },
                                                 { label: "Retention Goal", c: 100, r: 0 }
                                             ].map((target, idx) => (
-                                                <div key={idx} className="group/target">
-                                                    <div className="text-[10px] md:text-xs font-bold text-slate-300 mb-1.5 md:mb-2 uppercase tracking-wide">{target.label}</div>
-                                                    <div className="flex h-5 md:h-6 w-full rounded-lg overflow-hidden border border-white/10 bg-slate-800">
-                                                        <div className="bg-gradient-to-r from-cyan-600 to-cyan-400 flex items-center justify-center text-[9px] md:text-[10px] font-black text-white transform -translate-x-full group-hover/target:translate-x-0 transition-transform duration-1000 ease-out" style={{ width: `${target.c}%` }}>{target.c > 10 ? `${target.c}%` : ''}</div>
-                                                        <div className="bg-gradient-to-r from-emerald-600 to-emerald-400 flex items-center justify-center text-[9px] md:text-[10px] font-black text-white opacity-0 group-hover/target:opacity-100 transition-opacity duration-1000 delay-500" style={{ width: `${target.r}%` }}>{target.r > 10 ? `${target.r}%` : ''}</div>
+                                                <div key={idx} className="relative">
+                                                    <div className="flex justify-between items-end mb-2">
+                                                        <span className="text-[10px] md:text-xs font-bold text-slate-300 uppercase tracking-wide">{target.label}</span>
+                                                        <span className="text-[10px] font-black text-cyan-400"><AnimatedCounter end={target.c} suffix="%" /></span>
+                                                    </div>
+                                                    {/* Custom segmented progress bar */}
+                                                    <div className="flex gap-1 h-3 w-full">
+                                                        {[...Array(10)].map((_, i) => {
+                                                            const isActive = i < (target.c / 10);
+                                                            return (
+                                                                <div 
+                                                                    key={i} 
+                                                                    className={`flex-1 rounded-sm ${isActive ? 'bg-cyan-500 shadow-[0_0_5px_rgba(6,182,212,0.5)]' : 'bg-slate-800'} transition-all duration-300`}
+                                                                    style={{ 
+                                                                        opacity: playStatsAnim ? 1 : 0, 
+                                                                        transform: playStatsAnim ? 'scaleY(1)' : 'scaleY(0)',
+                                                                        transitionDelay: `${(idx * 200) + (i * 50)}ms` 
+                                                                    }}
+                                                                ></div>
+                                                            )
+                                                        })}
                                                     </div>
                                                 </div>
                                             ))}
@@ -773,7 +842,7 @@
                                     </div>
                                 </div>
 
-                                {/* Insights & Action Steps */}
+                                {/* Insights & Action Steps - Kept clean and elegant */}
                                 <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="bg-indigo-500/10 border border-indigo-500/20 p-5 rounded-2xl flex items-center gap-4 hover:-translate-y-1 transition-transform shadow-[0_5px_15px_rgba(99,102,241,0.1)]">
                                         <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0 text-xl"><i className="fas fa-exclamation-triangle"></i></div>
