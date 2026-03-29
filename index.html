@@ -22,6 +22,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: #030712;
             color: #f8fafc;
+            overflow-x: hidden; /* Prevent accidental side scrolling */
         }
         
         .text-gradient {
@@ -137,7 +138,12 @@
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
+        @keyframes laser-flow-v {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
         .animate-laser-flow { animation: laser-flow 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .animate-laser-v { animation: laser-flow-v 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
         
         /* أنيميشن المسح بالليزر لقسم الذكاء الاصطناعي */
         @keyframes laser-scan {
@@ -283,14 +289,14 @@
                     </div>
                 </div>
 
-                <!-- Main Headline -->
-                <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+                <!-- Main Headline (Responsive text scaling updated) -->
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
                     Turning Raw Footage into <br class="hidden md:block" />
                     <span class="text-gradient">Profitable Sales Engines</span>
                 </h1>
 
                 <!-- Value Proposition -->
-                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                <p class="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
                     With deep expertise in <strong>AI-powered workflows</strong>, I don't just cut clips—I engineer high-retention, conversion-driven content.
                 </p>
 
@@ -305,7 +311,7 @@
                 </div>
                 
                 <!-- The Creative Timeline Animation -->
-                <div class="flex flex-col items-center justify-center w-full max-w-lg md:max-w-2xl mx-auto px-12 sm:px-16 md:px-14 mb-20 mt-28 md:mt-36 relative z-0">
+                <div class="flex flex-col items-center justify-center w-full max-w-lg md:max-w-2xl mx-auto px-8 sm:px-12 md:px-14 mb-20 mt-28 md:mt-36 relative z-0">
                     <div class="relative w-full h-1.5 md:h-2 bg-slate-800 rounded-full">
                         <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 via-sky-400 to-cyan-400 rounded-full animate-progress-bar origin-left z-0"></div>
 
@@ -388,7 +394,7 @@
             </div>
         </header>
 
-        <!-- ACCORDION SECTIONS (تم نقلها للأعلى لتظهر فوراً بعد الهيرو) -->
+        <!-- ACCORDION SECTIONS -->
         <section id="portfolio-sections" class="px-6 pb-16 pt-8 md:pt-12">
             <div class="max-w-4xl mx-auto space-y-6">
 
@@ -417,7 +423,7 @@
                             <div class="bg-slate-900/40 p-5 md:p-8 rounded-[2.5rem] border border-slate-800 hover:border-purple-500/50 transition-all hover:shadow-[0_0_40px_rgba(168,85,247,0.15)] flex flex-col md:flex-row gap-8 md:gap-12 items-center group/card">
                                 
                                 <!-- Video Container with specific visual cues -->
-                                <div class="relative w-full max-w-[280px] shrink-0">
+                                <div class="relative w-full max-w-[280px] shrink-0 mx-auto md:mx-0">
                                     <div class="absolute -inset-2 bg-gradient-to-tr from-purple-600/20 to-pink-600/20 rounded-[2rem] blur-xl group-hover/card:opacity-100 opacity-50 transition-opacity duration-500"></div>
                                     <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-slate-700/50 relative z-10 group-hover/card:-translate-y-2 transition-transform duration-500">
                                         <iframe src="https://player.vimeo.com/video/1177665327?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" class="absolute top-0 left-0 w-full h-full" title="GCC Fitness Startup"></iframe>
@@ -460,7 +466,7 @@
                             <!-- Video 2: Luxury Watch Brand (Reversed Layout) -->
                             <div class="bg-slate-900/40 p-5 md:p-8 rounded-[2.5rem] border border-slate-800 hover:border-amber-500/50 transition-all hover:shadow-[0_0_40px_rgba(245,158,11,0.15)] flex flex-col md:flex-row-reverse gap-8 md:gap-12 items-center group/card">
                                 
-                                <div class="relative w-full max-w-[280px] shrink-0">
+                                <div class="relative w-full max-w-[280px] shrink-0 mx-auto md:mx-0">
                                     <div class="absolute -inset-2 bg-gradient-to-tr from-amber-600/20 to-orange-600/20 rounded-[2rem] blur-xl group-hover/card:opacity-100 opacity-50 transition-opacity duration-500"></div>
                                     <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-slate-700/50 relative z-10 group-hover/card:-translate-y-2 transition-transform duration-500">
                                         <iframe src="https://player.vimeo.com/video/1177665492?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" class="absolute top-0 left-0 w-full h-full" title="Global Luxury Watches"></iframe>
@@ -501,7 +507,7 @@
                             <!-- Video 3: Medical Product -->
                             <div class="bg-slate-900/40 p-5 md:p-8 rounded-[2.5rem] border border-slate-800 hover:border-pink-500/50 transition-all hover:shadow-[0_0_40px_rgba(236,72,153,0.15)] flex flex-col md:flex-row gap-8 md:gap-12 items-center group/card">
                                 
-                                <div class="relative w-full max-w-[280px] shrink-0">
+                                <div class="relative w-full max-w-[280px] shrink-0 mx-auto md:mx-0">
                                     <div class="absolute -inset-2 bg-gradient-to-tr from-pink-600/20 to-rose-600/20 rounded-[2rem] blur-xl group-hover/card:opacity-100 opacity-50 transition-opacity duration-500"></div>
                                     <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-black shadow-2xl border border-slate-700/50 relative z-10 group-hover/card:-translate-y-2 transition-transform duration-500">
                                         <iframe src="https://player.vimeo.com/video/1177665423?title=0&byline=0&portrait=0&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" class="absolute top-0 left-0 w-full h-full" title="Medical Product"></iframe>
@@ -673,7 +679,7 @@
                     </div>
                 </details>
 
-                <!-- 3. Featured Case Study Accordion -->
+                <!-- 3. Featured Case Study Accordion (Mobile Arrow Fix applied) -->
                 <details class="glass-card rounded-[2rem] group border-l-4 border-l-emerald-500" id="case-study-details">
                     <summary class="p-6 md:p-8 text-xl md:text-2xl font-black cursor-pointer flex justify-between items-center hover:bg-white/5 transition-colors rounded-[2rem]">
                         <div class="flex items-center gap-4">
@@ -719,11 +725,12 @@
                                     </div>
                                 </div>
 
-                                <!-- السهم المضاعف (The Multiplier) -->
+                                <!-- السهم المضاعف (The Multiplier) - Responsive Flow Direction -->
                                 <div class="flex flex-col items-center justify-center w-full md:w-40 h-20 md:h-auto z-10 relative my-4 md:my-0">
                                     <div class="absolute inset-0 flex items-center justify-center">
-                                        <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                                            <div class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 w-full origin-left animate-laser-flow"></div>
+                                        <!-- Vertical line on mobile, Horizontal on desktop -->
+                                        <div class="bg-slate-800 rounded-full overflow-hidden w-1.5 h-full md:w-full md:h-1.5">
+                                            <div class="bg-gradient-to-b md:bg-gradient-to-r from-emerald-500 to-cyan-400 w-full h-full origin-top md:origin-left animate-laser-v md:animate-laser-flow"></div>
                                         </div>
                                     </div>
                                     <div class="bg-[#030712] px-4 py-2.5 rounded-full border border-emerald-500/40 text-emerald-400 text-xs font-black uppercase tracking-widest z-10 shadow-[0_0_20px_rgba(16,185,129,0.3)] animate-pulse whitespace-nowrap">
@@ -888,6 +895,9 @@
                                 </div>
                             </div>
 
+                            <div class="flex md:hidden items-center justify-center py-2 relative z-10">
+                                <div class="w-10 h-10 rounded-full bg-[#030712] border border-slate-700 flex items-center justify-center text-slate-500 font-black text-xs shadow-xl">VS</div>
+                            </div>
                             <div class="hidden md:flex items-center justify-center shrink-0 relative z-10 w-8">
                                 <div class="w-12 h-12 rounded-full bg-[#030712] border border-slate-700 flex items-center justify-center text-slate-500 font-black text-sm shadow-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">VS</div>
                                 <div class="w-px h-full bg-gradient-to-b from-transparent via-slate-700 to-transparent"></div>
@@ -940,11 +950,11 @@
             </div>
         </section>
 
-        <!-- UX: Instagram Insights Dashboard Style (تم نقلها لتكون أسفل الأعمال كدليل قوي قبل الفوتر) -->
+        <!-- UX: Instagram Insights Dashboard Style -->
         <section class="py-12 px-6 mb-12 relative overflow-hidden" id="stats-story">
             <div class="max-w-6xl mx-auto">
                 
-                <!-- Section Header (Familiar UI Title) -->
+                <!-- Section Header -->
                 <div class="flex items-center gap-3 mb-8 ml-2">
                     <i class="fas fa-chart-simple text-slate-400 text-xl"></i>
                     <h2 class="text-2xl font-bold text-white tracking-tight">Proven Impact & ROI</h2>
@@ -978,7 +988,7 @@
                             <span class="text-slate-500 text-xs">vs previous 30 days</span>
                         </div>
 
-                        <!-- Smooth IG Line Chart SVG & Animated Finger Tracker -->
+                        <!-- Smooth IG Line Chart SVG & Animated Finger Tracker (Adjusted for mobile) -->
                         <div class="flex-grow relative h-24 mt-auto w-full px-2 pb-2">
                             
                             <svg viewBox="0 0 200 60" class="w-full h-full preserve-3d overflow-visible" preserveAspectRatio="none">
@@ -996,19 +1006,19 @@
 
                             <!-- The Moving Finger & Tooltip -->
                             <div class="anim-tracker flex flex-col items-center">
-                                <!-- Dynamic Tooltip (Text changed via CSS content) -->
-                                <div class="bg-white px-4 py-2 rounded-lg shadow-[0_6px_15px_rgba(0,0,0,0.6)] relative flex items-center justify-center min-w-[110px] mb-2">
-                                    <span class="tracker-val text-sm md:text-base font-black tracking-tight"></span>
+                                <!-- Dynamic Tooltip -->
+                                <div class="bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg shadow-[0_6px_15px_rgba(0,0,0,0.6)] relative flex items-center justify-center min-w-[90px] md:min-w-[110px] mb-2">
+                                    <span class="tracker-val text-xs md:text-base font-black tracking-tight"></span>
                                     <div class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45"></div>
                                 </div>
                                 <!-- Finger Pointer -->
-                                <i class="fas fa-hand-pointer text-[#fbbf24] text-3xl drop-shadow-[0_4px_6px_rgba(0,0,0,0.8)] rotate-[-15deg] mt-1"></i>
+                                <i class="fas fa-hand-pointer text-[#fbbf24] text-2xl md:text-3xl drop-shadow-[0_4px_6px_rgba(0,0,0,0.8)] rotate-[-15deg] mt-1"></i>
                             </div>
 
                         </div>
                     </div>
 
-                    <!-- PANEL 2: Account Health / Expertise (IG Profile Style) -->
+                    <!-- PANEL 2: Account Health / Expertise -->
                     <div class="bg-[#121212] border border-white/5 rounded-3xl p-6 flex flex-col relative overflow-hidden hover:bg-[#1a1a1a] transition-colors shadow-lg justify-between">
                         
                         <div class="flex justify-between items-start mb-6">
@@ -1017,10 +1027,9 @@
                         </div>
 
                         <div class="flex items-center gap-4 mb-8">
-                            <!-- Avatar mimicking Upwork profile pic with online/top-rated ring -->
+                            <!-- Avatar mimicking Upwork profile pic -->
                             <div class="relative w-16 h-16 rounded-full bg-[#14a800] p-[2px] shrink-0 shadow-[0_0_15px_rgba(20,168,0,0.3)]">
                                 <div class="w-full h-full bg-[#121212] rounded-full border-[3px] border-[#121212] overflow-hidden flex items-center justify-center">
-                                    <!-- صورة المستخدم -->
                                     <img src="https://www.upwork.com/profile-portraits/c1THF4gBsqOlPFKbSLIsTFYzEu9SSy5aZUukDa3go4_jNtzVy5qU2k4PJtZM_lVLbC" alt="Mohamed Bamou" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=Mohamed+Bamou&background=121212&color=14a800'">
                                 </div>
                             </div>
@@ -1049,7 +1058,7 @@
                         </div>
                     </div>
 
-                    <!-- PANEL 3: Monetization / ROI (IG Bar Chart Style) -->
+                    <!-- PANEL 3: Monetization / ROI (Touch-friendly for mobile) -->
                     <div class="bg-[#121212] border border-white/5 rounded-3xl p-6 flex flex-col relative overflow-hidden hover:bg-[#1a1a1a] transition-colors shadow-lg">
                         
                         <div class="flex justify-between items-start mb-2">
@@ -1069,12 +1078,13 @@
 
                         <!-- Clean IG Style Rounded Bar Chart -->
                         <div class="flex-grow flex items-end justify-between gap-2 mt-auto h-24 px-1">
-                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[25%] ig-bar ig-b-1 relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white hidden group-hover:block">$10k</div></div>
-                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[35%] ig-bar ig-b-2 relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white hidden group-hover:block">$15k</div></div>
-                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[45%] ig-bar ig-b-3 relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white hidden group-hover:block">$22k</div></div>
-                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[60%] ig-bar ig-b-4 relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white hidden group-hover:block">$35k</div></div>
-                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[80%] ig-bar ig-b-5 relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white hidden group-hover:block">$55k</div></div>
-                            <div class="w-full bg-[#38bdf8] rounded-t-sm h-[100%] ig-bar ig-b-6 relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-[#38bdf8] hidden group-hover:block">$80k</div></div>
+                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[25%] ig-bar ig-b-1 relative group cursor-pointer"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white opacity-0 md:group-hover:opacity-100 active:opacity-100 transition-opacity">$10k</div></div>
+                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[35%] ig-bar ig-b-2 relative group cursor-pointer"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white opacity-0 md:group-hover:opacity-100 active:opacity-100 transition-opacity">$15k</div></div>
+                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[45%] ig-bar ig-b-3 relative group cursor-pointer"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white opacity-0 md:group-hover:opacity-100 active:opacity-100 transition-opacity">$22k</div></div>
+                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[60%] ig-bar ig-b-4 relative group cursor-pointer"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white opacity-0 md:group-hover:opacity-100 active:opacity-100 transition-opacity">$35k</div></div>
+                            <div class="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors h-[80%] ig-bar ig-b-5 relative group cursor-pointer"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-white opacity-0 md:group-hover:opacity-100 active:opacity-100 transition-opacity">$55k</div></div>
+                            <!-- $80k is always visible to guarantee value proposition is seen without interaction -->
+                            <div class="w-full bg-[#38bdf8] rounded-t-sm h-[100%] ig-bar ig-b-6 relative group"><div class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-[#38bdf8] opacity-100 transition-opacity">$80k</div></div>
                         </div>
                         
                         <!-- Simple Month Labels -->
@@ -1140,7 +1150,7 @@
             }
         });
 
-        // سكريبت المؤقت النفسي (FOMO Timer) يبدأ مباشرة
+        // سكريبت المؤقت النفسي (FOMO Timer)
         document.addEventListener("DOMContentLoaded", () => {
             const timerBadge = document.getElementById("badge-timer");
             const expiredBadge = document.getElementById("badge-expired");
@@ -1151,7 +1161,6 @@
 
             let timeLeft = 15; 
             
-            // بدء العد التنازلي فوراً بدون تأخير
             const countdownInterval = setInterval(() => {
                 timeLeft--;
                 timeLeftSpan.textContent = timeLeft;
@@ -1163,14 +1172,12 @@
                     expiredBadge.classList.remove("hidden");
                     expiredBadge.classList.add("flex");
                     
-                    // إطفاء اللون الأحمر الساطع وتحويله للرمادي الباهت برمجياً
                     badgeGlow.classList.remove("from-red-600", "to-red-500", "animate-pulse", "opacity-100", "blur-md", "-inset-1.5");
                     badgeGlow.classList.add("from-slate-800", "to-slate-900", "opacity-20", "blur", "-inset-1");
                     
                     badgeInner.classList.remove("bg-gradient-to-r", "from-red-600", "to-red-700", "border-red-400", "border-2", "shadow-[0_0_40px_rgba(220,38,38,0.8)]");
                     badgeInner.classList.add("bg-[#030712]", "border-slate-800", "border");
 
-                    // إظهار رسالة الكشف بنعومة
                     if(revealSection) {
                         revealSection.classList.remove("hidden");
                         revealSection.classList.add("flex");
