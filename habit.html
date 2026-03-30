@@ -1,0 +1,616 @@
+import React, { useState, useEffect } from 'react';
+
+// قائمة العادات
+const INITIAL_HABITS = [
+  { id: 'h1', name: 'Prayer', nameAr: 'صلاة', icon: '🙏', color: 'from-amber-400 to-orange-500' },
+  { id: 'h2', name: 'Sport', nameAr: 'رياضة', icon: '🏃', color: 'from-blue-400 to-cyan-500' },
+  { id: 'h3', name: 'Upwork', nameAr: 'العمل', icon: '💻', color: 'from-green-400 to-emerald-500' },
+  { id: 'h4', name: 'Learn', nameAr: 'تعلم', icon: '🧠', color: 'from-purple-400 to-pink-500' },
+  { id: 'h5', name: 'Seek Forgiveness', nameAr: 'استغفار', icon: '📿', color: 'from-yellow-200 to-amber-400' },
+  { id: 'h6', name: 'Daily Journaling', nameAr: 'تدوين', icon: '✍️', color: 'from-rose-400 to-red-500' },
+  { id: 'h7', name: 'Breaking Boundaries', nameAr: 'تخطي الحدود', icon: '🔥', color: 'from-orange-500 to-red-600' },
+  { id: 'h8', name: 'Deep work 5H', nameAr: 'عمل عميق', icon: '🎧', color: 'from-indigo-400 to-blue-600' },
+  { id: 'h9', name: 'English Practice', nameAr: 'لغة إنجليزية', icon: '🗣️', color: 'from-sky-400 to-blue-500' },
+  { id: 'h10', name: 'Analysis / Trading', nameAr: 'تحليل وتداول', icon: '📈', color: 'from-emerald-400 to-teal-500' },
+];
+
+const DAYS_OF_WEEK = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+// بيانات الأشهر لعام كامل
+const MONTHS = [
+  { id: 0, name: 'January', nameAr: 'يناير', days: 31 },
+  { id: 1, name: 'February', nameAr: 'فبراير', days: 28 },
+  { id: 2, name: 'March', nameAr: 'مارس', days: 31 },
+  { id: 3, name: 'April', nameAr: 'أبريل', days: 30 },
+  { id: 4, name: 'May', nameAr: 'مايو', days: 31 },
+  { id: 5, name: 'June', nameAr: 'يونيو', days: 30 },
+  { id: 6, name: 'July', nameAr: 'يوليو', days: 31 },
+  { id: 7, name: 'August', nameAr: 'أغسطس', days: 31 },
+  { id: 8, name: 'September', nameAr: 'سبتمبر', days: 30 },
+  { id: 9, name: 'October', nameAr: 'أكتوبر', days: 31 },
+  { id: 10, name: 'November', nameAr: 'نوفمبر', days: 30 },
+  { id: 11, name: 'December', nameAr: 'ديسمبر', days: 31 },
+];
+
+// دالة توليد الأسابيع
+const generateWeeks = (daysInMonth) => {
+  const weeks = [
+    { id: 'w1', name: 'Week 1', start: 1, end: 7, theme: 'purple' },
+    { id: 'w2', name: 'Week 2', start: 8, end: 14, theme: 'fuchsia' },
+    { id: 'w3', name: 'Week 3', start: 15, end: 21, theme: 'teal' },
+    { id: 'w4', name: 'Week 4', start: 22, end: 28, theme: 'emerald' },
+  ];
+  if (daysInMonth > 28) {
+    weeks.push({ id: 'w5', name: 'Week 5', start: 29, end: daysInMonth, theme: 'green' });
+  }
+  return weeks;
+};
+
+// دالة لحساب مسار المبيان الخطي
+const getChartPath = (statsArray, isArea = false) => {
+  const n = statsArray.length;
+  if (n === 0) return '';
+  
+  const c = 48; // عرض العمود (px)
+  const g = 8;  // عرض الفراغ (px)
+  const w = n * c + (n - 1) * g;
+  
+  const points = statsArray.map((stats, i) => ({
+    x: ((i * (c + g) + c / 2) / w) * 100, 
+    y: 90 - (stats.progress * 0.8) 
+  }));
+
+  let d = `M ${points[0].x} ${points[0].y}`;
+  
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i];
+    const p1 = points[i + 1];
+    const cx = (p0.x + p1.x) / 2;
+    d += ` C ${cx} ${p0.y}, ${cx} ${p1.y}, ${p1.x} ${p1.y}`;
+  }
+
+  if (isArea) {
+    d += ` L ${points[n - 1].x} 100 L ${points[0].x} 100 Z`;
+  }
+  
+  return d;
+};
+
+export default function App() {
+  const [trackerState, setTrackerState] = useState({});
+  const [habits] = useState(INITIAL_HABITS);
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  const [activeMonthId, setActiveMonthId] = useState(2); 
+  const [activeWeekId, setActiveWeekId] = useState('w1'); 
+  
+  // حالة جديدة لتتبع اليوم الذي يمر عليه الماوس في المبيان
+  const [hoveredChartDay, setHoveredChartDay] = useState(null);
+
+  const activeMonth = MONTHS.find(m => m.id === activeMonthId);
+  const currentWeeks = generateWeeks(activeMonth.days);
+
+  useEffect(() => {
+    setActiveWeekId('w1');
+    setHoveredChartDay(null); // إعادة تعيين التحديد عند تغيير الشهر
+  }, [activeMonthId]);
+
+  useEffect(() => {
+    const dummyData = {};
+    MONTHS.forEach(month => {
+      habits.forEach(habit => {
+        for (let i = 1; i <= month.days; i++) {
+          if (Math.random() > 0.65) dummyData[`${month.id}-${habit.id}-${i}`] = true;
+        }
+      });
+    });
+    setTrackerState(dummyData);
+    setTimeout(() => setIsLoaded(true), 100);
+  }, [habits]);
+
+  const toggleCheck = (habitId, day) => {
+    setTrackerState(prev => ({
+      ...prev,
+      [`${activeMonthId}-${habitId}-${day}`]: !prev[`${activeMonthId}-${habitId}-${day}`]
+    }));
+  };
+
+  const totalPossible = habits.length * activeMonth.days;
+  let totalCompleted = 0;
+  habits.forEach(h => {
+    for(let i = 1; i <= activeMonth.days; i++) {
+      if(trackerState[`${activeMonthId}-${h.id}-${i}`]) totalCompleted++;
+    }
+  });
+  const totalProgressPercentage = totalPossible === 0 ? 0 : ((totalCompleted / totalPossible) * 100).toFixed(1);
+
+  const getDailyStats = (day) => {
+    let done = 0;
+    habits.forEach(h => { if (trackerState[`${activeMonthId}-${h.id}-${day}`]) done++; });
+    return { done, notDone: habits.length - done, progress: Math.round((done / habits.length) * 100) };
+  };
+
+  const getHabitStats = (habitId) => {
+    let done = 0;
+    for (let i = 1; i <= activeMonth.days; i++) { if (trackerState[`${activeMonthId}-${habitId}-${i}`]) done++; }
+    return ((done / activeMonth.days) * 100).toFixed(1);
+  };
+
+  // خوارزمية حساب متوسط آخر 7 أيام (أسبوع سابق) لليوم المحدد
+  const getRollingAverage = (targetDay) => {
+    let total = 0;
+    let count = 0;
+    for (let d = targetDay - 7; d < targetDay; d++) {
+      if (d >= 1) { // نأخذ الأيام الصالحة في الشهر الحالي فقط
+        const stats = getDailyStats(d);
+        total += stats.progress;
+        count++;
+      }
+    }
+    return count > 0 ? Math.round(total / count) : null;
+  };
+
+  const getThemeColors = (theme) => {
+    const themes = {
+      purple: { bg: 'bg-purple-600/20', text: 'text-purple-400', border: 'border-purple-500/30', active: 'bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]', inactive: 'text-purple-400 hover:bg-purple-500/10' },
+      fuchsia: { bg: 'bg-fuchsia-600/20', text: 'text-fuchsia-400', border: 'border-fuchsia-500/30', active: 'bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.5)]', inactive: 'text-fuchsia-400 hover:bg-fuchsia-500/10' },
+      teal: { bg: 'bg-teal-500/20', text: 'text-teal-300', border: 'border-teal-500/30', active: 'bg-teal-400 text-slate-900 shadow-[0_0_15px_rgba(45,212,191,0.5)]', inactive: 'text-teal-400 hover:bg-teal-500/10' },
+      emerald: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30', active: 'bg-emerald-500 text-slate-900 shadow-[0_0_15px_rgba(16,185,129,0.5)]', inactive: 'text-emerald-400 hover:bg-emerald-500/10' },
+      green: { bg: 'bg-green-600/20', text: 'text-green-400', border: 'border-green-500/30', active: 'bg-green-500 text-slate-900 shadow-[0_0_15px_rgba(34,197,94,0.5)]', inactive: 'text-green-400 hover:bg-green-500/10' },
+    };
+    return themes[theme];
+  };
+
+  return (
+    <div className="min-h-screen bg-[#07070a] text-slate-200 font-sans p-4 sm:p-6 lg:p-8 overflow-x-hidden selection:bg-purple-500/30 flex flex-col items-center pb-24">
+      
+      {/* --- Month Carousel --- */}
+      <div className={`w-full max-w-[1800px] mb-8 relative transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-r from-[#07070a] to-transparent z-10 pointer-events-none"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 bg-gradient-to-l from-[#07070a] to-transparent z-10 pointer-events-none"></div>
+
+        <div className="flex gap-4 sm:gap-6 overflow-x-auto hide-scrollbar snap-x snap-mandatory px-12 sm:px-[50%] py-6 scroll-smooth items-center">
+          {MONTHS.map(month => {
+            const isActive = activeMonthId === month.id;
+            return (
+              <button
+                key={month.id}
+                onClick={() => {
+                  setActiveMonthId(month.id);
+                  const element = document.getElementById(`month-btn-${month.id}`);
+                  if(element) element.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                }}
+                id={`month-btn-${month.id}`}
+                className={`snap-center shrink-0 flex flex-col items-center justify-center min-w-[140px] px-6 py-4 rounded-3xl transition-all duration-500 relative group
+                  ${isActive 
+                    ? 'bg-[#12121a]/80 backdrop-blur-md text-white scale-110 sm:scale-125 shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-white/10 z-20' 
+                    : 'text-slate-500 hover:text-slate-300 hover:bg-white/5 border border-transparent scale-90 sm:scale-100 z-0'
+                  }`}
+              >
+                <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-1 transition-colors ${isActive ? 'text-emerald-400' : 'opacity-60'}`}>
+                  {month.nameAr}
+                </span>
+                <span className={`text-xl sm:text-2xl font-black tracking-wide ${isActive ? 'text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300' : ''}`}>
+                  {month.name}
+                </span>
+                {isActive && <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/30 to-emerald-500/30 rounded-3xl blur-xl -z-10 animate-pulse"></div>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* --- Top Header Stats --- */}
+      <header className={`w-full max-w-[1800px] mb-10 flex justify-center transition-all duration-1000 delay-100 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 bg-[#101016]/80 backdrop-blur-md p-6 rounded-[2rem] border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] w-full xl:w-auto">
+          <div className="text-center px-2">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Total Habits</p>
+            <p className="text-4xl font-black text-white">{habits.length}</p>
+          </div>
+          <div className="w-px h-16 bg-white/10 hidden sm:block"></div>
+          <div className="text-center px-2">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Completed</p>
+            <p className="text-4xl font-black text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.3)]">{totalCompleted}</p>
+          </div>
+          <div className="w-px h-16 bg-white/10 hidden sm:block"></div>
+          <div className="px-2 w-full sm:w-auto min-w-[280px]">
+            <div className="flex justify-between items-end mb-3">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Overall Progress</p>
+              <p className="text-2xl font-black text-white">{totalProgressPercentage}%</p>
+            </div>
+            <div className="w-full h-4 bg-[#0a0a0e] rounded-full overflow-hidden border border-white/5 shadow-inner">
+              <div 
+                className="h-full bg-gradient-to-r from-purple-500 via-teal-400 to-emerald-400 rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
+                style={{ width: `${totalProgressPercentage}%` }}
+              >
+                <div className="absolute inset-0 bg-white/20 w-full animate-shimmer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* --- Main Dashboard Area --- */}
+      <div className={`w-full max-w-[1800px] flex flex-col xl:flex-row gap-8 transition-all duration-1000 delay-200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        
+        {/* Main Tracker Container */}
+        <div className="flex-1 flex flex-col gap-6 w-full overflow-hidden">
+
+          {/* Week Selector Tabs */}
+          <div className="flex gap-2 bg-[#101016]/80 p-2 rounded-2xl border border-white/5 backdrop-blur-md w-full sm:w-max shadow-lg overflow-x-auto hide-scrollbar">
+            {currentWeeks.map((week) => {
+              const isActive = activeWeekId === week.id;
+              const colors = getThemeColors(week.theme);
+              return (
+                <button
+                  key={week.id}
+                  onClick={() => setActiveWeekId(week.id)}
+                  className={`px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-300 whitespace-nowrap ${
+                    isActive ? `${colors.active} scale-105` : `${colors.inactive} hover:text-white border border-transparent`
+                  }`}
+                >
+                  {week.name}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="overflow-x-auto custom-scrollbar pb-6 w-full">
+            <div className="inline-flex flex-col min-w-max w-full">
+              
+              {/* Headers Area */}
+              <div className="flex items-end mb-4">
+                <div className="w-64 sm:w-72 flex-shrink-0 sticky left-0 z-40 bg-[#07070a] pt-4 pb-2 pr-4 sm:pr-6">
+                  <span className="text-xl font-black text-white tracking-wide">My Habits</span>
+                </div>
+
+                {(() => {
+                  const week = currentWeeks.find(w => w.id === activeWeekId);
+                  if(!week) return null;
+                  const colors = getThemeColors(week.theme);
+                  return (
+                    <div key={`header-${week.id}`} className="flex flex-col animate-fade-in-up">
+                      <div className="flex justify-center mb-3">
+                        <span className={`px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border ${colors.border} ${colors.bg} ${colors.text} shadow-sm`}>
+                          {week.name}
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        {Array.from({ length: week.end - week.start + 1 }).map((_, i) => {
+                          const dayNum = week.start + i;
+                          const dayOfWeek = DAYS_OF_WEEK[(dayNum - 1) % 7];
+                          return (
+                            <div key={dayNum} className={`w-11 sm:w-12 h-14 sm:h-16 rounded-xl flex flex-col items-center justify-center border ${colors.border} bg-[#101016]/50 backdrop-blur-sm shadow-sm transition-all hover:-translate-y-1`}>
+                              <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase mb-0.5">{dayOfWeek}</span>
+                              <span className={`text-sm sm:text-base font-black ${colors.text}`}>{dayNum}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Habits Rows */}
+              <div className="flex flex-col gap-3">
+                {habits.map((habit, hIndex) => (
+                  <div key={habit.id} className={`flex group animate-fade-in-up`} style={{ animationDelay: `${hIndex * 30}ms`, animationFillMode: 'both' }}>
+                    <div className="w-64 sm:w-72 flex-shrink-0 sticky left-0 z-30 bg-[#07070a] pr-4 py-1">
+                      <div className="h-full bg-[#12121a] border border-white/5 rounded-2xl p-2 sm:p-3 flex items-center gap-3 sm:gap-4 shadow-lg transition-all duration-300 group-hover:bg-[#1a1a24] group-hover:border-white/10 group-hover:-translate-y-0.5 group-hover:shadow-xl cursor-default relative overflow-hidden">
+                        <div className={`absolute inset-0 bg-gradient-to-r ${habit.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+                        <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br ${habit.color} flex items-center justify-center text-lg sm:text-xl shadow-inner flex-shrink-0 relative z-10`}>
+                          {habit.icon}
+                        </div>
+                        <div className="flex flex-col relative z-10 overflow-hidden">
+                          <span className="text-xs sm:text-sm font-bold text-slate-200 group-hover:text-white transition-colors truncate">{habit.name}</span>
+                          <span className="text-[10px] sm:text-xs font-medium text-slate-500 truncate">{habit.nameAr}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center py-1">
+                      {(() => {
+                        const week = currentWeeks.find(w => w.id === activeWeekId);
+                        if(!week) return null;
+                        const colors = getThemeColors(week.theme);
+                        return (
+                          <div key={`check-${habit.id}-${week.id}`} className="flex gap-2 animate-fade-in-up" style={{ animationDelay: `${hIndex * 20}ms` }}>
+                            {Array.from({ length: week.end - week.start + 1 }).map((_, i) => {
+                              const dayNum = week.start + i;
+                              const isChecked = trackerState[`${activeMonthId}-${habit.id}-${dayNum}`];
+                              return (
+                                <div key={dayNum} className="w-11 sm:w-12 flex justify-center items-center">
+                                  <button
+                                    onClick={() => toggleCheck(habit.id, dayNum)}
+                                    className={`relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl border-2 flex items-center justify-center transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#07070a] focus:ring-slate-600
+                                      ${isChecked ? `border-transparent ${colors.active} scale-110 active:scale-95` : `border-slate-700/50 bg-[#12121a] hover:border-slate-500 hover:bg-[#1a1a24] hover:scale-105 active:scale-95`}`}
+                                  >
+                                    <svg className={`w-4 h-4 sm:w-5 sm:h-5 text-current transition-all duration-300 ease-out ${isChecked ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-45'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                      <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                  </button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* --- Bottom Daily Line Chart Stats --- */}
+              <div className="flex mt-8 mb-4">
+                
+                {/* Left Legend Panel */}
+                <div className="w-64 sm:w-72 flex-shrink-0 sticky left-0 z-30 bg-[#07070a] pr-4">
+                  <div className="h-full bg-[#12121a]/50 rounded-2xl border border-white/5 p-3 sm:p-4 flex flex-col justify-end gap-2 pb-6">
+                     <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 sm:mb-5">
+                       <span className="text-base sm:text-lg">📈</span> Daily Trend
+                     </div>
+                     <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider"><div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-slate-400"></div> Progress</div>
+                     <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-emerald-400 uppercase tracking-wider"><div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400"></div> Done</div>
+                     <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold text-red-400 uppercase tracking-wider"><div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-red-400"></div> Missed</div>
+                  </div>
+                </div>
+
+                {/* Animated Line Chart & Stats */}
+                <div className="flex">
+                  {(() => {
+                    const week = currentWeeks.find(w => w.id === activeWeekId);
+                    if(!week) return null;
+                    
+                    // نجمع تفاصيل الأيام ونضيف رقم اليوم لنستخدمه في الـ Tooltip
+                    const weekStats = Array.from({ length: week.end - week.start + 1 }).map((_, i) => {
+                      const dayNum = week.start + i;
+                      return { ...getDailyStats(dayNum), dayNum };
+                    });
+                    
+                    return (
+                      <div key={`stats-line-${week.id}`} className="flex flex-col animate-fade-in-up w-full">
+                         
+                         {/* Glowing Animated Line Chart Wrapper */}
+                         <div className="relative w-full h-32 sm:h-40 mb-4 mt-2">
+                            <svg className="absolute inset-0 w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                               <defs>
+                                  <linearGradient id="chartLineGrad" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stopColor="#8b5cf6" />
+                                    <stop offset="50%" stopColor="#2dd4bf" />
+                                    <stop offset="100%" stopColor="#10b981" />
+                                  </linearGradient>
+                                  <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#2dd4bf" stopOpacity="0.4" />
+                                    <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                                  </linearGradient>
+                                  <filter id="glow-line" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feGaussianBlur stdDeviation="1.5" result="blur" />
+                                    <feMerge>
+                                      <feMergeNode in="blur"/>
+                                      <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                  </filter>
+                               </defs>
+                               
+                               <path
+                                 d={getChartPath(weekStats, true)}
+                                 fill="url(#chartAreaGrad)"
+                                 className="opacity-60 animate-fade-in-up"
+                                 style={{ animationDelay: '0.4s', animationFillMode: 'both' }}
+                               />
+                               
+                               <path
+                                 d={getChartPath(weekStats, false)}
+                                 fill="none"
+                                 stroke="url(#chartLineGrad)"
+                                 strokeWidth="2.5"
+                                 vectorEffect="non-scaling-stroke"
+                                 filter="url(#glow-line)"
+                                 className="path-draw-animation drop-shadow-lg"
+                               />
+                            </svg>
+                            
+                            {/* Interactive Glowing Dots & Tooltips */}
+                            <div className="absolute inset-0 flex gap-2">
+                              {weekStats.map((stats, i) => (
+                                <div 
+                                  key={`dot-wrapper-${i}`} 
+                                  className="w-11 sm:w-12 h-full relative z-20 cursor-pointer group/dot"
+                                  onMouseEnter={() => setHoveredChartDay(stats.dayNum)}
+                                  onMouseLeave={() => setHoveredChartDay(null)}
+                                  onClick={() => setHoveredChartDay(hoveredChartDay === stats.dayNum ? null : stats.dayNum)}
+                                >
+                                  {/* Tooltip Card (تظهر عند مرور الماوس) */}
+                                  {hoveredChartDay === stats.dayNum && (
+                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-48 bg-[#1a1a24]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-[0_15px_50px_rgba(0,0,0,0.8)] z-50 pointer-events-none animate-fade-in-up flex flex-col gap-2">
+                                      
+                                      {/* Date Header */}
+                                      <div className="text-center border-b border-white/10 pb-2">
+                                         <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest bg-white/5 px-2 py-1 rounded-md">
+                                           {activeMonth.name} {stats.dayNum}
+                                         </span>
+                                      </div>
+                                      
+                                      {/* Main Stats */}
+                                      <div className="flex flex-col gap-1.5 mt-1">
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-[10px] font-bold text-slate-400 uppercase">Progress</span>
+                                          <span className="text-sm font-black text-white drop-shadow-md">{stats.progress}%</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-[10px] font-bold text-emerald-400/80 uppercase">Done</span>
+                                          <span className="text-xs font-black text-emerald-400">{stats.done}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                          <span className="text-[10px] font-bold text-red-400/80 uppercase">Missed</span>
+                                          <span className="text-xs font-black text-red-400">{stats.notDone}</span>
+                                        </div>
+                                      </div>
+
+                                      {/* Comparison with 7-Day Rolling Average */}
+                                      {(() => {
+                                        const prevAvg = getRollingAverage(stats.dayNum);
+                                        if (prevAvg === null) return null; // إخفاء المقارنة إذا لم يكن هناك أيام سابقة
+                                        
+                                        const diff = stats.progress - prevAvg;
+                                        const isPositive = diff >= 0;
+                                        
+                                        return (
+                                          <div className={`mt-1 pt-2 border-t border-white/10 flex items-center justify-between`}>
+                                            <span className="uppercase text-slate-500 font-bold text-[8px] leading-tight w-16">Vs Last<br/>7 Days</span>
+                                            <span className={`flex items-center gap-1 text-[11px] font-black ${isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
+                                              {isPositive ? '▲' : '▼'} {Math.abs(diff)}%
+                                            </span>
+                                          </div>
+                                        );
+                                      })()}
+                                      
+                                      {/* Tooltip Arrow */}
+                                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[#1a1a24]/95"></div>
+                                    </div>
+                                  )}
+
+                                  {/* The Dot Itself */}
+                                  <div 
+                                    className="absolute left-1/2 -translate-x-1/2"
+                                    style={{ 
+                                      top: `${90 - (stats.progress * 0.8)}%`,
+                                      marginTop: '-4px',
+                                      animation: 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both',
+                                      animationDelay: `${0.6 + i * 0.05}s`
+                                    }}
+                                  >
+                                    <div 
+                                      className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white transition-all duration-300 ease-out group-hover/dot:scale-[1.8] group-hover/dot:bg-purple-100"
+                                      style={{ 
+                                        boxShadow: `0 0 12px 2px ${stats.progress === 100 ? '#10b981' : '#8b5cf6'}`,
+                                      }}
+                                    >
+                                      {/* Pulse effect */}
+                                      <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-40"></div>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              ))}
+                            </div>
+                         </div>
+
+                         {/* Numbers Row */}
+                         <div className="flex gap-2">
+                            {weekStats.map((stats, i) => (
+                              <div key={`stat-${i}`} className="w-11 sm:w-12 flex flex-col items-center gap-1 sm:gap-2">
+                                <span className="text-[9px] sm:text-[10px] font-bold text-slate-500">{stats.progress}%</span>
+                                <span className="text-xs sm:text-sm font-black text-emerald-400">{stats.done}</span>
+                                <span className="text-xs sm:text-sm font-black text-red-400/80">{stats.notDone}</span>
+                              </div>
+                            ))}
+                         </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div> 
+
+        {/* --- Sidebar Analysis Section --- */}
+        <div className="w-full xl:w-96 flex-shrink-0">
+          <div className="bg-[#101016]/80 backdrop-blur-md rounded-3xl border border-white/5 p-5 sm:p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] sticky top-6">
+            <h3 className="text-lg sm:text-xl font-black text-white mb-6 sm:mb-8 flex items-center gap-3 uppercase tracking-widest">
+              <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-emerald-500 flex items-center justify-center text-sm">📊</span>
+              Month Analysis
+            </h3>
+            
+            <div className="space-y-5 sm:space-y-6">
+              {habits.map((habit, i) => {
+                const habitProgress = parseFloat(getHabitStats(habit.id));
+                let barColor = 'from-red-600 to-rose-500';
+                if (habitProgress > 40) barColor = 'from-amber-500 to-orange-400';
+                if (habitProgress > 70) barColor = 'from-emerald-500 to-teal-400';
+                if (habitProgress > 90) barColor = 'from-purple-500 to-fuchsia-400';
+
+                return (
+                  <div key={`analysis-${habit.id}`} className="group cursor-default animate-fade-in-up" style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'both' }}>
+                    <div className="flex justify-between items-end mb-2">
+                      <div className="flex items-center gap-2 overflow-hidden pr-2">
+                        <span className="opacity-70 text-xs sm:text-sm flex-shrink-0">{habit.icon}</span>
+                        <span className="font-bold text-xs sm:text-sm text-slate-300 group-hover:text-white transition-colors truncate">{habit.name}</span>
+                      </div>
+                      <span className="font-black text-xs sm:text-sm text-white flex-shrink-0">{habitProgress}%</span>
+                    </div>
+                    
+                    <div className="w-full h-2 sm:h-2.5 bg-[#0a0a0e] rounded-full overflow-hidden border border-white/5">
+                      <div 
+                        className={`h-full bg-gradient-to-r ${barColor} rounded-full transition-all duration-1000 ease-out relative`}
+                        style={{ width: `${habitProgress}%` }}
+                      >
+                         <div className="absolute inset-0 bg-white/20 w-full opacity-0 group-hover:opacity-100 transition-opacity animate-pulse"></div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            <button 
+              onClick={() => {
+                if(window.confirm(`Are you sure you want to reset all data for ${activeMonth.name}?`)) {
+                  const newState = {...trackerState};
+                  Object.keys(newState).forEach(key => {
+                    if(key.startsWith(`${activeMonthId}-`)) delete newState[key];
+                  });
+                  setTrackerState(newState);
+                }
+              }}
+              className="mt-8 sm:mt-10 w-full py-3 sm:py-4 bg-[#1a1a24] hover:bg-[#232336] border border-white/5 text-slate-300 hover:text-white rounded-xl text-xs sm:text-sm font-bold uppercase tracking-widest transition-all active:scale-95 flex justify-center items-center gap-2 group"
+            >
+              <svg className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+              Clear {activeMonth.name}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {/* --- Custom Styles & Animations --- */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #07070a; border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #1a1a24; border-radius: 8px; border: 2px solid #07070a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #33334d; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(15px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes shimmer {
+          100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+          transform: translateX(-100%);
+          animation: shimmer 2.5s infinite;
+        }
+
+        @keyframes drawLine {
+          from { stroke-dashoffset: 1000; }
+          to { stroke-dashoffset: 0; }
+        }
+        .path-draw-animation {
+          stroke-dasharray: 1000;
+          animation: drawLine 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+      `}} />
+    </div>
+  );
+}
