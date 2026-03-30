@@ -98,8 +98,6 @@
         }
 
         /* --- 7-Second Analytics Loop Animations --- */
-        
-        /* 1. Laser Scanner over video */
         @keyframes scan {
             0% { top: 0%; opacity: 0; }
             10% { opacity: 1; }
@@ -107,11 +105,8 @@
             50% { opacity: 0; }
             100% { top: 0%; opacity: 0; }
         }
-        .animate-scan {
-            animation: scan 7s ease-in-out infinite;
-        }
+        .animate-scan { animation: scan 7s ease-in-out infinite; }
 
-        /* 2. Graph Line Drawing */
         @keyframes drawGraph {
             0%, 20% { stroke-dashoffset: 1000; }
             50%, 100% { stroke-dashoffset: 0; }
@@ -122,7 +117,6 @@
             animation: drawGraph 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
-        /* 3. The Smart Pointer (Finger/Mouse) */
         @keyframes smartPointer {
             0% { transform: translate(150px, 150px) scale(0); opacity: 0; } 
             10% { transform: translate(150px, 150px) scale(1); opacity: 1; } 
@@ -142,7 +136,7 @@
             filter: drop-shadow(0px 10px 8px rgba(0, 242, 254, 0.4));
         }
 
-        /* Highlight effects triggered by pointer */
+        /* Highlight effects */
         @keyframes highlightBox1 {
             0%, 25% { box-shadow: 0 0 0 transparent; border-color: rgba(255,255,255,0.1); }
             30%, 40% { box-shadow: 0 0 30px rgba(16,185,129,0.3); border-color: rgba(16,185,129,0.8); }
@@ -164,52 +158,25 @@
         }
         .highlight-3 { animation: highlightBox3 7s infinite; }
 
-        /* Red Glow for Main Action Button */
         @keyframes redGlow {
             0%, 100% { box-shadow: 0 0 20px rgba(225, 29, 72, 0.4); }
             50% { box-shadow: 0 0 45px rgba(225, 29, 72, 0.85); transform: scale(1.01); }
         }
-        .animate-red-glow {
-            animation: redGlow 2s infinite ease-in-out;
-        }
+        .animate-red-glow { animation: redGlow 2s infinite ease-in-out; }
 
-        /* Dashboard specific animations */
-        @keyframes fillBar {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
-        .animate-fill-bar {
-            animation: fillBar 1.5s ease-out forwards;
-        }
+        @keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+        .animate-fill-bar { animation: fillBar 1.5s ease-out forwards; }
         
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-slide-in {
-            animation: slideInRight 0.8s ease-out forwards;
-        }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .animate-slide-in { animation: slideInRight 0.8s ease-out forwards; }
 
-        @keyframes popUp {
-            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .animate-pop-up {
-            animation: popUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
+        @keyframes popUp { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .animate-pop-up { animation: popUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
-        /* Mobile Scroll UX */
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
 
-        .transformation-border {
-            position: relative;
-        }
+        .transformation-border { position: relative; }
         .transformation-border::before {
             content: '';
             position: absolute;
@@ -220,22 +187,17 @@
             opacity: 0.3;
         }
 
-        /* NEW Transparent Red Sound Button */
-        .sound-btn-red {
-            background: rgba(220, 38, 38, 0.25);
+        /* Generic Glass Button for Dynamic Coloring */
+        .glass-btn {
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(239, 68, 68, 0.5);
             color: #ffffff;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+            border-width: 1px;
+            border-style: solid;
         }
-        .sound-btn-red:hover { 
-            background: rgba(220, 38, 38, 0.8); 
-            border-color: rgba(239, 68, 68, 1);
-            color: #ffffff;
+        .glass-btn:hover { 
             transform: scale(1.1); 
-            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6);
         }
     </style>
 </head>
@@ -246,103 +208,166 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // --- Video Card for Hero Section (Top Videos) ---
-        const VideoCard = ({ vimeoId, badge, badgeColor, title, subtitle }) => {
+        // --- Video Component (Used everywhere) ---
+        const InteractiveVideoCard = ({ vimeoId, badge, badgeColor, title, subtitle, colorTheme, activeVideoId, onActivate, delayClass = "", isLarge = false }) => {
+            const isPutin = vimeoId === "1178509950"; // Special Putin Video Condition
+            
             const iframeRef = useRef(null);
-            const [isMuted, setIsMuted] = useState(true);
             const playerRef = useRef(null);
+            const [isPlaying, setIsPlaying] = useState(isPutin);
+            const [isMuted, setIsMuted] = useState(true);
+            const activeIdRef = useRef(activeVideoId);
 
+            // Keeps ref updated for event listeners without causing re-renders
+            useEffect(() => {
+                activeIdRef.current = activeVideoId;
+            }, [activeVideoId]);
+
+            // Initialize Vimeo Player
             useEffect(() => {
                 if (iframeRef.current) {
-                    playerRef.current = new Vimeo.Player(iframeRef.current);
-                    playerRef.current.setVolume(0);
+                    const player = new Vimeo.Player(iframeRef.current);
+                    playerRef.current = player;
+                    
+                    player.ready().then(() => {
+                        if (isPutin) {
+                            // Putin: Autoplay (muted) on load
+                            player.setVolume(0);
+                            player.play().catch(e => console.log("Autoplay prevented:", e));
+                            setIsPlaying(true);
+                        } else {
+                            // Others: Force pause to prevent annoying autoplay
+                            player.pause().catch(e => console.log(e));
+                            setIsPlaying(false);
+                        }
+                    });
+
+                    // Safeguard against Vimeo's automatic scrolling plays (background=1 behavior)
+                    player.on('play', () => {
+                        if (vimeoId !== activeIdRef.current && !isPutin) {
+                            // If it tries to play but isn't the active one, stop it.
+                            player.pause();
+                            setIsPlaying(false);
+                        } else {
+                            setIsPlaying(true);
+                        }
+                    });
+
+                    player.on('pause', () => setIsPlaying(false));
                 }
             }, []);
 
+            // Handle exclusive playback (Pause if another video becomes active)
+            useEffect(() => {
+                if (activeVideoId !== vimeoId && isPlaying && playerRef.current) {
+                    playerRef.current.pause();
+                    setIsPlaying(false);
+                    playerRef.current.setVolume(0); // Mute when paused in background
+                    setIsMuted(true);
+                }
+            }, [activeVideoId]);
+
+            // The main Play/Pause Action
+            const handlePlay = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!playerRef.current) return;
+
+                if (!isPlaying) {
+                    onActivate(vimeoId); // Become the active video (pauses others)
+                    playerRef.current.play();
+                    playerRef.current.setVolume(1); // Unmute immediately when explicitly played
+                    setIsPlaying(true);
+                    setIsMuted(false);
+                } else {
+                    playerRef.current.pause();
+                    setIsPlaying(false);
+                }
+            };
+
+            // Independent Sound Toggle Action
             const toggleMute = (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 if (!playerRef.current) return;
                 const nextMuteState = !isMuted;
                 playerRef.current.setVolume(nextMuteState ? 0 : 1);
                 setIsMuted(nextMuteState);
+                
+                // If they unmute while it's paused, start playing
+                if (!nextMuteState && !isPlaying) {
+                    onActivate(vimeoId);
+                    playerRef.current.play();
+                    setIsPlaying(true);
+                }
             };
 
+            // Theme Mapping
+            const themes = {
+                cyan: { gradient: 'from-cyan-500 to-blue-500', titleColor: 'group-hover:text-cyan-400', btn: 'bg-cyan-500/30 border-cyan-500/50 hover:bg-cyan-500/80 hover:border-cyan-400 shadow-[0_4px_15px_rgba(6,182,212,0.3)] hover:shadow-[0_6px_20px_rgba(6,182,212,0.6)]' },
+                emerald: { gradient: 'from-emerald-500 to-cyan-500', titleColor: 'group-hover:text-emerald-400', btn: 'bg-emerald-500/30 border-emerald-500/50 hover:bg-emerald-500/80 hover:border-emerald-400 shadow-[0_4px_15px_rgba(16,185,129,0.3)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.6)]' },
+                purple: { gradient: 'from-purple-500 to-pink-500', titleColor: 'group-hover:text-purple-400', btn: 'bg-purple-500/30 border-purple-500/50 hover:bg-purple-500/80 hover:border-purple-400 shadow-[0_4px_15px_rgba(168,85,247,0.3)] hover:shadow-[0_6px_20px_rgba(168,85,247,0.6)]' },
+                pink: { gradient: 'from-pink-500 to-rose-500', titleColor: 'group-hover:text-pink-400', btn: 'bg-pink-500/30 border-pink-500/50 hover:bg-pink-500/80 hover:border-pink-400 shadow-[0_4px_15px_rgba(236,72,153,0.3)] hover:shadow-[0_6px_20px_rgba(236,72,153,0.6)]' },
+                blue: { gradient: 'from-blue-500 to-cyan-500', titleColor: 'group-hover:text-blue-400', btn: 'bg-blue-500/30 border-blue-500/50 hover:bg-blue-500/80 hover:border-blue-400 shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.6)]' },
+                default: { gradient: 'from-[#00f2fe] via-[#f093fb] to-[#4facfe]', titleColor: 'text-white', btn: 'bg-slate-500/30 border-slate-500/50 hover:bg-slate-500/80 hover:border-slate-400 shadow-[0_4px_15px_rgba(100,116,139,0.3)]' }
+            };
+            const theme = themes[colorTheme] || themes.default;
+
             return (
-                <div className="glass-card rounded-[2.5rem] p-4 md:p-5 transformation-border group hover:scale-[1.02] transition-all duration-500 relative">
-                    <div className="aspect-[9/16] w-full rounded-[2rem] overflow-hidden bg-black relative border border-white/10 shadow-2xl">
+                <div className={`${isLarge ? 'w-full max-w-[320px] md:max-w-[350px] transformation-border p-4 md:p-5' : `w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 p-3 md:p-4 hover:border-${colorTheme}-500/50 flex-col hover:-translate-y-2`} glass-card rounded-[2.5rem] relative group border border-white/10 transition-all duration-500 flex ${delayClass}`}>
+                    
+                    {!isLarge && (
+                        <div className={`absolute -inset-0.5 bg-gradient-to-r ${theme.gradient} rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none`}></div>
+                    )}
+                    
+                    <div className="aspect-[9/16] w-full rounded-[2rem] overflow-hidden bg-black relative border border-white/10 shadow-2xl flex items-center justify-center">
+                        
+                        {/* Badge */}
                         <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 pointer-events-none">
                             <span className={`${badgeColor} text-white text-[10px] md:text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg`}>
                                 {badge}
                             </span>
                         </div>
-                        <button onClick={toggleMute} className="absolute top-4 right-4 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full sound-btn-red flex items-center justify-center shadow-xl cursor-pointer" aria-label="Toggle Sound">
-                            <i className={`fas ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high animate-pulse'} text-sm md:text-lg`}></i>
-                        </button>
-                        <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent z-20 pointer-events-none">
+
+                        {/* Interactive Buttons Container */}
+                        <div className="absolute top-4 right-4 z-30 flex flex-col gap-3">
+                            
+                            {/* Sound Button */}
+                            <button onClick={toggleMute} className={`w-10 h-10 md:w-12 md:h-12 rounded-full glass-btn flex items-center justify-center cursor-pointer ${theme.btn}`} aria-label="Toggle Sound">
+                                <i className={`fas ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high'} text-[11px] md:text-sm`}></i>
+                            </button>
+
+                            {/* Play Button */}
+                            <button onClick={handlePlay} className={`w-10 h-10 md:w-12 md:h-12 rounded-full glass-btn flex items-center justify-center cursor-pointer relative ${!isPlaying ? 'animate-pulse' : ''} ${theme.btn}`} aria-label="Play Video">
+                                <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} text-[11px] md:text-sm ${!isPlaying ? 'translate-x-0.5' : ''}`}></i>
+                            </button>
+
+                        </div>
+
+                        <div className={`absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent z-20 pointer-events-none ${!isLarge && 'hidden'}`}>
                             <p className="text-white font-bold text-sm md:text-base">{title}</p>
                             <p className="text-slate-400 text-[10px] md:text-xs mt-1 italic">{subtitle}</p>
                         </div>
+                        
                         <iframe 
                             ref={iframeRef} 
-                            src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&muted=1&background=1`} 
+                            src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1`} 
                             className="absolute inset-0 w-full h-full object-cover scale-[1.05]" 
                             allow="autoplay; fullscreen"
                         ></iframe>
                     </div>
-                </div>
-            );
-        };
 
-        // --- NEW Component: Showcase Video Card for the 4 Grid Videos ---
-        const ShowcaseVideoCard = ({ vimeoId, title, desc, cat, styleText, colorTheme, delayClass = "" }) => {
-            const iframeRef = useRef(null);
-            const [isMuted, setIsMuted] = useState(true);
-            const playerRef = useRef(null);
-
-            useEffect(() => {
-                if (iframeRef.current) {
-                    playerRef.current = new Vimeo.Player(iframeRef.current);
-                    playerRef.current.setVolume(0);
-                }
-            }, []);
-
-            const toggleMute = (e) => {
-                e.preventDefault();
-                if (!playerRef.current) return;
-                const nextMuteState = !isMuted;
-                playerRef.current.setVolume(nextMuteState ? 0 : 1);
-                setIsMuted(nextMuteState);
-            };
-
-            // Mapping themes to avoid tailwind purge issues
-            const themes = {
-                cyan: { borderHover: 'hover:border-cyan-500/50', gradient: 'from-cyan-500 to-blue-500', innerBorder: 'group-hover:border-cyan-500/30', titleColor: 'group-hover:text-cyan-400', badge: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' },
-                emerald: { borderHover: 'hover:border-emerald-500/50', gradient: 'from-emerald-500 to-cyan-500', innerBorder: 'group-hover:border-emerald-500/30', titleColor: 'group-hover:text-emerald-400', badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
-                purple: { borderHover: 'hover:border-purple-500/50', gradient: 'from-purple-500 to-pink-500', innerBorder: 'group-hover:border-purple-500/30', titleColor: 'group-hover:text-purple-400', badge: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
-                pink: { borderHover: 'hover:border-pink-500/50', gradient: 'from-pink-500 to-rose-500', innerBorder: 'group-hover:border-pink-500/30', titleColor: 'group-hover:text-pink-400', badge: 'bg-pink-500/20 text-pink-300 border-pink-500/30' },
-            };
-            const theme = themes[colorTheme];
-
-            return (
-                <div className={`w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 glass-card p-3 md:p-4 rounded-[2rem] relative group border border-white/10 ${theme.borderHover} flex flex-col hover:-translate-y-2 transition-all duration-300 ${delayClass}`}>
-                    <div className={`absolute -inset-0.5 bg-gradient-to-r ${theme.gradient} rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none`}></div>
-                    <div className={`aspect-[9/16] w-full rounded-2xl overflow-hidden bg-[#020202] relative z-10 border border-slate-800 flex items-center justify-center ${theme.innerBorder} transition-colors`}>
-                        
-                        {/* Sound Button */}
-                        <button onClick={toggleMute} className="absolute top-3 right-3 z-30 w-8 h-8 md:w-10 md:h-10 rounded-full sound-btn-red flex items-center justify-center shadow-xl cursor-pointer" aria-label="Toggle Sound">
-                            <i className={`fas ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high animate-pulse'} text-[11px] md:text-sm`}></i>
-                        </button>
-
-                        <iframe ref={iframeRef} src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&muted=1&background=1`} loading="lazy" className="absolute top-0 left-0 w-full h-full border-0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
-                    </div>
-                    <div className="mt-4 md:mt-5 mb-1 md:mb-2 px-2 flex flex-col flex-grow relative z-10">
-                        <h4 className={`text-white font-bold text-sm md:text-base mb-1 md:mb-2 ${theme.titleColor} transition-colors`}>{title}</h4>
-                        <p className="text-[11px] md:text-xs text-slate-400 mb-3 md:mb-4 flex-grow">{desc}</p>
-                        <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
-                            <span className={`text-[9px] md:text-[10px] px-2 py-1 rounded border ${theme.badge}`}>{cat}</span>
-                            <span className="bg-white/10 text-white text-[9px] md:text-[10px] px-2 py-1 rounded">{styleText}</span>
+                    {/* Small grid text layout */}
+                    {!isLarge && (
+                        <div className="mt-4 md:mt-5 mb-1 md:mb-2 px-2 flex flex-col flex-grow relative z-10">
+                            <h4 className={`text-white font-bold text-sm md:text-base mb-1 md:mb-2 ${theme.titleColor} transition-colors`}>{title}</h4>
+                            <p className="text-[11px] md:text-xs text-slate-400 mb-3 md:mb-4 flex-grow">{subtitle}</p>
+                            <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/5">
+                                <span className={`text-[9px] md:text-[10px] px-2 py-1 rounded border bg-${colorTheme}-500/20 text-${colorTheme}-300 border-${colorTheme}-500/30`}>{badge}</span>
+                                <span className="bg-white/10 text-white text-[9px] md:text-[10px] px-2 py-1 rounded">High Quality</span>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             );
         };
@@ -352,18 +377,14 @@
             
             useEffect(() => {
                 if (!startTrigger) return;
-                
                 let startTime = null;
                 const step = (timestamp) => {
                     if (!startTime) startTime = timestamp;
                     const progress = Math.min((timestamp - startTime) / duration, 1);
                     const easeOutQuart = 1 - Math.pow(1 - progress, 4);
                     setCount(easeOutQuart * end);
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
-                    } else {
-                        setCount(end);
-                    }
+                    if (progress < 1) window.requestAnimationFrame(step);
+                    else setCount(end);
                 };
                 window.requestAnimationFrame(step);
             }, [end, duration, startTrigger]);
@@ -375,10 +396,11 @@
             const myUpworkLink = "https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share";
             const mainPortfolioUrl = "index.html";
 
+            // --- GLOBAL APP STATE ---
+            const [activeVideoId, setActiveVideoId] = useState("1178509950"); // Putin starts active
+            
             const [showWorkflow, setShowWorkflow] = useState(false);
             const [hoveredNode, setHoveredNode] = useState(null);
-            
-            // --- Analytics & Quarters State ---
             const [activeVariant, setActiveVariant] = useState(null);
             const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
             const [playStatsAnim, setPlayStatsAnim] = useState(false); 
@@ -527,24 +549,28 @@
 
                             {/* --- TRANSFORMATION SHOWCASE --- */}
                             <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 max-w-4xl mx-auto text-left relative z-20">
-                                <div className="w-full max-w-[320px] md:max-w-[350px]">
-                                    <VideoCard 
-                                        vimeoId="1178505128" 
-                                        badge="UGC Beauty" 
-                                        badgeColor="bg-pink-600" 
-                                        title="Me into Pink UGC Character" 
-                                        subtitle="Flawless tongue and facial micro-movement tracking" 
-                                    />
-                                </div>
-                                <div className="w-full max-w-[320px] md:max-w-[350px]">
-                                    <VideoCard 
-                                        vimeoId="1178509950" 
-                                        badge="Precision Face Lock" 
-                                        badgeColor="bg-blue-600" 
-                                        title="Me into Putin Avatar" 
-                                        subtitle="1:1 structural motion matching during extreme expressions" 
-                                    />
-                                </div>
+                                <InteractiveVideoCard 
+                                    vimeoId="1178505128" 
+                                    badge="UGC Beauty" 
+                                    badgeColor="bg-pink-600" 
+                                    title="Me into Pink UGC Character" 
+                                    subtitle="Flawless tongue and facial micro-movement tracking" 
+                                    colorTheme="pink"
+                                    isLarge={true}
+                                    activeVideoId={activeVideoId}
+                                    onActivate={setActiveVideoId}
+                                />
+                                <InteractiveVideoCard 
+                                    vimeoId="1178509950" 
+                                    badge="Precision Face Lock" 
+                                    badgeColor="bg-blue-600" 
+                                    title="Me into Putin Avatar" 
+                                    subtitle="1:1 structural motion matching during extreme expressions" 
+                                    colorTheme="blue"
+                                    isLarge={true}
+                                    activeVideoId={activeVideoId}
+                                    onActivate={setActiveVideoId}
+                                />
                             </div>
                         </div>
                     </header>
@@ -562,43 +588,51 @@
 
                             <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-8 md:pb-0 snap-x snap-mandatory hide-scrollbar px-6 md:px-0">
                                 
-                                <ShowcaseVideoCard 
+                                <InteractiveVideoCard 
                                     vimeoId="1177969101"
                                     title="Cosmetics UGC"
-                                    desc="Women's cosmetic product integrating authentic UGC feel."
-                                    cat="Beauty"
-                                    styleText="UGC Style"
+                                    subtitle="Women's cosmetic product integrating authentic UGC feel."
+                                    badge="Beauty"
+                                    badgeColor="bg-[#c5a880]"
                                     colorTheme="cyan"
+                                    activeVideoId={activeVideoId}
+                                    onActivate={setActiveVideoId}
                                 />
 
-                                <ShowcaseVideoCard 
+                                <InteractiveVideoCard 
                                     vimeoId="1177969028"
                                     title="App Promo (Emotion)"
-                                    desc="Betting app ad demonstrating strong AI-generated emotional reactions."
-                                    cat="App Promo"
-                                    styleText="High Emotion"
+                                    subtitle="Betting app ad demonstrating strong AI-generated emotional reactions."
+                                    badge="App Promo"
+                                    badgeColor="bg-[#9b8df0]"
                                     colorTheme="emerald"
                                     delayClass="md:delay-100"
+                                    activeVideoId={activeVideoId}
+                                    onActivate={setActiveVideoId}
                                 />
 
-                                <ShowcaseVideoCard 
+                                <InteractiveVideoCard 
                                     vimeoId="1177963191"
                                     title="High-Ticket Gadget"
-                                    desc="Hard-to-film gadgets rendered with hyper-realistic sales appeal."
-                                    cat="Tech"
-                                    styleText="Ultra-Realism"
+                                    subtitle="Hard-to-film gadgets rendered with hyper-realistic sales appeal."
+                                    badge="Tech"
+                                    badgeColor="bg-[#64748b]"
                                     colorTheme="purple"
                                     delayClass="md:delay-200"
+                                    activeVideoId={activeVideoId}
+                                    onActivate={setActiveVideoId}
                                 />
 
-                                <ShowcaseVideoCard 
+                                <InteractiveVideoCard 
                                     vimeoId="1177969846"
                                     title="Medical Mixed Reality"
-                                    desc="Blending real medical/physical products with AI environments."
-                                    cat="Medical & E-Com"
-                                    styleText="Mixed Reality"
+                                    subtitle="Blending real medical/physical products with AI environments."
+                                    badge="Medical & E-Com"
+                                    badgeColor="bg-[#d2a3a9]"
                                     colorTheme="pink"
                                     delayClass="md:delay-300"
+                                    activeVideoId={activeVideoId}
+                                    onActivate={setActiveVideoId}
                                 />
 
                                 <div className="w-1 md:hidden shrink-0"></div>
