@@ -526,21 +526,25 @@
                             </div>
 
                             {/* --- TRANSFORMATION SHOWCASE --- */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-5xl mx-auto text-left relative z-20">
-                                <VideoCard 
-                                    vimeoId="1178505128" 
-                                    badge="UGC Beauty" 
-                                    badgeColor="bg-pink-600" 
-                                    title="Me into Pink UGC Character" 
-                                    subtitle="Flawless tongue and facial micro-movement tracking" 
-                                />
-                                <VideoCard 
-                                    vimeoId="1178509950" 
-                                    badge="Precision Face Lock" 
-                                    badgeColor="bg-blue-600" 
-                                    title="Me into Putin Avatar" 
-                                    subtitle="1:1 structural motion matching during extreme expressions" 
-                                />
+                            <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 max-w-4xl mx-auto text-left relative z-20">
+                                <div className="w-full max-w-[320px] md:max-w-[350px]">
+                                    <VideoCard 
+                                        vimeoId="1178505128" 
+                                        badge="UGC Beauty" 
+                                        badgeColor="bg-pink-600" 
+                                        title="Me into Pink UGC Character" 
+                                        subtitle="Flawless tongue and facial micro-movement tracking" 
+                                    />
+                                </div>
+                                <div className="w-full max-w-[320px] md:max-w-[350px]">
+                                    <VideoCard 
+                                        vimeoId="1178509950" 
+                                        badge="Precision Face Lock" 
+                                        badgeColor="bg-blue-600" 
+                                        title="Me into Putin Avatar" 
+                                        subtitle="1:1 structural motion matching during extreme expressions" 
+                                    />
+                                </div>
                             </div>
                         </div>
                     </header>
