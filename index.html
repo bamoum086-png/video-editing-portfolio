@@ -244,11 +244,13 @@
 
     </style>
 </head>
-<body class="antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+<body class="antialiased selection:bg-indigo-500 selection:text-white relative">
     
-    <!-- Ambient Background Lighting -->
-    <div class="bg-glow top-[-200px] left-[-200px]"></div>
-    <div class="bg-glow bottom-[-200px] right-[-200px] bg-purple-500/10"></div>
+    <!-- Ambient Background Lighting (Isolated wrapper to prevent side scrolling) -->
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="bg-glow top-[-200px] left-[-200px]"></div>
+        <div class="bg-glow bottom-[-200px] right-[-200px] bg-purple-500/10"></div>
+    </div>
 
     <div class="flex flex-col min-h-screen relative z-10">
         
