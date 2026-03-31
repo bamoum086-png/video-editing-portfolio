@@ -231,10 +231,15 @@
                     
                     player.ready().then(() => {
                         if (isPutin) {
-                            // Putin: Autoplay (muted) on load
-                            player.setVolume(0);
-                            player.play().catch(e => console.log("Autoplay prevented:", e));
-                            setIsPlaying(true);
+                            // Putin: Autoplay (muted) on load. Added explicit Promise handling for mobile support.
+                            player.setVolume(0).then(() => {
+                                player.play().then(() => {
+                                    setIsPlaying(true);
+                                }).catch(e => {
+                                    console.log("Autoplay prevented by mobile browser:", e);
+                                    setIsPlaying(false); // Update UI if mobile strictly blocks it
+                                });
+                            });
                         } else {
                             // Others: Force pause to prevent annoying autoplay
                             player.pause().catch(e => console.log(e));
@@ -349,11 +354,13 @@
                             <p className="text-slate-400 text-[10px] md:text-xs mt-1 italic">{subtitle}</p>
                         </div>
                         
+                        {/* Added playsinline=1 & autopause=0 for mobile compatibility */}
                         <iframe 
                             ref={iframeRef} 
-                            src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1`} 
+                            src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0`} 
                             className="absolute inset-0 w-full h-full object-cover scale-[1.05]" 
-                            allow="autoplay; fullscreen"
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            title={title}
                         ></iframe>
                     </div>
 
@@ -549,17 +556,10 @@
 
                             {/* --- TRANSFORMATION SHOWCASE --- */}
                             <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 max-w-4xl mx-auto text-left relative z-20">
-                                <InteractiveVideoCard 
-                                    vimeoId="1178505128" 
-                                    badge="UGC Beauty" 
-                                    badgeColor="bg-pink-600" 
-                                    title="Me into Pink UGC Character" 
-                                    subtitle="Flawless tongue and facial micro-movement tracking" 
-                                    colorTheme="pink"
-                                    isLarge={true}
-                                    activeVideoId={activeVideoId}
-                                    onActivate={setActiveVideoId}
-                                />
+                                
+                                {/* تم تبديل الترتيب ليصبح فيديو بوتين هو الأول هنا
+                                    ليظهر في أعلى القائمة على أجهزة الهاتف المحمول
+                                */}
                                 <InteractiveVideoCard 
                                     vimeoId="1178509950" 
                                     badge="Precision Face Lock" 
@@ -571,6 +571,19 @@
                                     activeVideoId={activeVideoId}
                                     onActivate={setActiveVideoId}
                                 />
+
+                                <InteractiveVideoCard 
+                                    vimeoId="1178505128" 
+                                    badge="UGC Beauty" 
+                                    badgeColor="bg-pink-600" 
+                                    title="Me into Pink UGC Character" 
+                                    subtitle="Flawless tongue and facial micro-movement tracking" 
+                                    colorTheme="pink"
+                                    isLarge={true}
+                                    activeVideoId={activeVideoId}
+                                    onActivate={setActiveVideoId}
+                                />
+
                             </div>
                         </div>
                     </header>
