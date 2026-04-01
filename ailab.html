@@ -175,6 +175,26 @@
         @keyframes popUp { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
         .animate-pop-up { animation: popUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
+        /* --- NEW: Variant Cards Animations --- */
+        @keyframes lightningFlash {
+            0%, 100% { opacity: 0; background: transparent; }
+            1%, 3% { opacity: 1; background: rgba(255,255,255,0.3); mix-blend-mode: overlay; }
+            2% { opacity: 0; }
+        }
+        .group:hover .hover-lightning { animation: lightningFlash 5s infinite; }
+
+        @keyframes fingerPointDown {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(12px) scale(0.95); }
+        }
+        .animate-finger { animation: fingerPointDown 1s ease-in-out infinite; }
+
+        @keyframes tooltipBounce {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-5px) rotate(2deg); }
+        }
+        .animate-tooltip { animation: tooltipBounce 2s ease-in-out infinite; }
+
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
 
@@ -516,11 +536,12 @@
             const [playStatsAnim, setPlayStatsAnim] = useState(false); 
             const [activeQuarter, setActiveQuarter] = useState('Q1'); 
 
+            // قمنا بإضافة خاصية thumbnail لتضع فيها رابط الصورة الخاصة باللقطة لكل فيديو
             const outputVariants = [
-                { id: 'v1', title: "Variant 01", vimeoId: "1178041937", hook: "71%", retention: "Steady", ctr: "4.2%", roas: "3.1x", color: "cyan" },
-                { id: 'v2', title: "Variant 02", vimeoId: "1178041915", hook: "65%", retention: "Spike", ctr: "5.1%", roas: "3.8x", color: "emerald" },
-                { id: 'v3', title: "Variant 03", vimeoId: "1178041887", hook: "78%", retention: "High", ctr: "6.4%", roas: "4.5x", color: "purple" },
-                { id: 'v4', title: "Variant 04", vimeoId: "1178041859", hook: "82%", retention: "Viral", ctr: "7.1%", roas: "5.2x", color: "pink" }
+                { id: 'v1', title: "Variant 01", vimeoId: "1178041937", thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop", hook: "71%", retention: "Steady", ctr: "4.2%", roas: "3.1x", color: "cyan" },
+                { id: 'v2', title: "Variant 02", vimeoId: "1178041915", thumbnail: "https://images.unsplash.com/photo-1600861194942-f883de0dfe96?q=80&w=400&auto=format&fit=crop", hook: "65%", retention: "Spike", ctr: "5.1%", roas: "3.8x", color: "emerald" },
+                { id: 'v3', title: "Variant 03", vimeoId: "1178041887", thumbnail: "https://images.unsplash.com/photo-1622737133809-d95047b9e673?q=80&w=400&auto=format&fit=crop", hook: "78%", retention: "High", ctr: "6.4%", roas: "4.5x", color: "purple" },
+                { id: 'v4', title: "Variant 04", vimeoId: "1178041859", thumbnail: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop", hook: "82%", retention: "Viral", ctr: "7.1%", roas: "5.2x", color: "pink" }
             ];
 
             useEffect(() => {
@@ -868,22 +889,53 @@
                                         </div>
 
                                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 px-4 md:px-0">
-                                            {outputVariants.map((variant) => (
-                                                <div key={variant.id} className="glass-card p-2 md:p-3 rounded-2xl md:rounded-[2rem] relative group border border-white/10 hover:border-white/30 transition-all flex flex-col">
-                                                    <div className="aspect-[9/16] w-full rounded-xl overflow-hidden bg-slate-900 relative z-10 border border-slate-800 flex items-center justify-center">
-                                                        <div className="absolute inset-0 bg-slate-800 animate-pulse flex items-center justify-center z-0">
-                                                            <i className={`fas fa-circle-notch fa-spin text-${variant.color}-500/50 text-xl`}></i>
-                                                        </div>
-                                                        {/* إضافة loading="lazy" لتأخير تحميل الفيديوهات الصغيرة */}
-                                                        <iframe src={`https://player.vimeo.com/video/${variant.vimeoId}?background=1&autoplay=1&loop=1&muted=1`} loading="lazy" className="absolute top-0 left-0 w-full h-full border-0 pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity z-10" allow="autoplay; fullscreen" allowFullScreen></iframe>
+                                            {outputVariants.map((variant, idx) => (
+                                                <div 
+                                                    key={variant.id} 
+                                                    className="glass-card p-2 md:p-3 rounded-2xl md:rounded-[2rem] relative group border border-white/10 hover:border-white/40 transition-all duration-300 flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:z-20"
+                                                >
+                                                    {/* تأثير وميض البرق عند الإشارة */}
+                                                    <div className="hover-lightning absolute inset-0 rounded-[2rem] pointer-events-none z-30"></div>
+
+                                                    {/* صورة مصغرة (Thumbnail) بدلاً من زر التشغيل أو الفيديو لتقليل الضغط والتركيز على زر التحليل */}
+                                                    <div className={`aspect-[9/16] w-full rounded-xl overflow-hidden relative z-10 border border-slate-800 flex flex-col items-center justify-center transition-all duration-500 group-hover:border-${variant.color}-500/50 bg-slate-900`}>
+                                                        {/* صورة اللقطة من الفيديو */}
+                                                        <img 
+                                                            src={variant.thumbnail} 
+                                                            alt={variant.title} 
+                                                            className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105" 
+                                                            loading="lazy" 
+                                                        />
+                                                        
+                                                        {/* تأثير التدرج اللوني فوق الصورة لجعل النص والزر واضحين */}
+                                                        <div className={`absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-${variant.color}-500/20 opacity-80 group-hover:opacity-60 transition-opacity duration-500`}></div>
                                                     </div>
-                                                    <div className="mt-3 flex flex-col flex-grow text-left">
-                                                        <h4 className="text-white font-bold text-[11px] md:text-xs mb-1.5">{variant.title}</h4>
+
+                                                    <div className="mt-4 flex flex-col flex-grow text-left relative z-40">
+                                                        <h4 className="text-white font-bold text-[11px] md:text-xs mb-1.5 pl-1">{variant.title}</h4>
+                                                        
+                                                        {/* رسالة السوشيال ميديا وإصبع البرق (تظهر عند الإشارة فقط لتوجيه المستخدم لزر التحليل) */}
+                                                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none hidden group-hover:flex">
+                                                            {/* Tooltip */}
+                                                            <div className={`bg-white text-slate-900 text-[10px] md:text-xs font-black px-3 py-1.5 rounded-xl mb-1 shadow-[0_0_20px_rgba(255,255,255,0.4)] whitespace-nowrap animate-tooltip border-b-2 border-${variant.color}-500`}>
+                                                                Check the Analytics!
+                                                                <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45"></div>
+                                                            </div>
+                                                            {/* Finger & Lightning */}
+                                                            <div className={`text-${variant.color}-400 text-3xl md:text-4xl drop-shadow-[0_0_15px_currentColor] animate-finger relative mt-1`}>
+                                                                <i className="fas fa-hand-point-down"></i>
+                                                                <i className="fas fa-bolt absolute -top-1 -right-3 text-yellow-300 text-base animate-pulse drop-shadow-[0_0_10px_rgba(253,224,71,0.8)]"></i>
+                                                            </div>
+                                                        </div>
+
                                                         <button 
                                                             onClick={(e) => handleAnalyzeVariant(variant, e)}
-                                                            className={`mt-auto w-full py-2 rounded-lg bg-${variant.color}-500/20 border border-${variant.color}-500/50 text-${variant.color}-300 text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-${variant.color}-500 hover:text-white transition-all shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] flex items-center justify-center gap-1.5`}
+                                                            className={`mt-auto w-full py-2.5 rounded-lg bg-${variant.color}-500/10 border border-${variant.color}-500/50 text-${variant.color}-300 text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-${variant.color}-500 hover:text-white transition-all duration-300 shadow-inner group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 relative overflow-hidden group/btn`}
                                                         >
-                                                            <i className="fas fa-microchip"></i> Analyze
+                                                            <i className="fas fa-bolt text-[10px] opacity-0 group-hover/btn:opacity-100 transition-opacity text-yellow-300 absolute left-4"></i>
+                                                            <i className="fas fa-microchip relative z-10"></i> 
+                                                            <span className="relative z-10">Analyze</span>
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-[150%] group-hover/btn:animate-[glare_1.5s_infinite]"></div>
                                                         </button>
                                                     </div>
                                                 </div>
