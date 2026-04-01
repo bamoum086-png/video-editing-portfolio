@@ -321,7 +321,7 @@
                 </div>
                 
                 <!-- The Creative Timeline Animation -->
-                <div class="flex flex-col items-center justify-center w-full max-w-[90%] md:max-w-2xl mx-auto px-4 sm:px-12 md:px-14 mb-16 md:mb-20 mt-20 md:mt-36 relative z-0">
+                <div class="flex flex-col items-center justify-center w-full max-w-[90%] md:max-w-2xl mx-auto px-4 sm:px-12 md:px-14 mb-12 md:mb-16 mt-20 md:mt-32 relative z-0">
                     <div class="relative w-full h-1.5 md:h-2 bg-slate-800 rounded-full">
                         <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 via-sky-400 to-cyan-400 rounded-full animate-progress-bar origin-left z-0"></div>
 
@@ -362,41 +362,19 @@
                     </div>
                 </div>
 
-                <!-- شارة مؤقت FOMO -->
-                <div class="relative mx-auto w-full max-w-[90%] md:max-w-sm flex flex-col items-center mt-12 md:mt-16 mb-4" id="badge-container">
-                    <div class="relative group w-full">
-                        <div id="badge-glow" class="absolute -inset-1.5 bg-gradient-to-r from-red-600 to-red-500 rounded-full blur-md opacity-100 animate-pulse transition duration-500"></div>
-                        <div id="badge-inner" class="relative flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 border-2 border-red-400 rounded-full shadow-[0_0_40px_rgba(220,38,38,0.8)] overflow-hidden transition-all duration-300 w-full">
-                            
-                            <a href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" id="badge-timer" class="flex items-center gap-2 md:gap-3 px-3 py-2.5 md:px-6 md:py-3 justify-center w-full hover:brightness-110 transition-all">
-                                <i class="fas fa-stopwatch text-white animate-bounce text-sm md:text-xl"></i>
-                                <span class="text-white font-black text-[10px] min-[400px]:text-[11px] md:text-sm tracking-wide uppercase drop-shadow-md text-center">
-                                    Hire before timer ends: <span id="time-left" class="text-red-700 text-sm md:text-xl font-black bg-white px-1.5 md:px-2.5 py-0.5 md:py-1 rounded shadow-inner ml-1 inline-block min-w-[20px]">15</span>
-                                </span>
-                            </a>
-                            
-                            <div id="badge-expired" class="hidden items-center px-3 py-2.5 md:px-6 md:py-3 justify-center w-full bg-slate-900 border-slate-800 transition-all">
-                                <span class="text-slate-400 font-bold text-[9px] md:text-[11px] tracking-wide uppercase text-center leading-snug">
-                                    <span class="text-amber-400">⏱️ Timer expired!</span> But luckily, the quality of my work doesn't expire. Dive into the logic below.
-                                </span>
-                            </div>
+                <!-- Clean Transition / Bridge Section -->
+                <div class="w-full flex flex-col items-center justify-center mt-12 md:mt-16 mb-4 px-4 animate-[sweep_1s_ease-in-out_forwards]">
+                    <h3 class="text-slate-300 text-sm md:text-lg font-medium mb-3 tracking-wide text-center">
+                        The timeline proves the <span class="text-cyan-400 font-bold drop-shadow-sm">experience</span>.<br class="block sm:hidden"/> 
+                        The portfolio proves the <span class="text-purple-400 font-bold drop-shadow-sm">quality</span>.
+                    </h3>
+                    
+                    <a href="#portfolio-sections" class="flex flex-col items-center group cursor-pointer mt-4">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors duration-300 mb-2">Dive Into The Work</span>
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-800/40 border border-slate-700 flex items-center justify-center group-hover:border-cyan-500/50 group-hover:bg-cyan-500/10 group-hover:shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-all duration-300">
+                            <i class="fas fa-chevron-down text-slate-400 group-hover:text-cyan-400 text-sm md:text-base animate-bounce"></i>
                         </div>
-                    </div>
-
-                    <!-- الرسالة المخفية -->
-                    <div id="post-timer-reveal" class="hidden opacity-0 translate-y-4 flex-col items-center mt-8 md:mt-12 transition-all duration-1000 ease-out px-2 w-full text-center">
-                        <h3 class="text-base md:text-2xl font-black text-white mb-2 md:mb-3 tracking-wide">
-                            Did you feel the <span class="text-red-400 drop-shadow-md">psychological pull?</span>
-                        </h3>
-                        <p class="text-slate-400 text-xs md:text-base leading-relaxed mb-6 md:mb-8">
-                            That's <strong>neuromarketing</strong> in action. Over the past 4 years, I've mastered the art of making audiences take action. Just as that timer compelled you, I engineer your content to compel your ideal clients.
-                        </p>
-                        
-                        <div class="animate-bounce text-cyan-400 flex flex-col items-center gap-2 cursor-pointer hover:text-cyan-300 transition-colors" onclick="document.getElementById('portfolio-sections').scrollIntoView({behavior: 'smooth'})">
-                            <span class="text-[10px] font-black uppercase tracking-widest drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">Dive In To See How</span>
-                            <i class="fas fa-chevron-down text-base md:text-lg drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]"></i>
-                        </div>
-                    </div>
+                    </a>
                 </div>
 
             </div>
@@ -1136,46 +1114,6 @@
                 navbar.classList.remove('bg-[#030712]/80', 'md:backdrop-blur-lg', 'border-b', 'border-slate-800/50', 'py-3', 'md:py-4');
                 navbar.classList.add('bg-transparent', 'py-4', 'md:py-6', 'backdrop-blur-sm', 'md:backdrop-blur-none');
             }
-        });
-
-        // سكريبت المؤقت النفسي (FOMO Timer)
-        document.addEventListener("DOMContentLoaded", () => {
-            const timerBadge = document.getElementById("badge-timer");
-            const expiredBadge = document.getElementById("badge-expired");
-            const timeLeftSpan = document.getElementById("time-left");
-            const badgeGlow = document.getElementById("badge-glow");
-            const badgeInner = document.getElementById("badge-inner");
-            const revealSection = document.getElementById("post-timer-reveal"); 
-
-            let timeLeft = 15; 
-            
-            const countdownInterval = setInterval(() => {
-                timeLeft--;
-                timeLeftSpan.textContent = timeLeft;
-
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    timerBadge.classList.add("hidden");
-                    timerBadge.classList.remove("flex");
-                    expiredBadge.classList.remove("hidden");
-                    expiredBadge.classList.add("flex");
-                    
-                    badgeGlow.classList.remove("from-red-600", "to-red-500", "animate-pulse", "opacity-100", "blur-md", "-inset-1.5");
-                    badgeGlow.classList.add("from-slate-800", "to-slate-900", "opacity-20", "blur", "-inset-1");
-                    
-                    badgeInner.classList.remove("bg-gradient-to-r", "from-red-600", "to-red-700", "border-red-400", "border-2", "shadow-[0_0_40px_rgba(220,38,38,0.8)]");
-                    badgeInner.classList.add("bg-[#030712]", "border-slate-800", "border");
-
-                    if(revealSection) {
-                        revealSection.classList.remove("hidden");
-                        revealSection.classList.add("flex");
-                        setTimeout(() => {
-                            revealSection.classList.remove("opacity-0", "translate-y-4");
-                            revealSection.classList.add("opacity-100", "translate-y-0");
-                        }, 50);
-                    }
-                }
-            }, 1000); 
         });
 
         // سكريبت عداد الأرقام في قسم دراسة الحالة
