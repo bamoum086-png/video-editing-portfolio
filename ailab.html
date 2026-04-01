@@ -69,6 +69,7 @@
             opacity: 0;
             transform: translateY(30px);
             transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+            will-change: transform, opacity;
         }
         .reveal.active {
             opacity: 1;
@@ -134,6 +135,7 @@
         .animate-pointer {
             animation: smartPointer 7s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
             filter: drop-shadow(0px 10px 8px rgba(0, 242, 254, 0.4));
+            will-change: transform, opacity;
         }
 
         /* Highlight effects */
@@ -208,13 +210,12 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // --- PRELOADER COMPONENT (NEW) ---
+        // --- PRELOADER COMPONENT ---
         const Preloader = ({ onComplete }) => {
             const [progress, setProgress] = useState(0);
             const [isHiding, setIsHiding] = useState(false);
 
             useEffect(() => {
-                // Total duration of the loading screen: 2.5 seconds
                 const duration = 2500; 
                 const intervalTime = 25;
                 const steps = duration / intervalTime;
@@ -222,16 +223,14 @@
 
                 const timer = setInterval(() => {
                     currentStep++;
-                    // Non-linear progress calculation for a cooler effect
                     const rawProgress = (currentStep / steps);
-                    const easeOutProgress = 1 - Math.pow(1 - rawProgress, 3); // Cubic ease out
+                    const easeOutProgress = 1 - Math.pow(1 - rawProgress, 3); 
                     
                     setProgress(Math.min(easeOutProgress * 100, 100));
                     
                     if (currentStep >= steps) {
                         clearInterval(timer);
                         setIsHiding(true);
-                        // Wait for the exit animation to finish before removing from DOM
                         setTimeout(() => onComplete(), 800); 
                     }
                 }, intervalTime);
@@ -241,21 +240,14 @@
 
             return (
                 <div className={`fixed inset-0 z-[9999] bg-[#020202] flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.7,0,0.3,1)] ${isHiding ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'}`}>
-                    
-                    {/* Background Tech Grid */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/circuit-board.png')] opacity-10 pointer-events-none"></div>
 
-                    {/* Profile Setup */}
                     <div className="relative w-36 h-36 md:w-44 md:h-44 flex items-center justify-center mb-10 group">
-                        {/* Glowing Background */}
                         <div className="absolute inset-0 bg-cyan-500/20 rounded-full blur-[40px] animate-pulse"></div>
-                        
-                        {/* Outer Tech Rings */}
                         <div className="absolute inset-[-10px] rounded-full border border-white/10 border-t-cyan-400 animate-[spin_2s_linear_infinite]"></div>
                         <div className="absolute inset-[-20px] rounded-full border border-white/5 border-b-purple-400 animate-[spin_3s_linear_infinite_reverse]"></div>
                         <div className="absolute inset-[2px] rounded-full border-2 border-dashed border-cyan-500/30 animate-[spin_10s_linear_infinite]"></div>
 
-                        {/* Profile Picture */}
                         <img 
                             src="https://www.upwork.com/profile-portraits/c1THF4gBsqOlPFKbSLIsTFYzEu9SSy5aZUukDa3go4_jNtzVy5qU2k4PJtZM_lVLbC" 
                             alt="Mohamed B. Workspace" 
@@ -263,7 +255,6 @@
                         />
                     </div>
 
-                    {/* Loading Text */}
                     <div className="text-center relative z-10">
                         <h2 className="text-2xl md:text-3xl font-black text-white tracking-widest uppercase mb-1 drop-shadow-lg">Mohamed B.</h2>
                         <div className="flex items-center justify-center gap-2 text-cyan-400 text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase mb-8">
@@ -272,7 +263,6 @@
                         </div>
                     </div>
 
-                    {/* Progress Bar Container */}
                     <div className="w-64 md:w-80 relative z-10">
                         <div className="flex justify-between text-[10px] text-slate-500 font-mono mb-2 uppercase tracking-widest">
                             <span>System Boot</span>
@@ -287,91 +277,110 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             );
         };
 
-        // --- Video Component ---
+        // --- Video Component (تم تحسينه للتحميل المتأخر لمنع التقطيع) ---
         const InteractiveVideoCard = ({ vimeoId, badge, badgeColor, title, subtitle, colorTheme, activeVideoId, onActivate, delayClass = "", isLarge = false }) => {
-            const isPutin = vimeoId === "1178509950"; // Special Putin Video Condition
+            const isPutin = vimeoId === "1178509950"; 
             
+            const cardRef = useRef(null);
             const iframeRef = useRef(null);
             const playerRef = useRef(null);
+            
+            // إضافة حالة جديدة للتحميل المتأخر
+            const [isVisible, setIsVisible] = useState(false);
+            
             const [isPlaying, setIsPlaying] = useState(isPutin);
             const [isMuted, setIsMuted] = useState(true);
-            const [isLoaded, setIsLoaded] = useState(false); // New state for loading
+            const [isLoaded, setIsLoaded] = useState(false); 
             const activeIdRef = useRef(activeVideoId);
 
-            // Keeps ref updated for event listeners without causing re-renders
             useEffect(() => {
                 activeIdRef.current = activeVideoId;
             }, [activeVideoId]);
 
-            // Initialize Vimeo Player
+            // مراقب التقاطع (Intersection Observer) لتحميل الفيديو فقط عند اقتراب المستخدم منه
             useEffect(() => {
-                if (iframeRef.current) {
-                    const player = new Vimeo.Player(iframeRef.current);
-                    playerRef.current = player;
-                    
-                    // Listen for load and play events to hide the skeleton loader
-                    player.on('loaded', () => setIsLoaded(true));
-                    player.on('play', () => setIsLoaded(true));
-
-                    player.ready().then(() => {
-                        setIsLoaded(true); // Fallback
-                        if (isPutin) {
-                            // Putin: Autoplay (muted) on load. Added explicit Promise handling for mobile support.
-                            player.setVolume(0).then(() => {
-                                player.play().then(() => {
-                                    setIsPlaying(true);
-                                }).catch(e => {
-                                    console.log("Autoplay prevented by mobile browser:", e);
-                                    setIsPlaying(false); // Update UI if mobile strictly blocks it
-                                });
-                            });
-                        } else {
-                            // Others: Force pause to prevent annoying autoplay
-                            player.pause().catch(e => console.log(e));
-                            setIsPlaying(false);
+                const observer = new IntersectionObserver(
+                    ([entry]) => {
+                        if (entry.isIntersecting) {
+                            setIsVisible(true);
+                            observer.disconnect(); // إيقاف المراقبة بعد التحميل
                         }
-                    });
+                    },
+                    { rootMargin: "400px" } // يبدأ التحميل قبل 400 بكسل من ظهور العنصر لتفادي التأخير
+                );
 
-                    // Safeguard against Vimeo's automatic scrolling plays (background=1 behavior)
-                    player.on('play', () => {
-                        if (vimeoId !== activeIdRef.current && !isPutin) {
-                            // If it tries to play but isn't the active one, stop it.
-                            player.pause();
-                            setIsPlaying(false);
-                        } else {
-                            setIsPlaying(true);
-                        }
-                    });
-
-                    player.on('pause', () => setIsPlaying(false));
+                if (cardRef.current) {
+                    observer.observe(cardRef.current);
                 }
+
+                return () => {
+                    if (cardRef.current) observer.disconnect();
+                };
             }, []);
 
-            // Handle exclusive playback (Pause if another video becomes active)
+            // تهيئة مشغل Vimeo فقط عندما يصبح العنصر مرئياً
+            useEffect(() => {
+                if (!isVisible || !iframeRef.current) return;
+
+                const player = new Vimeo.Player(iframeRef.current);
+                playerRef.current = player;
+                
+                player.on('loaded', () => setIsLoaded(true));
+                player.on('play', () => setIsLoaded(true));
+
+                player.ready().then(() => {
+                    setIsLoaded(true); 
+                    if (isPutin) {
+                        player.setVolume(0).then(() => {
+                            player.play().then(() => {
+                                setIsPlaying(true);
+                            }).catch(e => {
+                                console.log("Autoplay prevented by mobile browser:", e);
+                                setIsPlaying(false); 
+                            });
+                        });
+                    } else {
+                        player.pause().catch(e => console.log(e));
+                        setIsPlaying(false);
+                    }
+                });
+
+                player.on('play', () => {
+                    if (vimeoId !== activeIdRef.current && !isPutin) {
+                        player.pause();
+                        setIsPlaying(false);
+                    } else {
+                        setIsPlaying(true);
+                    }
+                });
+
+                player.on('pause', () => setIsPlaying(false));
+                
+            }, [isVisible]); // الاعتماد على isVisible
+
+            // Handle exclusive playback 
             useEffect(() => {
                 if (activeVideoId !== vimeoId && isPlaying && playerRef.current) {
                     playerRef.current.pause();
                     setIsPlaying(false);
-                    playerRef.current.setVolume(0); // Mute when paused in background
+                    playerRef.current.setVolume(0); 
                     setIsMuted(true);
                 }
             }, [activeVideoId]);
 
-            // The main Play/Pause Action
             const handlePlay = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 if (!playerRef.current) return;
 
                 if (!isPlaying) {
-                    onActivate(vimeoId); // Become the active video (pauses others)
+                    onActivate(vimeoId); 
                     playerRef.current.play();
-                    playerRef.current.setVolume(1); // Unmute immediately when explicitly played
+                    playerRef.current.setVolume(1); 
                     setIsPlaying(true);
                     setIsMuted(false);
                 } else {
@@ -380,7 +389,6 @@
                 }
             };
 
-            // Independent Sound Toggle Action
             const toggleMute = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -389,7 +397,6 @@
                 playerRef.current.setVolume(nextMuteState ? 0 : 1);
                 setIsMuted(nextMuteState);
                 
-                // If they unmute while it's paused, start playing
                 if (!nextMuteState && !isPlaying) {
                     onActivate(vimeoId);
                     playerRef.current.play();
@@ -397,7 +404,6 @@
                 }
             };
 
-            // Theme Mapping
             const themes = {
                 cyan: { gradient: 'from-cyan-500 to-blue-500', titleColor: 'group-hover:text-cyan-400', btn: 'bg-cyan-500/30 border-cyan-500/50 hover:bg-cyan-500/80 hover:border-cyan-400 shadow-[0_4px_15px_rgba(6,182,212,0.3)] hover:shadow-[0_6px_20px_rgba(6,182,212,0.6)]', spinner: 'border-cyan-500/30 border-t-cyan-500' },
                 emerald: { gradient: 'from-emerald-500 to-cyan-500', titleColor: 'group-hover:text-emerald-400', btn: 'bg-emerald-500/30 border-emerald-500/50 hover:bg-emerald-500/80 hover:border-emerald-400 shadow-[0_4px_15px_rgba(16,185,129,0.3)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.6)]', spinner: 'border-emerald-500/30 border-t-emerald-500' },
@@ -409,7 +415,7 @@
             const theme = themes[colorTheme] || themes.default;
 
             return (
-                <div className={`${isLarge ? 'w-full max-w-[320px] md:max-w-[350px] transformation-border p-4 md:p-5' : `w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 p-3 md:p-4 hover:border-${colorTheme}-500/50 flex-col hover:-translate-y-2`} glass-card rounded-[2.5rem] relative group border border-white/10 transition-all duration-500 flex ${delayClass}`}>
+                <div ref={cardRef} className={`${isLarge ? 'w-full max-w-[320px] md:max-w-[350px] transformation-border p-4 md:p-5' : `w-[82vw] sm:w-[60vw] md:w-auto snap-center shrink-0 p-3 md:p-4 hover:border-${colorTheme}-500/50 flex-col hover:-translate-y-2`} glass-card rounded-[2.5rem] relative group border border-white/10 transition-all duration-500 flex ${delayClass}`}>
                     
                     {!isLarge && (
                         <div className={`absolute -inset-0.5 bg-gradient-to-r ${theme.gradient} rounded-[2.2rem] blur opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none`}></div>
@@ -417,32 +423,24 @@
                     
                     <div className="aspect-[9/16] w-full rounded-[2rem] overflow-hidden bg-slate-900 relative border border-white/10 shadow-2xl flex items-center justify-center">
                         
-                        {/* Loading Indicator for Videos */}
                         <div className={`absolute inset-0 z-10 flex flex-col items-center justify-center bg-slate-900/90 backdrop-blur-md transition-opacity duration-700 ${isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                             <div className={`w-8 h-8 md:w-10 md:h-10 border-4 ${theme.spinner} rounded-full animate-spin mb-3`}></div>
                             <span className="text-white/50 text-[10px] font-bold tracking-widest uppercase animate-pulse">Loading...</span>
                         </div>
 
-                        {/* Badge */}
                         <div className="absolute top-4 left-4 z-20 flex flex-col gap-2 pointer-events-none">
                             <span className={`${badgeColor} text-white text-[10px] md:text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg`}>
                                 {badge}
                             </span>
                         </div>
 
-                        {/* Interactive Buttons Container */}
                         <div className="absolute top-4 right-4 z-30 flex flex-col gap-3">
-                            
-                            {/* Sound Button */}
                             <button onClick={toggleMute} className={`w-10 h-10 md:w-12 md:h-12 rounded-full glass-btn flex items-center justify-center cursor-pointer ${theme.btn}`} aria-label="Toggle Sound">
                                 <i className={`fas ${isMuted ? 'fa-volume-xmark' : 'fa-volume-high'} text-[11px] md:text-sm`}></i>
                             </button>
-
-                            {/* Play Button */}
                             <button onClick={handlePlay} className={`w-10 h-10 md:w-12 md:h-12 rounded-full glass-btn flex items-center justify-center cursor-pointer relative ${!isPlaying ? 'animate-pulse' : ''} ${theme.btn}`} aria-label="Play Video">
                                 <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play'} text-[11px] md:text-sm ${!isPlaying ? 'translate-x-0.5' : ''}`}></i>
                             </button>
-
                         </div>
 
                         <div className={`absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 to-transparent z-20 pointer-events-none ${!isLarge && 'hidden'}`}>
@@ -450,17 +448,19 @@
                             <p className="text-slate-400 text-[10px] md:text-xs mt-1 italic">{subtitle}</p>
                         </div>
                         
-                        {/* Added playsinline=1 & autopause=0 for mobile compatibility */}
-                        <iframe 
-                            ref={iframeRef} 
-                            src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0`} 
-                            className={`absolute inset-0 w-full h-full object-cover scale-[1.05] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} 
-                            allow="autoplay; fullscreen; picture-in-picture"
-                            title={title}
-                        ></iframe>
+                        {/* يتم رندر ال iframe فقط عندما يقترب من الشاشة */}
+                        {isVisible && (
+                            <iframe 
+                                ref={iframeRef} 
+                                src={`https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0`} 
+                                className={`absolute inset-0 w-full h-full object-cover scale-[1.05] transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`} 
+                                allow="autoplay; fullscreen; picture-in-picture"
+                                title={title}
+                                loading="lazy"
+                            ></iframe>
+                        )}
                     </div>
 
-                    {/* Small grid text layout */}
                     {!isLarge && (
                         <div className="mt-4 md:mt-5 mb-1 md:mb-2 px-2 flex flex-col flex-grow relative z-10">
                             <h4 className={`text-white font-bold text-sm md:text-base mb-1 md:mb-2 ${theme.titleColor} transition-colors`}>{title}</h4>
@@ -481,15 +481,22 @@
             useEffect(() => {
                 if (!startTrigger) return;
                 let startTime = null;
+                let animationFrame;
+                
                 const step = (timestamp) => {
                     if (!startTime) startTime = timestamp;
                     const progress = Math.min((timestamp - startTime) / duration, 1);
                     const easeOutQuart = 1 - Math.pow(1 - progress, 4);
                     setCount(easeOutQuart * end);
-                    if (progress < 1) window.requestAnimationFrame(step);
-                    else setCount(end);
+                    if (progress < 1) {
+                        animationFrame = window.requestAnimationFrame(step);
+                    } else {
+                        setCount(end);
+                    }
                 };
-                window.requestAnimationFrame(step);
+                animationFrame = window.requestAnimationFrame(step);
+                
+                return () => window.cancelAnimationFrame(animationFrame);
             }, [end, duration, startTrigger]);
 
             return <span>{prefix}{count.toFixed(decimals)}{suffix}</span>;
@@ -499,9 +506,8 @@
             const myUpworkLink = "https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share";
             const mainPortfolioUrl = "index.html";
 
-            // --- GLOBAL APP STATE ---
-            const [showPreloader, setShowPreloader] = useState(true); // Preloader State
-            const [activeVideoId, setActiveVideoId] = useState("1178509950"); // Putin starts active
+            const [showPreloader, setShowPreloader] = useState(true); 
+            const [activeVideoId, setActiveVideoId] = useState("1178509950"); 
             
             const [showWorkflow, setShowWorkflow] = useState(false);
             const [hoveredNode, setHoveredNode] = useState(null);
@@ -510,7 +516,6 @@
             const [playStatsAnim, setPlayStatsAnim] = useState(false); 
             const [activeQuarter, setActiveQuarter] = useState('Q1'); 
 
-            // The 4 Output Variants
             const outputVariants = [
                 { id: 'v1', title: "Variant 01", vimeoId: "1178041937", hook: "71%", retention: "Steady", ctr: "4.2%", roas: "3.1x", color: "cyan" },
                 { id: 'v2', title: "Variant 02", vimeoId: "1178041915", hook: "65%", retention: "Spike", ctr: "5.1%", roas: "3.8x", color: "emerald" },
@@ -586,14 +591,11 @@
             return (
                 <div className="flex flex-col min-h-screen relative z-10 ai-grid">
                     
-                    {/* The New Preloader Component */}
                     {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
 
-                    {/* Background Orbs */}
                     <div className="fixed top-[-20%] left-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-cyan-600/10 blur-[100px] md:blur-[150px] rounded-full pointer-events-none -z-10 animate-pulse" style={{animationDuration: '8s'}}></div>
                     <div className="fixed bottom-[-20%] right-[-10%] w-[80vw] md:w-[50vw] h-[80vw] md:h-[50vw] bg-purple-600/10 blur-[100px] md:blur-[150px] rounded-full pointer-events-none -z-10 animate-pulse" style={{animationDuration: '12s'}}></div>
 
-                    {/* --- NAVIGATION --- */}
                     <nav className="fixed w-full z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-white/5 py-4 transition-all duration-300">
                         <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
                             <div className="flex items-center gap-3 group cursor-pointer">
@@ -612,7 +614,6 @@
                         </div>
                     </nav>
 
-                    {/* --- HERO SECTION: THE HOOK --- */}
                     <header className="pt-36 md:pt-40 pb-16 md:pb-20 px-4 md:px-6 relative reveal">
                         <div className="max-w-5xl mx-auto text-center">
                             
@@ -629,7 +630,6 @@
                                 Experience the future of <span className="text-white font-bold italic">UGC-Style content</span>. Why spend thousands of dollars on expensive models every time when you can have a digital avatar that does <span className="text-cyan-400 font-semibold">exactly what you want</span>? Better than any real creator, I offer <span className="text-white font-semibold">total control</span> over a high-converting digital persona with Hollywood-grade fidelity.
                             </p>
 
-                            {/* Client Pain Point Counters */}
                             <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 md:gap-8 max-w-4xl mx-auto px-4 mb-16">
                                 <div className="flex items-center gap-3 bg-white/5 px-5 md:px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-default w-full sm:w-auto justify-center sm:justify-start">
                                     <i className="fas fa-face-smile-beam text-xl md:text-2xl text-purple-400"></i>
@@ -654,7 +654,6 @@
                                 </div>
                             </div>
 
-                            {/* --- TRANSFORMATION SHOWCASE --- */}
                             <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12 max-w-4xl mx-auto text-left relative z-20">
                                 
                                 <InteractiveVideoCard 
@@ -685,7 +684,6 @@
                         </div>
                     </header>
 
-                    {/* --- AI INFLUENCER SHOWCASE (GRID) --- */}
                     <section className="py-16 md:py-24 relative z-30 bg-[#050505] border-y border-white/5 shadow-2xl reveal overflow-hidden">
                         <div className="max-w-7xl mx-auto px-0 md:px-6">
                             <div className="text-center mb-8 md:mb-16 px-6">
@@ -750,7 +748,6 @@
                         </div>
                     </section>
 
-                    {/* --- THE TECH STACK ARCHITECTURE --- */}
                     <section className="py-20 md:py-24 px-6 relative z-20 bg-[#020408]/80 border-t border-white/5 reveal">
                         <div className="max-w-7xl mx-auto">
                             <div className="text-center mb-12 md:mb-20">
@@ -797,7 +794,6 @@
                             </div>
                         </div>
 
-                        {/* --- THE MASTER BUTTON --- */}
                         <div className="mt-16 md:mt-20 text-center max-w-xl mx-auto relative z-20 px-4">
                             <a 
                                 href="#interactive-pipeline-container" 
@@ -819,10 +815,8 @@
                         </div>
                     </section>
 
-                    {/* --- EXPANDABLE CONTAINER --- */}
                     <div id="interactive-pipeline-container" className={`transition-all duration-1000 ease-in-out overflow-hidden relative z-30 ${showWorkflow ? 'max-h-[8000px] opacity-100 mt-4' : 'max-h-0 opacity-0 mt-0 pointer-events-none'}`}>
                         
-                        {/* THE PRODUCTION PIPELINE */}
                         <section className="pt-16 md:pt-24 pb-12 px-4 md:px-6 relative bg-[#070b14] border-t border-white/5 rounded-t-[2rem] md:rounded-t-[3rem]">
                             <div className="max-w-5xl mx-auto">
                                 <div className="text-center mb-12 md:mb-16">
@@ -866,7 +860,6 @@
                                         </div>
                                     ))}
 
-                                    {/* --- PIPELINE BRANCHING INTO OUTPUT VARIANTS --- */}
                                     <div className="relative mt-24 pt-12 text-center border-t border-dashed border-white/20">
                                         <div className="absolute top-[-2px] left-6 md:left-1/2 w-1 h-12 bg-gradient-to-b from-amber-500 to-transparent -translate-x-1/2"></div>
                                         
@@ -878,11 +871,11 @@
                                             {outputVariants.map((variant) => (
                                                 <div key={variant.id} className="glass-card p-2 md:p-3 rounded-2xl md:rounded-[2rem] relative group border border-white/10 hover:border-white/30 transition-all flex flex-col">
                                                     <div className="aspect-[9/16] w-full rounded-xl overflow-hidden bg-slate-900 relative z-10 border border-slate-800 flex items-center justify-center">
-                                                        {/* Skeleton Loader */}
                                                         <div className="absolute inset-0 bg-slate-800 animate-pulse flex items-center justify-center z-0">
                                                             <i className={`fas fa-circle-notch fa-spin text-${variant.color}-500/50 text-xl`}></i>
                                                         </div>
-                                                        <iframe src={`https://player.vimeo.com/video/${variant.vimeoId}?background=1&autoplay=1&loop=1&muted=1`} className="absolute top-0 left-0 w-full h-full border-0 pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity z-10" allow="autoplay; fullscreen" allowFullScreen></iframe>
+                                                        {/* إضافة loading="lazy" لتأخير تحميل الفيديوهات الصغيرة */}
+                                                        <iframe src={`https://player.vimeo.com/video/${variant.vimeoId}?background=1&autoplay=1&loop=1&muted=1`} loading="lazy" className="absolute top-0 left-0 w-full h-full border-0 pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity z-10" allow="autoplay; fullscreen" allowFullScreen></iframe>
                                                     </div>
                                                     <div className="mt-3 flex flex-col flex-grow text-left">
                                                         <h4 className="text-white font-bold text-[11px] md:text-xs mb-1.5">{variant.title}</h4>
@@ -901,7 +894,6 @@
                             </div>
                         </section>
 
-                        {/* --- NEW DYNAMIC BUSINESS HEALTH HUB (THE 7s LOOP ANIMATION) - NO AUTO CLOSE --- */}
                         <div id="analytics-wrapper" className={`transition-all duration-1000 ease-in-out overflow-hidden ${isAnalyticsOpen ? 'max-h-[1500px] opacity-100' : 'max-h-0 opacity-0'}`}>
                             <section id="live-analytics-engine" className="pt-16 pb-20 px-4 md:px-6 relative bg-[#050505] shadow-[inset_0_20px_50px_rgba(0,0,0,0.8)] border-b border-white/5">
                                 <div className="max-w-6xl mx-auto">
@@ -929,7 +921,8 @@
                                                     <div className="absolute top-2 right-2 px-2 py-1 bg-black/50 text-emerald-400 text-[9px] font-mono rounded z-20 flex items-center gap-1">
                                                         <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div> REC
                                                     </div>
-                                                    <iframe src={`https://player.vimeo.com/video/${activeVariant.vimeoId}?autoplay=1&loop=1&muted=1`} className="w-full aspect-[9/16] border-0 relative z-10" allow="autoplay; fullscreen" allowFullScreen></iframe>
+                                                    {/* إضافة loading="lazy" للفيديو الخاص بالتحليلات */}
+                                                    <iframe src={`https://player.vimeo.com/video/${activeVariant.vimeoId}?autoplay=1&loop=1&muted=1`} loading="lazy" className="w-full aspect-[9/16] border-0 relative z-10" allow="autoplay; fullscreen" allowFullScreen></iframe>
                                                 </div>
                                                 <div className="mt-4 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded border border-emerald-500/20 flex items-center gap-2">
                                                     <i className="fas fa-spinner fa-spin"></i> Analyzing Facial Fidelity
@@ -1004,7 +997,6 @@
                             </section>
                         </div>
 
-                        {/* --- [RESTORED & UPGRADED] NEW CREATIVE BUSINESS HEALTH HUB (TABS Q1, Q2, Q3, Q4) --- */}
                         <section id="portfolio-metrics-section" className="pt-16 pb-24 px-4 md:px-6 relative bg-gradient-to-b from-[#0a0f1d] to-[#050505] rounded-b-[2rem] md:rounded-b-[3rem] shadow-2xl mb-12 overflow-hidden min-h-[600px]">
                             <div className="max-w-7xl mx-auto relative z-10">
                                 <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-8 md:mb-12 gap-4 md:gap-6 border-b border-white/10 pb-6 md:pb-8 text-center md:text-left">
@@ -1027,12 +1019,8 @@
                                     </div>
                                 </div>
 
-                                {/* --- TAB CONTENT RENDERING --- */}
-                                
-                                {/* Q1: The Data Grid */}
                                 {activeQuarter === 'Q1' && (
                                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-pop-up">
-                                        {/* 1. Creative Profit Margins */}
                                         <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-pink-500/50 transition-all duration-500 hover:-translate-y-2 group shadow-lg">
                                             <div className="flex justify-between items-center mb-8">
                                                 <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
@@ -1063,7 +1051,6 @@
                                             </div>
                                         </div>
 
-                                        {/* 2. KPI Scoreboard */}
                                         <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-emerald-500/50 transition-all duration-500 hover:-translate-y-2 group shadow-lg">
                                             <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 md:mb-8 flex items-center gap-2">
                                                 <i className="fas fa-list-check text-emerald-400 group-hover:rotate-12 transition-transform"></i> KPI Scoreboard
@@ -1083,7 +1070,6 @@
                                             </div>
                                         </div>
 
-                                        {/* 3. Quarterly Summary */}
                                         <div className="glass-card p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-2 group shadow-lg flex flex-col">
                                             <h3 className="text-xs md:text-sm font-bold text-white uppercase tracking-widest mb-6 flex items-center justify-between">
                                                 <span className="flex items-center gap-2"><i className="fas fa-bullseye text-cyan-400 group-hover:animate-pulse"></i> Quarterly Targets</span>
@@ -1124,7 +1110,6 @@
                                     </div>
                                 )}
 
-                                {/* Q2: The Easter Egg (Surprise Joke) */}
                                 {activeQuarter === 'Q2' && (
                                     <div className="flex flex-col items-center justify-center p-10 md:p-16 glass-card rounded-[2rem] border border-emerald-500/40 animate-pop-up text-center relative overflow-hidden bg-emerald-950/20">
                                         <div className="absolute inset-0 bg-emerald-500/5 animate-pulse"></div>
@@ -1143,7 +1128,6 @@
                                     </div>
                                 )}
 
-                                {/* Q3: Data Benefits (How you benefit) - ENGLISH */}
                                 {activeQuarter === 'Q3' && (
                                     <div className="glass-card rounded-[2rem] p-8 md:p-12 border border-blue-500/30 animate-pop-up relative overflow-hidden bg-blue-950/10">
                                         <h3 className="text-2xl md:text-3xl font-black text-white mb-8 flex items-center gap-3 justify-center md:justify-start">
@@ -1169,7 +1153,6 @@
                                     </div>
                                 )}
 
-                                {/* Q4: Why Me (The Perfect Fit) - ENGLISH */}
                                 {activeQuarter === 'Q4' && (
                                     <div className="glass-card rounded-[2rem] p-8 md:p-12 border border-purple-500/30 animate-pop-up relative overflow-hidden bg-purple-950/10">
                                         <h3 className="text-2xl md:text-3xl font-black text-white mb-8 flex items-center gap-3 justify-center md:justify-start">
@@ -1198,12 +1181,10 @@
                         </section>
                     </div>
 
-                    {/* --- VIRAL CASE STUDY (UX REDESIGNED) --- */}
                     <section className="py-20 md:py-32 px-4 md:px-6 relative z-20 bg-[#050505] border-y border-white/5 reveal overflow-hidden">
                         <div className="absolute top-0 right-0 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] bg-emerald-900/10 blur-[120px] rounded-full pointer-events-none"></div>
 
                         <div className="max-w-7xl mx-auto">
-                            {/* Header Section */}
                             <div className="flex flex-col items-center text-center mb-16 relative z-10">
                                 <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm md:text-base font-black uppercase mb-6 tracking-[0.2em] shadow-[0_0_20px_rgba(16,185,129,0.2)]">
                                     <i className="fas fa-file-contract"></i> Viral Case Study
@@ -1217,7 +1198,6 @@
                             </div>
 
                             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 relative z-10">
-                                {/* Left Column: The Metrics Dashboard */}
                                 <div className="lg:col-span-4 flex flex-col gap-6">
                                     <div className="glass-card p-8 rounded-[2rem] border-l-4 border-l-emerald-500 bg-emerald-950/10 relative overflow-hidden group">
                                         <div className="absolute -right-10 -top-10 text-emerald-500/10 text-9xl group-hover:scale-110 transition-transform"><i className="fas fa-eye"></i></div>
@@ -1238,14 +1218,12 @@
                                     </div>
                                 </div>
 
-                                {/* Right Column: The Methodology (Secret Sauce) */}
                                 <div className="lg:col-span-8 glass-card p-8 md:p-12 rounded-[2.5rem] border border-white/10 shadow-2xl">
                                     <h3 className="text-2xl md:text-3xl font-black text-white mb-8 border-b border-white/10 pb-6 flex items-center gap-4">
                                         <i className="fas fa-flask text-emerald-400"></i> The "Secret Sauce" Methodology
                                     </h3>
                                     
                                     <div className="space-y-8">
-                                        {/* Step 1 */}
                                         <div className="flex flex-col md:flex-row gap-5 items-start group">
                                             <div className="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center shrink-0 group-hover:bg-pink-500/20 transition-colors shadow-inner mt-1">
                                                 <i className="fas fa-eye text-2xl text-pink-400"></i>
@@ -1256,7 +1234,6 @@
                                             </div>
                                         </div>
                                         
-                                        {/* Step 2 */}
                                         <div className="flex flex-col md:flex-row gap-5 items-start group">
                                             <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shrink-0 group-hover:bg-cyan-500/20 transition-colors shadow-inner mt-1">
                                                 <i className="fas fa-tv text-2xl text-cyan-400"></i>
@@ -1267,7 +1244,6 @@
                                             </div>
                                         </div>
 
-                                        {/* Step 3 */}
                                         <div className="flex flex-col md:flex-row gap-5 items-start group">
                                             <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center shrink-0 group-hover:bg-purple-500/20 transition-colors shadow-inner mt-1">
                                                 <i className="fas fa-id-badge text-2xl text-purple-400"></i>
@@ -1278,7 +1254,6 @@
                                             </div>
                                         </div>
 
-                                        {/* Step 4 */}
                                         <div className="flex flex-col md:flex-row gap-5 items-start group">
                                             <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:bg-emerald-500/20 transition-colors shadow-inner mt-1">
                                                 <i className="fas fa-money-bill-trend-up text-2xl text-emerald-400"></i>
@@ -1292,7 +1267,6 @@
                                 </div>
                             </div>
 
-                            {/* Conclusion / CTA Box */}
                             <div className="mt-8 md:mt-12 p-6 md:p-10 rounded-[2rem] bg-gradient-to-r from-emerald-950/40 to-slate-900/60 border border-emerald-500/20 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10 shadow-xl">
                                 <div className="flex items-start gap-4 max-w-3xl">
                                     <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400 mt-1">
@@ -1312,7 +1286,6 @@
                         </div>
                     </section>
 
-                    {/* --- CALL TO ACTION --- */}
                     <section className="py-16 md:py-20 px-4 md:px-6 relative z-20 reveal">
                         <div className="max-w-4xl mx-auto bg-gradient-to-br from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 text-center shadow-[0_0_50px_rgba(0,242,254,0.1)] relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/circuit-board.png')] opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity duration-1000"></div>
