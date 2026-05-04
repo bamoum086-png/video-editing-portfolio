@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <!-- قسم المنتجات -->
+            <!-- قسم المنتجات (محدث بتقسيم السلالة والعمر لسهولة الاستخدام) -->
             <div class="bg-[#111] p-6 rounded-3xl shadow-lg border border-gray-800 space-y-8">
                 
                 <!-- السلالة -->
@@ -193,10 +193,15 @@
                 <label class="block text-2xl font-bold mb-6 text-white">شحال بغيتي؟ 🔢</label>
                 
                 <div class="flex items-center justify-center gap-6">
+                    <!-- زر النقصان -->
                     <button type="button" onclick="changeQty(-1)" class="w-16 h-16 rounded-2xl bg-[#1a1a1a] text-red-500 text-5xl font-bold flex items-center justify-center hover:bg-red-500/10 active:scale-95 transition-all border-2 border-gray-700">
                         -
                     </button>
+                    
+                    <!-- حقل الرقم -->
                     <input type="number" id="quantity" value="30" readonly class="w-32 h-20 text-center text-5xl font-black text-white bg-black border-2 border-green-500/50 rounded-2xl focus:outline-none cursor-default shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+                    
+                    <!-- زر الزيادة -->
                     <button type="button" onclick="changeQty(1)" class="w-16 h-16 rounded-2xl bg-[#1a1a1a] text-green-500 text-5xl font-bold flex items-center justify-center hover:bg-green-500/10 active:scale-95 transition-all border-2 border-gray-700">
                         +
                     </button>
@@ -213,8 +218,8 @@
             <!-- الخطة البديلة: زر الواتساب -->
             <div class="pt-8 border-t border-gray-800 mt-8">
                 <p class="text-center text-gray-400 font-bold mb-4">ماعرفتيش تعمر هادشي؟ 🤔</p>
-                <!-- تم تحديث رقم الواتساب بالرقم الجديد -->
-                <a href="https://wa.me/212698723448?text=سلام، بغيت نكوموندي من عند سيليا وازيس" target="_blank" class="w-full bg-[#111] border-2 border-green-500 text-green-400 text-xl font-bold py-5 rounded-2xl flex items-center justify-center gap-3 hover:bg-green-900/30 active:scale-95 transition-all">
+                <!-- تم تحديث رقم الواتساب بناءً على الصورة -->
+                <a href="https://wa.me/212711157878?text=سلام، بغيت نكوموندي من عند سيليا وازيس" target="_blank" class="w-full bg-[#111] border-2 border-green-500 text-green-400 text-xl font-bold py-5 rounded-2xl flex items-center justify-center gap-3 hover:bg-green-900/30 active:scale-95 transition-all">
                     <span class="text-3xl text-green-500">💬</span> كليك هنا وهضر معانا فالواتساب
                 </a>
             </div>
@@ -222,7 +227,9 @@
         </form>
     </main>
 
-    <!-- Modals -->
+    <!-- النوافذ المنبثقة (Modals) في الوضع المظلم -->
+    
+    <!-- نافذة الخطأ -->
     <div id="errorModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-md">
         <div class="bg-[#111] rounded-3xl p-8 max-w-sm w-full text-center shadow-[0_0_40px_rgba(239,68,68,0.3)] border-2 border-red-500 transform scale-100 transition-transform">
             <div class="text-7xl mb-4 animate-bounce">⚠️</div>
@@ -234,6 +241,7 @@
         </div>
     </div>
 
+    <!-- نافذة النجاح -->
     <div id="successModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-md">
         <div class="bg-[#111] rounded-3xl p-8 max-w-sm w-full text-center shadow-[0_0_40px_rgba(34,197,94,0.3)] border-2 border-green-500">
             <div class="text-7xl mb-4">✅</div>
@@ -249,6 +257,7 @@
     </div>
 
     <script>
+        // روابط جوجل فورم
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSecfPybf2L_YhmEWtYgM4l65pMbhO_AJZq-ST_tIc170IKIXQ/formResponse";
         const ENTRY_NAME = "entry.1188878275";
         const ENTRY_PHONE = "entry.589128182";
@@ -296,12 +305,14 @@
                 if (option.checked) { selectedProductType = option.value; break; }
             }
 
+            // التحقق برسائل واضحة
             if (!name) return showError("نسيتي ما كتبتي <span class='text-red-400'>السمية ديالك</span>.");
             if (!phone) return showError("عافاك كتب <span class='text-red-400'>نمرة التليفون</span> باش نعيطو ليك.");
             if (!city) return showError("نسيتي ما كتبتي <span class='text-red-400'>المدينة</span> فين ساكن.");
-            if (!selectedBreed) return showError("عافاك ختار <span class='text-red-400'>السلالة</span> اللي بغيتي.");
+            if (!selectedBreed) return showError("عافاك ختار <span class='text-red-400'>السلالة</span> اللي بغيتي (ليجهورن ولا أوسترالوب).");
             if (!selectedProductType) return showError("عافاك ختار واش بغيتي <span class='text-red-400'>البيض ولا الفلوس</span>.");
 
+            // جمع السلالة مع النوع باش يوصلك فقائمة وحدة فجوجل شيت
             const finalProductString = selectedBreed + " - " + selectedProductType;
 
             const btnText = document.getElementById('btnText');
@@ -313,6 +324,10 @@
             btnIcon.style.display = "none";
             btnLoader.style.display = "block";
             submitBtn.disabled = true;
+            submitBtn.classList.remove('pulse-btn');
+            submitBtn.classList.add('opacity-80');
+            submitBtn.style.boxShadow = 'none';
+            submitBtn.style.transform = 'translateY(5px)';
 
             const formData = new FormData();
             formData.append(ENTRY_NAME, name);
@@ -327,7 +342,9 @@
                     mode: 'no-cors',
                     body: formData
                 });
+                
                 showModal('successModal');
+
             } catch (error) {
                 showError("وقع شي مشكل فالاتصال بالأنترنيت، عاود جرب.");
             } finally {
@@ -335,6 +352,10 @@
                 btnIcon.style.display = "inline";
                 btnLoader.style.display = "none";
                 submitBtn.disabled = false;
+                submitBtn.classList.add('pulse-btn');
+                submitBtn.classList.remove('opacity-80');
+                submitBtn.style.boxShadow = '';
+                submitBtn.style.transform = '';
             }
         }
     </script>
