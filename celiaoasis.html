@@ -9,21 +9,18 @@
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap');
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: #0a0a0a; /* خلفية سوداء فخمة */
-            color: #f3f4f6; /* نص فاتح يسهل قراءته */
+            background-color: #0a0a0a;
+            color: #f3f4f6;
         }
-        /* إخفاء أسهم الأرقام */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
             margin: 0; 
         }
-        /* تخصيص لون التحديد */
         ::selection {
             background-color: #22c55e;
             color: black;
         }
-        /* تأثيرات التحميل */
         .loader {
             border: 4px solid rgba(0,0,0,0.3);
             border-top: 4px solid black;
@@ -37,7 +34,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* تأثير النبض للزر */
         .pulse-btn {
             animation: pulse 2s infinite;
         }
@@ -46,18 +42,13 @@
             50% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
-        
-        /* تأثير تحديد البطاقات */
-        .card-checked {
-            border-color: #22c55e !important;
-            background-color: rgba(34, 197, 94, 0.1) !important;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
-        }
     </style>
 </head>
 <body class="pb-20 selection:bg-green-500 selection:text-black">
 
-    <!-- Header (فخم بالأسود والأخضر) -->
+    <!-- iframe مخفي لاستقبال رد Google Forms -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
     <header class="bg-[#111] border-b-4 border-green-500 p-6 rounded-b-[2rem] shadow-[0_10px_30px_rgba(34,197,94,0.15)] mb-8 text-center relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-green-900/20 to-transparent"></div>
         <h1 class="text-4xl font-extrabold mb-2 tracking-wide text-white relative z-10">🌿 سيليا وازيس</h1>
@@ -66,7 +57,6 @@
 
     <main class="max-w-md mx-auto px-4 space-y-8">
         
-        <!-- رسالة ترحيبية واضحة -->
         <div class="bg-[#1a1a1a] border-l-4 border-green-500 p-5 rounded-2xl shadow-lg">
             <p class="text-xl font-bold text-white leading-relaxed">
                 <span class="text-2xl">👋</span> مرحبا بيك!<br>
@@ -74,41 +64,49 @@
             </p>
         </div>
 
-        <form id="orderForm" class="space-y-8">
+        <!-- ⚠️ الفورم الآن يرسل مباشرة لـ Google Forms عبر POST + iframe -->
+        <form 
+            id="orderForm"
+            action="https://docs.google.com/forms/d/e/1FAIpQLSecfPybf2L_YhmEWtYgM4l65pMbhO_AJZq-ST_tIc170IKIXQ/formResponse"
+            method="POST"
+            target="hidden_iframe"
+            onsubmit="handleSubmit(event)"
+            class="space-y-8"
+        >
             
-            <!-- قسم المعلومات الشخصية -->
             <div class="bg-[#111] p-6 rounded-3xl shadow-lg border border-gray-800 space-y-6">
                 
-                <!-- السمية -->
                 <div>
                     <label class="flex items-center gap-2 text-xl font-bold mb-3 text-gray-200">
                         <span class="text-2xl text-green-500">👤</span> السمية والكنية:
                     </label>
-                    <input type="text" id="name" placeholder="مثال: أحمد العلوي..." class="w-full p-4 bg-black border-2 border-gray-700 rounded-2xl text-xl text-white focus:outline-none focus:border-green-500 transition-all placeholder-gray-600">
+                    <input type="text" name="entry.1188878275" id="name" placeholder="مثال: أحمد العلوي..." 
+                        class="w-full p-4 bg-black border-2 border-gray-700 rounded-2xl text-xl text-white focus:outline-none focus:border-green-500 transition-all placeholder-gray-600">
                 </div>
 
-                <!-- التليفون -->
                 <div>
                     <label class="flex items-center gap-2 text-xl font-bold mb-3 text-gray-200">
                         <span class="text-2xl text-green-500">📱</span> نمرة التليفون:
                     </label>
-                    <input type="tel" id="phone" placeholder="06 XX XX XX XX" class="w-full p-4 bg-black border-2 border-gray-700 rounded-2xl text-2xl font-bold text-green-400 focus:outline-none focus:border-green-500 transition-all text-left tracking-widest placeholder-gray-700" dir="ltr">
+                    <input type="tel" name="entry.589128182" id="phone" placeholder="06 XX XX XX XX" 
+                        class="w-full p-4 bg-black border-2 border-gray-700 rounded-2xl text-2xl font-bold text-green-400 focus:outline-none focus:border-green-500 transition-all text-left tracking-widest placeholder-gray-700" dir="ltr">
                     <p class="text-sm text-green-500 mt-2 font-bold bg-green-500/10 inline-block px-3 py-1 rounded-lg">*(ضرورية باش نتاصلو بيك)*</p>
                 </div>
 
-                <!-- المدينة -->
                 <div>
                     <label class="flex items-center gap-2 text-xl font-bold mb-3 text-gray-200">
                         <span class="text-2xl text-green-500">📍</span> أشمن مدينة؟
                     </label>
-                    <input type="text" id="city" placeholder="مثال: الدار البيضاء..." class="w-full p-4 bg-black border-2 border-gray-700 rounded-2xl text-xl text-white focus:outline-none focus:border-green-500 transition-all placeholder-gray-600">
+                    <input type="text" name="entry.1846414494" id="city" placeholder="مثال: الدار البيضاء..." 
+                        class="w-full p-4 bg-black border-2 border-gray-700 rounded-2xl text-xl text-white focus:outline-none focus:border-green-500 transition-all placeholder-gray-600">
                 </div>
             </div>
 
-            <!-- قسم المنتجات (محدث بتقسيم السلالة والعمر لسهولة الاستخدام) -->
+            <!-- حقل مخفي يجمع السلالة + النوع -->
+            <input type="hidden" name="entry.9010612" id="finalProduct">
+
             <div class="bg-[#111] p-6 rounded-3xl shadow-lg border border-gray-800 space-y-8">
                 
-                <!-- السلالة -->
                 <div>
                     <label class="block text-2xl font-bold mb-4 text-white border-b-2 border-gray-800 pb-3">1. أشمن سلالة بغيتي؟ 🐔</label>
                     <div class="grid grid-cols-2 gap-4">
@@ -134,7 +132,6 @@
                     </div>
                 </div>
 
-                <!-- النوع والعمر -->
                 <div>
                     <label class="block text-2xl font-bold mb-4 text-white border-b-2 border-gray-800 pb-3">2. شنو بغيتي منها؟ 👇</label>
                     <div class="grid grid-cols-1 gap-4">
@@ -188,38 +185,28 @@
                 </div>
             </div>
 
-            <!-- قسم الكمية -->
+            <!-- الكمية -->
             <div class="bg-[#111] p-6 rounded-3xl shadow-lg border border-gray-800 text-center">
                 <label class="block text-2xl font-bold mb-6 text-white">شحال بغيتي؟ 🔢</label>
-                
                 <div class="flex items-center justify-center gap-6">
-                    <!-- زر النقصان -->
-                    <button type="button" onclick="changeQty(-1)" class="w-16 h-16 rounded-2xl bg-[#1a1a1a] text-red-500 text-5xl font-bold flex items-center justify-center hover:bg-red-500/10 active:scale-95 transition-all border-2 border-gray-700">
-                        -
-                    </button>
-                    
-                    <!-- حقل الرقم -->
-                    <input type="number" id="quantity" value="30" readonly class="w-32 h-20 text-center text-5xl font-black text-white bg-black border-2 border-green-500/50 rounded-2xl focus:outline-none cursor-default shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
-                    
-                    <!-- زر الزيادة -->
-                    <button type="button" onclick="changeQty(1)" class="w-16 h-16 rounded-2xl bg-[#1a1a1a] text-green-500 text-5xl font-bold flex items-center justify-center hover:bg-green-500/10 active:scale-95 transition-all border-2 border-gray-700">
-                        +
-                    </button>
+                    <button type="button" onclick="changeQty(-1)" class="w-16 h-16 rounded-2xl bg-[#1a1a1a] text-red-500 text-5xl font-bold flex items-center justify-center hover:bg-red-500/10 active:scale-95 transition-all border-2 border-gray-700">-</button>
+                    <input type="number" name="entry.1216701117" id="quantity" value="30" readonly 
+                        class="w-32 h-20 text-center text-5xl font-black text-white bg-black border-2 border-green-500/50 rounded-2xl focus:outline-none cursor-default shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)]">
+                    <button type="button" onclick="changeQty(1)" class="w-16 h-16 rounded-2xl bg-[#1a1a1a] text-green-500 text-5xl font-bold flex items-center justify-center hover:bg-green-500/10 active:scale-95 transition-all border-2 border-gray-700">+</button>
                 </div>
             </div>
 
-            <!-- زر الإرسال الرئيسي -->
-            <button type="button" id="submitBtn" onclick="submitToGoogle()" class="pulse-btn w-full bg-green-500 text-black text-2xl font-black py-6 rounded-3xl shadow-[0_5px_0_#166534] active:shadow-[0_0px_0_#166534] active:translate-y-[5px] flex items-center justify-center gap-3 transition-all">
+            <!-- زر الإرسال -->
+            <button type="submit" id="submitBtn" class="pulse-btn w-full bg-green-500 text-black text-2xl font-black py-6 rounded-3xl shadow-[0_5px_0_#166534] active:shadow-[0_0px_0_#166534] active:translate-y-[5px] flex items-center justify-center gap-3 transition-all">
                 <span id="btnText">صيفط الطلب دابا</span>
                 <span class="text-3xl" id="btnIcon">🚀</span>
                 <div id="btnLoader" class="loader"></div>
             </button>
 
-            <!-- الخطة البديلة: زر الواتساب -->
             <div class="pt-8 border-t border-gray-800 mt-8">
                 <p class="text-center text-gray-400 font-bold mb-4">ماعرفتيش تعمر هادشي؟ 🤔</p>
-                <!-- تم تحديث رقم الواتساب بناءً على الصورة -->
-                <a href="https://wa.me/212711157878?text=سلام، بغيت نكوموندي من عند سيليا وازيس" target="_blank" class="w-full bg-[#111] border-2 border-green-500 text-green-400 text-xl font-bold py-5 rounded-2xl flex items-center justify-center gap-3 hover:bg-green-900/30 active:scale-95 transition-all">
+                <a href="https://wa.me/212698723448?text=سلام، بغيت نكوموندي من عند سيليا وازيس" target="_blank" 
+                    class="w-full bg-[#111] border-2 border-green-500 text-green-400 text-xl font-bold py-5 rounded-2xl flex items-center justify-center gap-3 hover:bg-green-900/30 active:scale-95 transition-all">
                     <span class="text-3xl text-green-500">💬</span> كليك هنا وهضر معانا فالواتساب
                 </a>
             </div>
@@ -227,11 +214,9 @@
         </form>
     </main>
 
-    <!-- النوافذ المنبثقة (Modals) في الوضع المظلم -->
-    
-    <!-- نافذة الخطأ -->
+    <!-- Modals -->
     <div id="errorModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-md">
-        <div class="bg-[#111] rounded-3xl p-8 max-w-sm w-full text-center shadow-[0_0_40px_rgba(239,68,68,0.3)] border-2 border-red-500 transform scale-100 transition-transform">
+        <div class="bg-[#111] rounded-3xl p-8 max-w-sm w-full text-center shadow-[0_0_40px_rgba(239,68,68,0.3)] border-2 border-red-500">
             <div class="text-7xl mb-4 animate-bounce">⚠️</div>
             <h2 class="text-3xl font-black mb-3 text-red-500">وقف عافاك!</h2>
             <p id="errorMessage" class="text-xl font-bold text-white mb-8 leading-relaxed"></p>
@@ -241,7 +226,6 @@
         </div>
     </div>
 
-    <!-- نافذة النجاح -->
     <div id="successModal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50 backdrop-blur-md">
         <div class="bg-[#111] rounded-3xl p-8 max-w-sm w-full text-center shadow-[0_0_40px_rgba(34,197,94,0.3)] border-2 border-green-500">
             <div class="text-7xl mb-4">✅</div>
@@ -257,18 +241,9 @@
     </div>
 
     <script>
-        // روابط جوجل فورم
-        const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSecfPybf2L_YhmEWtYgM4l65pMbhO_AJZq-ST_tIc170IKIXQ/formResponse";
-        const ENTRY_NAME = "entry.1188878275";
-        const ENTRY_PHONE = "entry.589128182";
-        const ENTRY_CITY = "entry.1846414494";
-        const ENTRY_PRODUCT = "entry.9010612";
-        const ENTRY_QTY = "entry.1216701117";
-
         function changeQty(amount) {
             const qtyInput = document.getElementById('quantity');
-            let currentVal = parseInt(qtyInput.value) || 0;
-            let newVal = currentVal + amount;
+            let newVal = (parseInt(qtyInput.value) || 0) + amount;
             if (newVal < 1) newVal = 1;
             qtyInput.value = newVal;
         }
@@ -283,80 +258,54 @@
         function resetForm() {
             closeModal('successModal');
             document.getElementById('orderForm').reset();
-            document.getElementById('quantity').value = 30; 
-            window.scrollTo(0,0); 
+            document.getElementById('quantity').value = 30;
+            window.scrollTo(0, 0);
         }
 
-        async function submitToGoogle() {
-            const name = document.getElementById('name').value.trim();
+        function handleSubmit(event) {
+            // التحقق من البيانات
+            const name  = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const qty = document.getElementById('quantity').value;
-            
+            const city  = document.getElementById('city').value.trim();
+
             let selectedBreed = null;
-            const breedOptions = document.getElementsByName('breed');
-            for (let option of breedOptions) {
-                if (option.checked) { selectedBreed = option.value; break; }
-            }
+            for (let o of document.getElementsByName('breed'))
+                if (o.checked) { selectedBreed = o.value; break; }
 
-            let selectedProductType = null;
-            const typeOptions = document.getElementsByName('productType');
-            for (let option of typeOptions) {
-                if (option.checked) { selectedProductType = option.value; break; }
-            }
+            let selectedType = null;
+            for (let o of document.getElementsByName('productType'))
+                if (o.checked) { selectedType = o.value; break; }
 
-            // التحقق برسائل واضحة
-            if (!name) return showError("نسيتي ما كتبتي <span class='text-red-400'>السمية ديالك</span>.");
-            if (!phone) return showError("عافاك كتب <span class='text-red-400'>نمرة التليفون</span> باش نعيطو ليك.");
-            if (!city) return showError("نسيتي ما كتبتي <span class='text-red-400'>المدينة</span> فين ساكن.");
-            if (!selectedBreed) return showError("عافاك ختار <span class='text-red-400'>السلالة</span> اللي بغيتي (ليجهورن ولا أوسترالوب).");
-            if (!selectedProductType) return showError("عافاك ختار واش بغيتي <span class='text-red-400'>البيض ولا الفلوس</span>.");
+            if (!name)          { event.preventDefault(); return showError("نسيتي ما كتبتي <span class='text-red-400'>السمية ديالك</span>."); }
+            if (!phone)         { event.preventDefault(); return showError("عافاك كتب <span class='text-red-400'>نمرة التليفون</span> باش نعيطو ليك."); }
+            if (!city)          { event.preventDefault(); return showError("نسيتي ما كتبتي <span class='text-red-400'>المدينة</span> فين ساكن."); }
+            if (!selectedBreed) { event.preventDefault(); return showError("عافاك ختار <span class='text-red-400'>السلالة</span> اللي بغيتي."); }
+            if (!selectedType)  { event.preventDefault(); return showError("عافاك ختار واش بغيتي <span class='text-red-400'>البيض ولا الفلوس</span>."); }
 
-            // جمع السلالة مع النوع باش يوصلك فقائمة وحدة فجوجل شيت
-            const finalProductString = selectedBreed + " - " + selectedProductType;
+            // ملء الحقل المخفي بالسلالة + النوع
+            document.getElementById('finalProduct').value = selectedBreed + " - " + selectedType;
 
-            const btnText = document.getElementById('btnText');
-            const btnIcon = document.getElementById('btnIcon');
+            // تحديث الزر
+            const btnText   = document.getElementById('btnText');
+            const btnIcon   = document.getElementById('btnIcon');
             const btnLoader = document.getElementById('btnLoader');
             const submitBtn = document.getElementById('submitBtn');
-            
+
             btnText.innerText = "تسنا شوية...";
             btnIcon.style.display = "none";
             btnLoader.style.display = "block";
             submitBtn.disabled = true;
-            submitBtn.classList.remove('pulse-btn');
-            submitBtn.classList.add('opacity-80');
-            submitBtn.style.boxShadow = 'none';
-            submitBtn.style.transform = 'translateY(5px)';
 
-            const formData = new FormData();
-            formData.append(ENTRY_NAME, name);
-            formData.append(ENTRY_PHONE, phone);
-            formData.append(ENTRY_CITY, city);
-            formData.append(ENTRY_PRODUCT, finalProductString);
-            formData.append(ENTRY_QTY, qty);
-
-            try {
-                await fetch(GOOGLE_FORM_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
-                });
-                
+            // إظهار رسالة النجاح بعد ثانيتين (وقت كافي لـ iframe يرسل)
+            setTimeout(() => {
                 showModal('successModal');
-
-            } catch (error) {
-                showError("وقع شي مشكل فالاتصال بالأنترنيت، عاود جرب.");
-            } finally {
                 btnText.innerText = "صيفط الطلب دابا";
                 btnIcon.style.display = "inline";
                 btnLoader.style.display = "none";
                 submitBtn.disabled = false;
-                submitBtn.classList.add('pulse-btn');
-                submitBtn.classList.remove('opacity-80');
-                submitBtn.style.boxShadow = '';
-                submitBtn.style.transform = '';
-            }
+            }, 2000);
+
+            // الفورم يرسل طبيعياً عبر target="hidden_iframe"
         }
     </script>
 </body>
