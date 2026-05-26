@@ -31,13 +31,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
-        .text-gradient-amber {
-            background: linear-gradient(to right, #fbbf24, #f97316);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
 
         .glass-card {
             background: rgba(30, 41, 59, 0.4);
@@ -86,22 +79,7 @@
         }
         .animate-speed-1 { animation: speed-dash 1.5s linear infinite; }
         .animate-speed-2 { animation: speed-dash 2s linear infinite; }
-        .animate-speed-3 { animation: speed-dash 1.2s linear infinite; }
         
-        .bullet-point {
-            position: relative;
-            padding-left: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-        .bullet-point::before {
-            content: '✔️';
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-size: 0.875rem;
-            color: #10b981;
-        }
-
         /* IG Chart Animations */
         @keyframes draw-ig-line {
             0%, 5% { stroke-dashoffset: 100; }
@@ -183,7 +161,6 @@
             <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
                 <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
                     <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden border border-emerald-500/30 shadow-lg shadow-emerald-500/20 shrink-0">
-                        <!-- Profile Image -->
                         <img src="https://www.upwork.com/profile-portraits/c1THF4gBsqOlPFKbSLIsTFYzEu9SSy5aZUukDa3go4_jNtzVy5qU2k4PJtZM_lVLbC" alt="Mohamed Bamou" class="w-full h-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=Mohamed+Bamou&background=030712&color=10b981'">
                     </div>
                     <div class="flex flex-col">
@@ -196,7 +173,7 @@
                 <div class="hidden md:flex items-center gap-6">
                     <a href="#deep-dive" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Execution Deep Dive</a>
                     <a href="#creatives" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Winning Ads</a>
-                    <a href="#system" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Execution System</a>
+                    <a href="#system" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Execution Pipeline</a>
                     <a href="#stats-story" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Results & ROI</a>
                     <!-- Upwork Link -->
                     <a href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?p=2024825438540349440" target="_blank" class="px-5 py-2 bg-[#14a800]/10 text-[#14a800] hover:bg-[#14a800] hover:text-white border border-[#14a800]/50 rounded-full text-sm font-bold transition-all flex items-center gap-2">
@@ -206,7 +183,7 @@
             </div>
         </nav>
 
-        <!-- HERO SECTION (Hormozi Style) -->
+        <!-- HERO SECTION -->
         <header class="pt-32 pb-16 px-4 md:px-6 min-h-[85vh] flex flex-col justify-center relative">
             <div class="max-w-4xl mx-auto text-center relative z-10 w-full mt-8 md:mt-0">
                 
@@ -241,7 +218,7 @@
             </div>
         </header>
 
-        <!-- EXECUTION DEEP DIVE SECTION (MOVED TO TOP) -->
+        <!-- EXECUTION DEEP DIVE SECTION -->
         <section id="deep-dive" class="px-4 md:px-6 py-16 md:py-20 border-t border-slate-800/50 relative bg-[#030712]">
             <div class="max-w-7xl mx-auto">
                 <div class="mb-10 text-center">
@@ -259,12 +236,9 @@
                     
                     <!-- 2 Videos Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full mb-10 relative z-10">
-                        <!-- Video 1 -->
                         <div class="aspect-[9/16] w-full max-w-[320px] mx-auto rounded-3xl overflow-hidden bg-slate-900 relative shrink-0 border border-slate-700 shadow-2xl flex items-center justify-center group-hover:border-indigo-500/50 transition-colors duration-500">
                             <iframe src="https://drive.google.com/file/d/1vNvfThkLKFB1Z-0U3E9ufYS0CXp_RG9m/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
                         </div>
-                        
-                        <!-- Video 2 -->
                         <div class="aspect-[9/16] w-full max-w-[320px] mx-auto rounded-3xl overflow-hidden bg-slate-900 relative shrink-0 border border-slate-700 shadow-2xl flex items-center justify-center group-hover:border-indigo-500/50 transition-colors duration-500">
                             <iframe src="https://drive.google.com/file/d/158QsRZrKmc8ulZJSlPT-RUegU7TjWsJ3/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
                         </div>
@@ -285,7 +259,7 @@
             </div>
         </section>
 
-        <!-- THE DTC CREATIVES LAB (6 Videos) -->
+        <!-- THE DTC CREATIVES LAB (11 Videos Combined) -->
         <section id="creatives" class="px-4 md:px-6 py-16 md:py-24 border-t border-slate-800/50 relative bg-slate-900/20">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-10">
@@ -303,17 +277,10 @@
                     </a>
                 </div>
 
-                <div class="mb-8 flex items-center justify-center md:justify-start">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-shopping-cart text-emerald-400 text-2xl"></i>
-                        <h3 class="text-2xl font-bold text-white">High-Converting Frameworks</h3>
-                    </div>
-                </div>
-
-                <!-- 6 Videos Grid -->
+                <!-- 11 Videos Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     
-                    <!-- Ad 1 -->
+                    <!-- Ad 1 (Original) -->
                     <div class="glass-card rounded-3xl p-5 border-t-4 border-t-emerald-500 group flex flex-col hover:-translate-y-1 transition-all">
                         <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
                             <iframe src="https://drive.google.com/file/d/1MI88RIIbsOfOqlZttKtbgGl5hcSArLFH/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
@@ -328,7 +295,7 @@
                         </div>
                     </div>
 
-                    <!-- Ad 2 -->
+                    <!-- Ad 2 (Original) -->
                     <div class="glass-card rounded-3xl p-5 border-t-4 border-t-amber-500 group flex flex-col hover:-translate-y-1 transition-all">
                         <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
                             <iframe src="https://drive.google.com/file/d/1jf6xZeqMwkdvv5URfOnQzHR0EIyWbQ3C/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
@@ -343,7 +310,7 @@
                         </div>
                     </div>
 
-                    <!-- Ad 3 -->
+                    <!-- Ad 3 (Original) -->
                     <div class="glass-card rounded-3xl p-5 border-t-4 border-t-cyan-500 group flex flex-col hover:-translate-y-1 transition-all">
                         <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
                             <iframe src="https://drive.google.com/file/d/15kt1qxKAs4EXcFmEw6tM4irabVFE28FY/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
@@ -358,7 +325,7 @@
                         </div>
                     </div>
 
-                    <!-- Ad 4 -->
+                    <!-- Ad 4 (Original) -->
                     <div class="glass-card rounded-3xl p-5 border-t-4 border-t-pink-500 group flex flex-col hover:-translate-y-1 transition-all">
                         <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
                             <iframe src="https://drive.google.com/file/d/1fsVRn9ujZcjtRxtiLT6mGoQ2j-lLibLM/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
@@ -373,7 +340,7 @@
                         </div>
                     </div>
 
-                    <!-- Ad 5 -->
+                    <!-- Ad 5 (Original) -->
                     <div class="glass-card rounded-3xl p-5 border-t-4 border-t-purple-500 group flex flex-col hover:-translate-y-1 transition-all">
                         <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
                             <iframe src="https://drive.google.com/file/d/1P-8cb5-xEGlV7SsGBkIPAo2MEJra2bOG/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
@@ -388,7 +355,7 @@
                         </div>
                     </div>
 
-                    <!-- Ad 6 -->
+                    <!-- Ad 6 (Original) -->
                     <div class="glass-card rounded-3xl p-5 border-t-4 border-t-red-500 group flex flex-col hover:-translate-y-1 transition-all">
                         <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
                             <iframe src="https://drive.google.com/file/d/1LWDkdNlHUcFxzzyuI31KfYdISmsGyrM9/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
@@ -402,63 +369,184 @@
                             <span class="text-[10px] font-bold text-red-400 bg-red-500/10 px-2 py-1 rounded border border-red-500/20">Urgency</span>
                         </div>
                     </div>
+
+                    <!-- Ad 7 (New) -->
+                    <div class="glass-card rounded-3xl p-5 border-t-4 border-t-indigo-500 group flex flex-col hover:-translate-y-1 transition-all">
+                        <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
+                            <!-- Placeholder: يرجى وضع رابط Google Drive أو Vimeo هنا -->
+                            <iframe src="https://player.vimeo.com/video/1177963191?background=1&autoplay=1&loop=1&muted=1" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" class="absolute inset-0 scale-[1.05]"></iframe>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3 group-hover:text-indigo-400 transition-colors">Global Luxury Watches</h4>
+                        <div class="space-y-2 mb-4 flex-grow">
+                            <p class="text-sm text-slate-300">Sleek, high-end visual pacing designed to highlight premium craftsmanship and drive luxury e-commerce sales.</p>
+                        </div>
+                        <div class="flex gap-2 mt-auto pt-4 border-t border-slate-800/50">
+                            <span class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20">Premium Visuals</span>
+                            <span class="text-[10px] font-bold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded border border-indigo-500/20">High ROAS</span>
+                        </div>
+                    </div>
+
+                    <!-- Ad 8 (New) -->
+                    <div class="glass-card rounded-3xl p-5 border-t-4 border-t-teal-500 group flex flex-col hover:-translate-y-1 transition-all">
+                        <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
+                            <!-- Placeholder: يرجى وضع رابط Google Drive أو Vimeo هنا -->
+                            <iframe src="https://player.vimeo.com/video/1177969846?background=1&autoplay=1&loop=1&muted=1" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" class="absolute inset-0 scale-[1.05]"></iframe>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3 group-hover:text-teal-400 transition-colors">Women's Medical Product</h4>
+                        <div class="space-y-2 mb-4 flex-grow">
+                            <p class="text-sm text-slate-300">Sensitive, compliance-friendly framing emphasizing trust, safety, and clear problem-resolution for health products.</p>
+                        </div>
+                        <div class="flex gap-2 mt-auto pt-4 border-t border-slate-800/50">
+                            <span class="text-[10px] font-bold text-teal-400 bg-teal-500/10 px-2 py-1 rounded border border-teal-500/20">Health & Trust</span>
+                            <span class="text-[10px] font-bold text-teal-400 bg-teal-500/10 px-2 py-1 rounded border border-teal-500/20">Compliance</span>
+                        </div>
+                    </div>
+
+                    <!-- Ad 9 (New) -->
+                    <div class="glass-card rounded-3xl p-5 border-t-4 border-t-blue-500 group flex flex-col hover:-translate-y-1 transition-all">
+                        <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
+                            <!-- Placeholder: يرجى وضع رابط Google Drive أو Vimeo هنا -->
+                            <iframe src="https://drive.google.com/file/d/1MI88RIIbsOfOqlZttKtbgGl5hcSArLFH/preview" width="100%" height="100%" frameborder="0" allow="autoplay" class="absolute inset-0"></iframe>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">Future-Proof Your Ad Creatives</h4>
+                        <div class="space-y-2 mb-4 flex-grow">
+                            <p class="text-sm text-slate-300">AI-enhanced ad frameworks designed to beat ad fatigue, capture attention, and maintain long-term profitability.</p>
+                        </div>
+                        <div class="flex gap-2 mt-auto pt-4 border-t border-slate-800/50">
+                            <span class="text-[10px] font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">AI Strategy</span>
+                            <span class="text-[10px] font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20">Scalable</span>
+                        </div>
+                    </div>
+
+                    <!-- Ad 10 (New) -->
+                    <div class="glass-card rounded-3xl p-5 border-t-4 border-t-fuchsia-500 group flex flex-col hover:-translate-y-1 transition-all">
+                        <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
+                            <iframe src="https://player.vimeo.com/video/1177963191?autoplay=1&loop=1&muted=1&background=1" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" class="absolute inset-0 scale-[1.05]"></iframe>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3 group-hover:text-fuchsia-400 transition-colors">High-Ticket Gadget</h4>
+                        <div class="space-y-2 mb-4 flex-grow">
+                            <p class="text-sm text-slate-300">Hard-to-film tech gadgets rendered with hyper-realistic sales appeal and dynamic pacing to justify higher price points.</p>
+                        </div>
+                        <div class="flex gap-2 mt-auto pt-4 border-t border-slate-800/50">
+                            <span class="text-[10px] font-bold text-fuchsia-400 bg-fuchsia-500/10 px-2 py-1 rounded border border-fuchsia-500/20">Tech / Hardware</span>
+                            <span class="text-[10px] font-bold text-fuchsia-400 bg-fuchsia-500/10 px-2 py-1 rounded border border-fuchsia-500/20">High AOV</span>
+                        </div>
+                    </div>
+
+                    <!-- Ad 11 (New) -->
+                    <div class="glass-card rounded-3xl p-5 border-t-4 border-t-rose-500 group flex flex-col hover:-translate-y-1 transition-all">
+                        <div class="aspect-[9/16] w-full rounded-2xl overflow-hidden bg-slate-900 relative mb-5 flex items-center justify-center border border-slate-700/50">
+                            <iframe src="https://player.vimeo.com/video/1177969846?autoplay=1&loop=1&muted=1&background=1" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen" class="absolute inset-0 scale-[1.05]"></iframe>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3 group-hover:text-rose-400 transition-colors">Medical Mixed Reality</h4>
+                        <div class="space-y-2 mb-4 flex-grow">
+                            <p class="text-sm text-slate-300">Blending real medical and physical products with high-retention AI environments to educate and convert.</p>
+                        </div>
+                        <div class="flex gap-2 mt-auto pt-4 border-t border-slate-800/50">
+                            <span class="text-[10px] font-bold text-rose-400 bg-rose-500/10 px-2 py-1 rounded border border-rose-500/20">E-Com / Medical</span>
+                            <span class="text-[10px] font-bold text-rose-400 bg-rose-500/10 px-2 py-1 rounded border border-rose-500/20">Mixed Reality</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- THE SYSTEM (Showing you are a Systems Thinker) -->
-        <section id="system" class="px-4 md:px-6 py-16 md:py-24 bg-[#030712] border-t border-slate-800/50 relative overflow-hidden">
-            <div class="absolute top-[20%] left-0 w-1/3 h-px bg-amber-400/30 animate-speed-1 pointer-events-none"></div>
-            <div class="absolute top-[50%] left-0 w-1/2 h-[2px] bg-orange-400/20 animate-speed-2 pointer-events-none" style="animation-delay: 0.3s;"></div>
-
-            <div class="max-w-6xl mx-auto relative z-10">
-                <div class="text-center mb-16">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 text-amber-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-amber-500/20 mb-4">
-                        <i class="fas fa-stopwatch"></i> Time Is Money
+        <!-- THE SYSTEM (PIPELINE ARCHITECTURE MERGED) -->
+        <section id="system" class="px-4 md:px-6 py-16 md:py-24 bg-[#030712] border-y border-slate-800/50 relative overflow-hidden">
+            <div class="max-w-5xl mx-auto relative z-10">
+                
+                <div class="text-center mb-20">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 text-red-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-red-500/20 mb-4 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                        <i class="fas fa-project-diagram"></i> Execution Architecture
                     </div>
-                    <h2 class="text-3xl md:text-5xl font-black text-white mb-4">The High-Velocity Ad System</h2>
+                    <h2 class="text-3xl md:text-5xl font-black text-white mb-4">The High-Velocity Ad Pipeline</h2>
                     <p class="text-slate-400 text-lg max-w-2xl mx-auto">How I take your raw assets and turn them into a profitable machine without endless revisions.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-                    <!-- Step 1 -->
-                    <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl hover:border-emerald-500/50 transition-all hover:-translate-y-2 shadow-lg">
-                        <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-6">
-                            <span class="text-2xl font-black text-emerald-400">1</span>
+                <div class="relative max-w-4xl mx-auto py-10">
+                    <!-- The Central Flow Line (Red to Emerald Gradient) -->
+                    <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-red-500 via-cyan-500 to-emerald-500 rounded-full opacity-40 shadow-lg -translate-x-1/2 md:translate-x-0 hidden sm:block"></div>
+                    <!-- Mobile Line -->
+                    <div class="absolute left-6 top-0 bottom-0 w-1 bg-gradient-to-b from-red-500 via-cyan-500 to-emerald-500 rounded-full opacity-40 shadow-lg -translate-x-1/2 sm:hidden"></div>
+
+                    <!-- Pipeline Step 1 (Red Accent) -->
+                    <div class="relative flex items-center mb-16 md:justify-start group">
+                        <div class="absolute left-6 md:left-1/2 w-10 h-10 rounded-full bg-[#050505] border-4 border-red-500/30 group-hover:border-red-500 group-hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 -translate-x-1/2 flex items-center justify-center z-20">
+                            <div class="w-3 h-3 rounded-full bg-red-400 group-hover:scale-125 transition-transform duration-300"></div>
                         </div>
-                        <h4 class="text-2xl font-bold text-white mb-4">Asset Prep & AI Brainstorming</h4>
-                        <p class="text-slate-400 text-base leading-relaxed">
-                            Send raw footage or product links. I use <strong>Gemini Pro</strong> for psychological hook scripting, and <strong>Kling AI / Higgsfield</strong> for dynamic b-roll if needed.
-                        </p>
+                        <div class="w-full pl-16 pr-4 md:w-1/2 md:pl-4 md:pr-12">
+                            <div class="glass-card rounded-[2rem] p-6 md:p-8 border border-white/10 group-hover:border-red-500/50 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_0_30px_rgba(239,68,68,0.15)] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div class="flex items-center gap-4 mb-4 relative z-10">
+                                    <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-brain text-xl text-red-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] font-black uppercase tracking-widest text-red-400 mb-1">Phase 1</div>
+                                        <h3 class="text-lg md:text-xl font-bold text-white leading-tight">Asset Prep & AI Brainstorming</h3>
+                                    </div>
+                                </div>
+                                <p class="text-slate-400 text-sm leading-relaxed relative z-10">
+                                    Send raw footage or product links. I use <strong>Gemini Pro</strong> for psychological hook scripting, and <strong>Kling AI / Higgsfield</strong> for dynamic b-roll if needed.
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Step 2 -->
-                    <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl hover:border-cyan-500/50 transition-all hover:-translate-y-2 shadow-lg">
-                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-6">
-                            <span class="text-2xl font-black text-cyan-400">2</span>
+                    <!-- Pipeline Step 2 (Cyan Accent) -->
+                    <div class="relative flex items-center mb-16 md:justify-end group">
+                        <div class="absolute left-6 md:left-1/2 w-10 h-10 rounded-full bg-[#050505] border-4 border-cyan-500/30 group-hover:border-cyan-500 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-all duration-500 -translate-x-1/2 flex items-center justify-center z-20">
+                            <div class="w-3 h-3 rounded-full bg-cyan-400 group-hover:scale-125 transition-transform duration-300"></div>
                         </div>
-                        <h4 class="text-2xl font-bold text-white mb-4">Modular Assembly</h4>
-                        <p class="text-slate-400 text-base leading-relaxed">
-                            I don't build single videos; I build assets. I edit the core body once, then create 3-5 visual/audio hooks using my <strong>pre-built VFX architecture</strong> for rapid deployment.
-                        </p>
+                        <div class="w-full pl-16 pr-4 md:w-1/2 md:pl-12 md:pr-4">
+                            <div class="glass-card rounded-[2rem] p-6 md:p-8 border border-white/10 group-hover:border-cyan-500/50 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div class="flex items-center gap-4 mb-4 relative z-10">
+                                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-layer-group text-xl text-cyan-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] font-black uppercase tracking-widest text-cyan-400 mb-1">Phase 2</div>
+                                        <h3 class="text-lg md:text-xl font-bold text-white leading-tight">Modular Assembly</h3>
+                                    </div>
+                                </div>
+                                <p class="text-slate-400 text-sm leading-relaxed relative z-10">
+                                    I don't build single videos; I build assets. I edit the core body once, then create 3-5 visual/audio hooks using my <strong>pre-built VFX architecture</strong> for rapid deployment.
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Step 3 -->
-                    <div class="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl hover:border-purple-500/50 transition-all hover:-translate-y-2 shadow-lg">
-                        <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mb-6">
-                            <span class="text-2xl font-black text-purple-400">3</span>
+                    <!-- Pipeline Step 3 (Emerald Accent) -->
+                    <div class="relative flex items-center md:justify-start group">
+                        <div class="absolute left-6 md:left-1/2 w-10 h-10 rounded-full bg-[#050505] border-4 border-emerald-500/30 group-hover:border-emerald-500 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] transition-all duration-500 -translate-x-1/2 flex items-center justify-center z-20">
+                            <div class="w-3 h-3 rounded-full bg-emerald-400 group-hover:scale-125 transition-transform duration-300"></div>
                         </div>
-                        <h4 class="text-2xl font-bold text-white mb-4">Iterate on Hard Data</h4>
-                        <p class="text-slate-400 text-base leading-relaxed">
-                            Assets are delivered ready for Ads Manager. You tell me which hook won. We double down on the winner. Total alignment with your media buying strategy.
-                        </p>
+                        <div class="w-full pl-16 pr-4 md:w-1/2 md:pl-4 md:pr-12">
+                            <div class="glass-card rounded-[2rem] p-6 md:p-8 border border-white/10 group-hover:border-emerald-500/50 transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_0_30px_rgba(16,185,129,0.15)] relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div class="flex items-center gap-4 mb-4 relative z-10">
+                                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                                        <i class="fas fa-chart-line text-xl text-emerald-400"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-1">Phase 3</div>
+                                        <h3 class="text-lg md:text-xl font-bold text-white leading-tight">Iterate on Hard Data</h3>
+                                    </div>
+                                </div>
+                                <p class="text-slate-400 text-sm leading-relaxed relative z-10">
+                                    Assets are delivered ready for Ads Manager. You tell me which hook won. We double down on the winner. Total alignment with your media buying strategy.
+                                </p>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- ROI & RESULTS SECTION (MOVED TO THE END) -->
-        <section id="stats-story" class="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden bg-slate-900/30 border-t border-slate-800/50">
+        <!-- ROI & RESULTS SECTION -->
+        <section id="stats-story" class="py-16 md:py-24 px-4 md:px-6 relative overflow-hidden bg-slate-900/30">
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-col items-center justify-center mb-12 text-center">
                     <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded-lg border border-emerald-500/20 mb-4">
@@ -572,12 +660,14 @@
             </div>
         </section>
 
-        <!-- CTA FOOTER -->
+        <!-- CTA FOOTER WITH RED TEXT -->
         <footer class="pt-16 pb-12 px-4 md:px-6 relative border-t border-slate-800">
             <div class="max-w-4xl mx-auto text-center relative z-10">
-                <h2 class="text-3xl md:text-5xl font-black mb-6 text-white tracking-tight">Ready for a Strategic Partner?</h2>
+                <h2 class="text-3xl md:text-5xl font-black mb-6 text-white tracking-tight">
+                    Stop Gambling with <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-rose-400">Average Creators.</span>
+                </h2>
                 <p class="text-slate-400 mb-10 text-lg max-w-2xl mx-auto">
-                    If you are a marketer with traffic and vision, let me handle the creative heavy lifting. No hand-holding required. Let's scale.
+                    Let's build a highly-optimized DTC asset engine that stops the scroll and drives real ROI for your brand. I handle the creative heavy lifting; you scale the traffic.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
