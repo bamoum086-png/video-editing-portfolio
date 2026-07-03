@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<!-- saved from url=(0137)file:///Z:/disck%20%20%D8%A7%D8%AD%D8%AA%D9%8A%D8%A7%D8%B7/%D8%BA%D8%B1%D9%81%D8%A9_%D8%A7%D9%84%D9%82%D9%8A%D8%A7%D8%AF%D8%A9%20(1).html -->
+<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>غرفة القيادة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./غرفة القيادة_files/css2" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0E11;
+    --panel: #14181D;
+    --panel-2: #191E24;
+    --border: #262B32;
+    --text: #E8EAED;
+    --text-dim: #8B95A1;
+    --red: #E5484D;
+    --orange: #F2994A;
+    --yellow: #F2C94C;
+    --green: #27AE60;
+    --blue: #4F8EF7;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background: radial-gradient(circle at 20% -10%, #151b22 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: 'Tajawal', sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  h1,h2,h3,.display{ font-family:'Cairo', sans-serif; }
+  .wrap{ max-width: 1120px; margin: 0 auto; }
+
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:14px;
+    padding: 18px 22px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 18px;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand .mark{
+    width:38px; height:38px; border-radius:8px;
+    background: linear-gradient(135deg, var(--red), var(--orange));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Cairo'; font-weight:900; font-size:18px; color:#0B0E11;
+  }
+  .brand h1{ font-size: 20px; font-weight:800; letter-spacing:0.3px; }
+  .brand span{ display:block; font-size:12px; color:var(--text-dim); font-weight:500; margin-top:2px;}
+  .clock{ text-align:left; }
+  .clock .time{ font-family:'Cairo'; font-weight:800; font-size:26px; direction:ltr; }
+  .clock .date{ font-size:12px; color:var(--text-dim); }
+
+  .grid{ display:grid; grid-template-columns: 1.35fr 1fr; gap:18px; }
+  @media (max-width: 880px){ .grid{ grid-template-columns: 1fr; } }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .panel h2{
+    font-size:15px; font-weight:800; margin-bottom:14px;
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+  }
+  .panel h2 .htxt{ display:flex; align-items:center; gap:8px; }
+  .panel h2 small{ font-weight:500; font-size:11px; color:var(--text-dim); }
+
+  .badge{
+    font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;
+    display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+    cursor:pointer; user-select:none; border:1px solid transparent; flex-shrink:0;
+  }
+  .b-urgent{ background:rgba(229,72,77,.15); color:var(--red); border-color:rgba(229,72,77,.4); }
+  .b-active{ background:rgba(242,153,74,.15); color:var(--orange); border-color:rgba(242,153,74,.4); }
+  .b-scheduled{ background:rgba(242,201,76,.13); color:var(--yellow); border-color:rgba(242,201,76,.35); }
+  .b-done{ background:rgba(39,174,96,.15); color:var(--green); border-color:rgba(39,174,96,.4); }
+
+  .add-btn{
+    font-family:'Tajawal'; font-size:12px; font-weight:700; color: var(--blue);
+    background:transparent; border:1px dashed rgba(79,142,247,.5); border-radius:8px;
+    padding:5px 12px; cursor:pointer;
+  }
+  .add-btn:hover{ background:rgba(79,142,247,.1); }
+
+  /* ---- Pipeline (editable) ---- */
+  .pipe-row{
+    display:flex; align-items:flex-start; gap:10px;
+    padding:11px 4px; border-bottom:1px solid var(--border);
+  }
+  .pipe-row:last-child{ border-bottom:none; }
+  .pipe-dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:9px;}
+  .pipe-body{ flex:1; min-width:0; }
+  .field-title, .field-sub{
+    width:100%; background:transparent; border:none; color:var(--text);
+    font-family:'Tajawal'; outline:none; padding:2px 0;
+  }
+  .field-title{ font-size:13.5px; font-weight:700; }
+  .field-sub{ font-size:12px; color:var(--text-dim); }
+  .field-title::placeholder, .field-sub::placeholder{ color:#5a626d; }
+  .row-x{
+    width:22px; height:22px; border-radius:6px; border:1px solid var(--border);
+    background:var(--panel-2); color:var(--text-dim); cursor:pointer; font-size:13px; flex-shrink:0;
+  }
+  .row-x:hover{ color:var(--red); border-color:rgba(229,72,77,.4); }
+  .empty-hint{ font-size:12px; color:var(--text-dim); padding:14px 4px; text-align:center; border:1px dashed var(--border); border-radius:8px;}
+
+  /* ---- Tasks (5 fixed morning slots) ---- */
+  .task{ padding:12px 4px; border-bottom:1px solid var(--border); }
+  .task:last-child{ border-bottom:none; }
+  .task-num{
+    width:20px; height:20px; border-radius:50%; background:var(--panel-2); border:1px solid var(--border);
+    font-size:10.5px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); flex-shrink:0;
+    font-family:'Cairo'; font-weight:800;
+  }
+  .task-top{ display:flex; align-items:center; gap:8px; margin-bottom:8px;}
+  .task-top input.field-title{ font-size:13.5px; }
+  select.imp{
+    background: var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
+    font-family:'Tajawal'; font-size:11px; border-radius:6px; padding:3px 6px; flex-shrink:0;
+  }
+  .progress-track{ height:7px; background:#20262d; border-radius:20px; overflow:hidden; margin-top:6px;}
+  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--orange), var(--yellow)); border-radius:20px; transition:width .25s; }
+  .task-controls{ display:flex; align-items:center; gap:8px; margin-top:8px; }
+  .task-controls input[type=range]{ flex:1; accent-color: var(--orange); }
+  .task-controls .pct{ font-family:'Cairo'; font-size:12px; font-weight:800; width:36px; text-align:left; direction:ltr;}
+
+  /* ---- Deep work / timer ---- */
+  .timer-box{ text-align:center; padding: 6px 0 14px; }
+  .timer-display{ font-family:'Cairo'; font-weight:900; font-size:44px; direction:ltr; letter-spacing:1px; }
+  .timer-target{ font-size:11.5px; color:var(--text-dim); margin-top:2px; }
+  .timer-track{ height:9px; background:#20262d; border-radius:20px; overflow:hidden; margin:14px 0; }
+  .timer-track .fill{ height:100%; background:linear-gradient(90deg, var(--blue), #7BB0FF); border-radius:20px; transition:width .4s; }
+  .timer-btns{ display:flex; gap:10px; justify-content:center; }
+  .btn{
+    font-family:'Tajawal'; font-weight:700; font-size:13px;
+    border:1px solid var(--border); background:var(--panel-2); color:var(--text);
+    padding:9px 18px; border-radius:8px; cursor:pointer; transition: all .15s;
+  }
+  .btn:hover{ border-color:var(--blue); }
+  .btn.primary{ background: var(--blue); color:#0B0E11; border-color:var(--blue); }
+  .btn.danger{ background:transparent; color:var(--red); border-color: rgba(229,72,77,.4); }
+
+  /* ---- Checklist ---- */
+  .check-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 2px; border-bottom:1px solid var(--border); font-size:13.5px;
+  }
+  .check-row:last-child{ border-bottom:none; }
+  .check-row label{ display:flex; align-items:center; gap:10px; cursor:pointer; flex:1;}
+  .toggle{
+    width:40px; height:22px; border-radius:20px; background:#20262d; position:relative;
+    border:1px solid var(--border); cursor:pointer; flex-shrink:0; transition: background .2s;
+  }
+  .toggle.on{ background: rgba(39,174,96,.35); border-color: var(--green); }
+  .toggle::after{
+    content:''; position:absolute; top:1px; right:1px; width:18px; height:18px; border-radius:50%;
+    background:#8B95A1; transition: all .2s;
+  }
+  .toggle.on::after{ background: var(--green); transform: translateX(-18px); }
+  .istighfar{ display:flex; align-items:center; gap:8px; }
+  .istighfar .count{ font-family:'Cairo'; font-weight:800; font-size:14px; width:44px; text-align:center;}
+  .mini-btn{
+    width:24px; height:24px; border-radius:6px; border:1px solid var(--border); background:var(--panel-2);
+    color:var(--text); cursor:pointer; font-size:15px; line-height:1;
+  }
+
+  /* ---- The Gate ---- */
+  .gate-panel{ text-align:center; position:relative; overflow:hidden; }
+  .gate-stage{ height:150px; position:relative; display:flex; align-items:center; justify-content:center; margin: 6px 0 10px; }
+  .gate-frame{ width:170px; height:130px; border:3px solid #3a4048; border-radius:6px 6px 0 0; position:relative; background:#0d1013; overflow:hidden; }
+  .gate-leaf{
+    position:absolute; top:0; width:50%; height:100%; background: linear-gradient(160deg,#2a2f36,#1a1e23);
+    border:1px solid #3a4048; transition: transform 0.8s cubic-bezier(.7,-0.2,.3,1.2);
+  }
+  .gate-leaf.left{ left:0; transform-origin:left center; }
+  .gate-leaf.right{ right:0; transform-origin:right center; }
+  .gate-panel.unlocked .gate-leaf.left{ transform: rotateY(-95deg); }
+  .gate-panel.unlocked .gate-leaf.right{ transform: rotateY(95deg); }
+  .lockmark{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:26px; z-index:2; }
+  .gate-status{ font-family:'Cairo'; font-weight:800; font-size:15px; }
+  .gate-sub{ font-size:12px; color:var(--text-dim); margin-top:4px; }
+
+  /* ---- Constitution accordion ---- */
+  .rule{ border-bottom:1px solid var(--border); }
+  .rule:last-child{ border-bottom:none; }
+  .rule-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:12px 2px; cursor:pointer; font-size:13.5px; font-weight:700;
+  }
+  .rule-head .arrow{ transition: transform .2s; color:var(--text-dim); font-size:12px;}
+  .rule.open .arrow{ transform: rotate(180deg); }
+  .rule-body{ max-height:0; overflow:hidden; transition: max-height .25s ease; font-size:12.5px; color:var(--text-dim); line-height:1.9;}
+  .rule.open .rule-body{ max-height:200px; padding-bottom:12px; }
+
+  .save-note{ text-align:center; font-size:11px; color:var(--text-dim); margin-top:6px; }
+  ::selection{ background: var(--blue); color:#0B0E11; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="mark">Q</div>
+      <div>
+        <h1>غرفة القيادة</h1>
+        <span>لوحة التحكم اليومية — تتبّع، انضباط، إنجاز</span>
+      </div>
+    </div>
+    <div class="clock">
+      <div class="time" id="clockTime">13:10:06</div>
+      <div class="date" id="clockDate">الجمعة، ٣ يوليو ٢٠٢٦</div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- LEFT COLUMN -->
+    <div>
+      <div class="panel">
+        <h2>
+          <span class="htxt">⚡ البيب لاين التنفيذي <small>اكتبه بنفسك كل صباح</small></span>
+          <button class="add-btn" id="addPipeRow">+ إضافة مرحلة</button>
+        </h2>
+        <div id="pipelineList"><div class="empty-hint">لا توجد مراحل بعد — اضغط "+ إضافة مرحلة" واكتب خطة يومك</div></div>
+      </div>
+
+      <div class="panel">
+        <h2><span class="htxt">🎯 قائمة الاشتباك المباشر <small>5 فراغات — الصق مهام اليوم</small></span></h2>
+        <div id="taskList"><div class="task">
+        <div class="task-top">
+          <div class="task-num">1</div>
+          <input class="field-title" data-id="s1" placeholder="الصق أو اكتب مهمة اليوم هنا..." value="" style="flex:1;">
+          <select class="imp" data-id="s1">
+            <option value="مهم جدا">🔴 مهم جدا</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="غير محدد" selected="">⚪ غير محدد</option>
+          </select>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+        <div class="task-controls">
+          <input type="range" min="0" max="100" value="0" data-range="s1">
+          <span class="pct">0%</span>
+        </div>
+      </div><div class="task">
+        <div class="task-top">
+          <div class="task-num">2</div>
+          <input class="field-title" data-id="s2" placeholder="الصق أو اكتب مهمة اليوم هنا..." value="" style="flex:1;">
+          <select class="imp" data-id="s2">
+            <option value="مهم جدا">🔴 مهم جدا</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="غير محدد" selected="">⚪ غير محدد</option>
+          </select>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+        <div class="task-controls">
+          <input type="range" min="0" max="100" value="0" data-range="s2">
+          <span class="pct">0%</span>
+        </div>
+      </div><div class="task">
+        <div class="task-top">
+          <div class="task-num">3</div>
+          <input class="field-title" data-id="s3" placeholder="الصق أو اكتب مهمة اليوم هنا..." value="" style="flex:1;">
+          <select class="imp" data-id="s3">
+            <option value="مهم جدا">🔴 مهم جدا</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="غير محدد" selected="">⚪ غير محدد</option>
+          </select>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+        <div class="task-controls">
+          <input type="range" min="0" max="100" value="0" data-range="s3">
+          <span class="pct">0%</span>
+        </div>
+      </div><div class="task">
+        <div class="task-top">
+          <div class="task-num">4</div>
+          <input class="field-title" data-id="s4" placeholder="الصق أو اكتب مهمة اليوم هنا..." value="" style="flex:1;">
+          <select class="imp" data-id="s4">
+            <option value="مهم جدا">🔴 مهم جدا</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="غير محدد" selected="">⚪ غير محدد</option>
+          </select>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+        <div class="task-controls">
+          <input type="range" min="0" max="100" value="0" data-range="s4">
+          <span class="pct">0%</span>
+        </div>
+      </div><div class="task">
+        <div class="task-top">
+          <div class="task-num">5</div>
+          <input class="field-title" data-id="s5" placeholder="الصق أو اكتب مهمة اليوم هنا..." value="" style="flex:1;">
+          <select class="imp" data-id="s5">
+            <option value="مهم جدا">🔴 مهم جدا</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="غير محدد" selected="">⚪ غير محدد</option>
+          </select>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+        <div class="task-controls">
+          <input type="range" min="0" max="100" value="0" data-range="s5">
+          <span class="pct">0%</span>
+        </div>
+      </div></div>
+      </div>
+
+      <div class="panel">
+        <h2>📜 الدستور التشغيلي <small>V2.0</small></h2>
+        <div id="rulesList"><div class="rule"><div class="rule-head"><span>الشيفرة اللونية الصارمة</span><span class="arrow">▾</span></div><div class="rule-body">🔴 طوارئ/خرق، 🟠 قيد التنفيذ، 🟡 مجدول، 🟢 انتصار، 🔒 مغلق، 🔓 مفتوح — كل حالة تُقرأ بلونها فوراً دون الحاجة لقراءة النص.</div></div><div class="rule"><div class="rule-head"><span>التتبع الشامل (Omni-Tracking)</span><span class="arrow">▾</span></div><div class="rule-body">تسجيل كل دقيقة على مدار اليوم بحيادية تامة، دون أن يكون التتبع عبئاً بل عيناً كاشفة لجمع البيانات الاستراتيجية.</div></div><div class="rule"><div class="rule-head"><span>بوابة الدوبامين (The Gateway Rule)</span><span class="arrow">▾</span></div><div class="rule-body">يُحظر الترفيه تماماً حتى إقفال هدف العمل العميق (3:15) والعادات الأساسية. عند الإنجاز تُفتح البوابة بحرية كاملة وبدون أي ذنب.</div></div><div class="rule"><div class="rule-head"><span>قناص الأسواق (Sniper Protocol)</span><span class="arrow">▾</span></div><div class="rule-body">جلستان فقط للتداول (لندن/نيويورك). يُمنع فحص الصفقات أو الشارت خارج هذين الوقتين.</div></div><div class="rule"><div class="rule-head"><span>وضع الشبح الاجتماعي (DND)</span><span class="arrow">▾</span></div><div class="rule-body">تفعيل "عدم الإزعاج" آلياً عند بدء مؤقت العمل. المحاسبة على أي تسرب أو تشتت تتم ليلاً.</div></div><div class="rule"><div class="rule-head"><span>الراحة التكتيكية السيادية</span><span class="arrow">▾</span></div><div class="rule-body">الراحة لا تُجدول بل تُتخذ كقرار سيادي عند الحاجة، وتُعلن رسمياً دون أي شعور بالذنب.</div></div><div class="rule"><div class="rule-head"><span>الخطوط الحمراء (الصلوات)</span><span class="arrow">▾</span></div><div class="rule-body">الصلاة في وقتها فوق كل شيء؛ يُكسر أي تدفق عمل أو ترفيه فور سماع الأذان.</div></div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <div class="panel">
+        <h2>🎧 العمل العميق <small>الهدف: 3 ساعات و 15 دقيقة</small></h2>
+        <div class="timer-box">
+          <div class="timer-display" id="timerDisplay">00:00:00</div>
+          <div class="timer-target">من أصل 03:15:00</div>
+          <div class="timer-track"><div class="fill" id="timerFill" style="width:0%"></div></div>
+          <div class="timer-btns">
+            <button class="btn primary" id="timerToggle">ابدأ</button>
+            <button class="btn danger" id="timerReset">تصفير</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel gate-panel locked" id="gatePanel">
+        <h2 style="justify-content:center;">🚪 بوابة الترفيه</h2>
+        <div class="gate-stage">
+          <div class="gate-frame">
+            <div class="gate-leaf left"></div>
+            <div class="gate-leaf right"></div>
+          </div>
+          <div class="lockmark" id="gateIcon">🔒</div>
+        </div>
+        <div class="gate-status" id="gateStatus" style="color: var(--red);">مـغـلـقـة — يُمنع الدخول</div>
+        <div class="gate-sub">تُفتح تلقائياً بعد إنجاز هدف العمل العميق والصلوات الخمس والورد</div>
+      </div>
+
+      <div class="panel">
+        <h2>🙏 الصلوات الخمس</h2>
+        <div id="prayerList"><div class="check-row"><label>الفجر</label><div class="toggle "></div></div><div class="check-row"><label>الظهر</label><div class="toggle "></div></div><div class="check-row"><label>العصر</label><div class="toggle "></div></div><div class="check-row"><label>المغرب</label><div class="toggle "></div></div><div class="check-row"><label>العشاء</label><div class="toggle "></div></div></div>
+      </div>
+
+      <div class="panel">
+        <h2>📊 مؤشرات إضافية</h2>
+        <div id="extraList"><div class="check-row"><label>🛡️ الشبح الاجتماعي (DND)</label><div class="toggle "></div></div><div class="check-row"><label>📈 جلسة لندن</label><div class="toggle "></div></div><div class="check-row"><label>📈 جلسة نيويورك</label><div class="toggle "></div></div><div class="check-row"><label>🧠 التعلم (30 دقيقة)</label><div class="toggle "></div></div><div class="check-row"><label>🗣️ ممارسة الإنجليزية</label><div class="toggle "></div></div><div class="check-row"><label>📖 ورد القرآن</label><div class="toggle "></div></div><div class="check-row">
+      <label>📿 استغفار (الهدف 100)</label>
+      <div class="istighfar">
+        <button class="mini-btn" id="istigMinus">−</button>
+        <span class="count">0</span>
+        <button class="mini-btn" id="istigPlus">+</button>
+      </div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="save-note" id="saveNote">يتم الحفظ تلقائياً ليوم اليوم — كل صباح تبدأ صفحة جديدة</div>
+</div>
+
+<script>
+(function(){
+  const todayKey = () => {
+    const d = new Date();
+    return 'state-' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  };
+  const KEY = todayKey();
+  const DEEP_TARGET = 3*3600 + 15*60; // 11700s
+  const uid = () => 'x' + Math.random().toString(36).slice(2,9);
+
+  // default state: pipeline & tasks start EMPTY each day — the person fills them in every morning
+  let state = {
+    pipeline: [],
+    tasks: [
+      {id:'s1', title:'', importance:'غير محدد', progress:0},
+      {id:'s2', title:'', importance:'غير محدد', progress:0},
+      {id:'s3', title:'', importance:'غير محدد', progress:0},
+      {id:'s4', title:'', importance:'غير محدد', progress:0},
+      {id:'s5', title:'', importance:'غير محدد', progress:0},
+    ],
+    prayers: {fajr:false, dhuhr:false, asr:false, maghrib:false, isha:false},
+    dnd:false,
+    trading:{london:false, newyork:false},
+    learning:false,
+    english:false,
+    quran:false,
+    istighfar:0,
+    deepWork:{ elapsed:0, running:false, startedAt:null }
+  };
+
+  const rules = [
+    {t:'الشيفرة اللونية الصارمة', b:'🔴 طوارئ/خرق، 🟠 قيد التنفيذ، 🟡 مجدول، 🟢 انتصار، 🔒 مغلق، 🔓 مفتوح — كل حالة تُقرأ بلونها فوراً دون الحاجة لقراءة النص.'},
+    {t:'التتبع الشامل (Omni-Tracking)', b:'تسجيل كل دقيقة على مدار اليوم بحيادية تامة، دون أن يكون التتبع عبئاً بل عيناً كاشفة لجمع البيانات الاستراتيجية.'},
+    {t:'بوابة الدوبامين (The Gateway Rule)', b:'يُحظر الترفيه تماماً حتى إقفال هدف العمل العميق (3:15) والعادات الأساسية. عند الإنجاز تُفتح البوابة بحرية كاملة وبدون أي ذنب.'},
+    {t:'قناص الأسواق (Sniper Protocol)', b:'جلستان فقط للتداول (لندن/نيويورك). يُمنع فحص الصفقات أو الشارت خارج هذين الوقتين.'},
+    {t:'وضع الشبح الاجتماعي (DND)', b:'تفعيل "عدم الإزعاج" آلياً عند بدء مؤقت العمل. المحاسبة على أي تسرب أو تشتت تتم ليلاً.'},
+    {t:'الراحة التكتيكية السيادية', b:'الراحة لا تُجدول بل تُتخذ كقرار سيادي عند الحاجة، وتُعلن رسمياً دون أي شعور بالذنب.'},
+    {t:'الخطوط الحمراء (الصلوات)', b:'الصلاة في وقتها فوق كل شيء؛ يُكسر أي تدفق عمل أو ترفيه فور سماع الأذان.'},
+  ];
+
+  const statusMeta = {
+    urgent:{label:'طوارئ', cls:'b-urgent', dot:'var(--red)'},
+    active:{label:'قيد التنفيذ', cls:'b-active', dot:'var(--orange)'},
+    scheduled:{label:'مجدول', cls:'b-scheduled', dot:'var(--yellow)'},
+    done:{label:'منجز', cls:'b-done', dot:'var(--green)'},
+  };
+  const cycle = ['scheduled','active','done','urgent'];
+
+  // ---------- storage ----------
+  let saveTimer = null;
+  async function save(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async ()=>{
+      try{ await window.storage.set(KEY, JSON.stringify(state), false); }
+      catch(e){ console.error('save failed', e); }
+    }, 250);
+  }
+  async function load(){
+    try{
+      const res = await window.storage.get(KEY, false);
+      if(res && res.value){
+        const saved = JSON.parse(res.value);
+        state = Object.assign(state, saved);
+      }
+    }catch(e){ /* no saved state yet for today */ }
+    renderAll();
+  }
+
+  // ---------- clock ----------
+  function tickClock(){
+    const d = new Date();
+    document.getElementById('clockTime').textContent = d.toLocaleTimeString('en-GB');
+    document.getElementById('clockDate').textContent = d.toLocaleDateString('ar-EG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  }
+  setInterval(tickClock, 1000); tickClock();
+
+  // ---------- pipeline (fully editable) ----------
+  function renderPipeline(){
+    const el = document.getElementById('pipelineList');
+    el.innerHTML = '';
+    if(state.pipeline.length === 0){
+      el.innerHTML = '<div class="empty-hint">لا توجد مراحل بعد — اضغط "+ إضافة مرحلة" واكتب خطة يومك</div>';
+      return;
+    }
+    state.pipeline.forEach(p=>{
+      const meta = statusMeta[p.status];
+      const row = document.createElement('div');
+      row.className='pipe-row';
+      row.innerHTML = `
+        <div class="pipe-dot" style="background:${meta.dot}"></div>
+        <div class="pipe-body">
+          <input class="field-title" data-id="${p.id}" data-f="title" placeholder="عنوان المرحلة" value="${p.title.replace(/"/g,'&quot;')}">
+          <input class="field-sub" data-id="${p.id}" data-f="sub" placeholder="تفاصيل قصيرة" value="${p.sub.replace(/"/g,'&quot;')}">
+        </div>
+        <div class="badge ${meta.cls}" data-act="cycle" data-id="${p.id}">${meta.label}</div>
+        <button class="row-x" data-act="del" data-id="${p.id}">×</button>
+      `;
+      el.appendChild(row);
+    });
+    el.querySelectorAll('input').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        const item = state.pipeline.find(x=>x.id===inp.dataset.id);
+        item[inp.dataset.f] = inp.value;
+        save();
+      });
+    });
+    el.querySelectorAll('[data-act="cycle"]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const item = state.pipeline.find(x=>x.id===b.dataset.id);
+        const idx = cycle.indexOf(item.status);
+        item.status = cycle[(idx+1)%cycle.length];
+        renderPipeline(); save();
+      });
+    });
+    el.querySelectorAll('[data-act="del"]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        state.pipeline = state.pipeline.filter(x=>x.id!==b.dataset.id);
+        renderPipeline(); save();
+      });
+    });
+  }
+  document.getElementById('addPipeRow').addEventListener('click', ()=>{
+    state.pipeline.push({id:uid(), title:'', sub:'', status:'scheduled'});
+    renderPipeline(); save();
+  });
+
+  // ---------- tasks: 5 fixed morning slots ----------
+  function renderTasks(){
+    const el = document.getElementById('taskList');
+    el.innerHTML='';
+    state.tasks.forEach((t,i)=>{
+      const row = document.createElement('div');
+      row.className='task';
+      row.innerHTML = `
+        <div class="task-top">
+          <div class="task-num">${i+1}</div>
+          <input class="field-title" data-id="${t.id}" placeholder="الصق أو اكتب مهمة اليوم هنا..." value="${t.title.replace(/"/g,'&quot;')}" style="flex:1;">
+          <select class="imp" data-id="${t.id}">
+            <option value="مهم جدا" ${t.importance==='مهم جدا'?'selected':''}>🔴 مهم جدا</option>
+            <option value="متوسط" ${t.importance==='متوسط'?'selected':''}>🟡 متوسط</option>
+            <option value="غير محدد" ${t.importance==='غير محدد'?'selected':''}>⚪ غير محدد</option>
+          </select>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:${t.progress}%"></div></div>
+        <div class="task-controls">
+          <input type="range" min="0" max="100" value="${t.progress}" data-range="${t.id}">
+          <span class="pct">${t.progress}%</span>
+        </div>
+      `;
+      el.appendChild(row);
+    });
+    el.querySelectorAll('input.field-title').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        const t = state.tasks.find(x=>x.id===inp.dataset.id);
+        t.title = inp.value;
+        save();
+      });
+    });
+    el.querySelectorAll('select.imp').forEach(sel=>{
+      sel.addEventListener('change', ()=>{
+        const t = state.tasks.find(x=>x.id===sel.dataset.id);
+        t.importance = sel.value;
+        save();
+      });
+    });
+    el.querySelectorAll('input[type=range]').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        const t = state.tasks.find(x=>x.id===inp.dataset.range);
+        t.progress = parseInt(inp.value,10);
+        renderTasks(); save();
+      });
+    });
+  }
+
+  // ---------- rules ----------
+  function renderRules(){
+    const el = document.getElementById('rulesList');
+    el.innerHTML='';
+    rules.forEach((r)=>{
+      const d = document.createElement('div');
+      d.className='rule';
+      d.innerHTML = `<div class="rule-head"><span>${r.t}</span><span class="arrow">▾</span></div><div class="rule-body">${r.b}</div>`;
+      d.querySelector('.rule-head').addEventListener('click', ()=> d.classList.toggle('open'));
+      el.appendChild(d);
+    });
+  }
+
+  // ---------- prayers & extras ----------
+  function toggleRow(labelText, checked, onToggle){
+    const row = document.createElement('div');
+    row.className='check-row';
+    row.innerHTML = `<label>${labelText}</label><div class="toggle ${checked?'on':''}"></div>`;
+    row.querySelector('.toggle').addEventListener('click', ()=>{
+      onToggle();
+      renderAll(); save();
+    });
+    return row;
+  }
+
+  function renderPrayers(){
+    const el = document.getElementById('prayerList');
+    el.innerHTML='';
+    const map = {fajr:'الفجر', dhuhr:'الظهر', asr:'العصر', maghrib:'المغرب', isha:'العشاء'};
+    Object.keys(map).forEach(k=>{
+      el.appendChild(toggleRow(map[k], state.prayers[k], ()=> state.prayers[k]=!state.prayers[k]));
+    });
+  }
+
+  function renderExtras(){
+    const el = document.getElementById('extraList');
+    el.innerHTML='';
+    el.appendChild(toggleRow('🛡️ الشبح الاجتماعي (DND)', state.dnd, ()=> state.dnd=!state.dnd));
+    el.appendChild(toggleRow('📈 جلسة لندن', state.trading.london, ()=> state.trading.london=!state.trading.london));
+    el.appendChild(toggleRow('📈 جلسة نيويورك', state.trading.newyork, ()=> state.trading.newyork=!state.trading.newyork));
+    el.appendChild(toggleRow('🧠 التعلم (30 دقيقة)', state.learning, ()=> state.learning=!state.learning));
+    el.appendChild(toggleRow('🗣️ ممارسة الإنجليزية', state.english, ()=> state.english=!state.english));
+    el.appendChild(toggleRow('📖 ورد القرآن', state.quran, ()=> state.quran=!state.quran));
+
+    const row = document.createElement('div');
+    row.className='check-row';
+    row.innerHTML = `
+      <label>📿 استغفار (الهدف 100)</label>
+      <div class="istighfar">
+        <button class="mini-btn" id="istigMinus">−</button>
+        <span class="count">${state.istighfar}</span>
+        <button class="mini-btn" id="istigPlus">+</button>
+      </div>`;
+    el.appendChild(row);
+    row.querySelector('#istigPlus').addEventListener('click', ()=>{ state.istighfar = Math.min(100, state.istighfar+1); renderExtras(); save(); });
+    row.querySelector('#istigMinus').addEventListener('click', ()=>{ state.istighfar = Math.max(0, state.istighfar-1); renderExtras(); save(); });
+  }
+
+  // ---------- deep work timer ----------
+  let timerInterval = null;
+  function fmt(sec){
+    const h = String(Math.floor(sec/3600)).padStart(2,'0');
+    const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+    const s = String(Math.floor(sec%60)).padStart(2,'0');
+    return `${h}:${m}:${s}`;
+  }
+  function currentElapsed(){
+    let e = state.deepWork.elapsed;
+    if(state.deepWork.running && state.deepWork.startedAt){
+      e += (Date.now() - state.deepWork.startedAt)/1000;
+    }
+    return e;
+  }
+  function renderTimer(){
+    const e = currentElapsed();
+    document.getElementById('timerDisplay').textContent = fmt(e);
+    document.getElementById('timerFill').style.width = Math.min(100, (e/DEEP_TARGET)*100) + '%';
+    document.getElementById('timerToggle').textContent = state.deepWork.running ? 'إيقاف مؤقت' : 'ابدأ';
+  }
+  function startTimerLoop(){
+    if(timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(()=>{ renderTimer(); updateGate(); }, 1000);
+  }
+  document.getElementById('timerToggle').addEventListener('click', ()=>{
+    if(state.deepWork.running){
+      state.deepWork.elapsed = currentElapsed();
+      state.deepWork.running = false;
+      state.deepWork.startedAt = null;
+    } else {
+      state.deepWork.running = true;
+      state.deepWork.startedAt = Date.now();
+    }
+    renderTimer(); save(); updateGate();
+  });
+  document.getElementById('timerReset').addEventListener('click', ()=>{
+    state.deepWork = {elapsed:0, running:false, startedAt:null};
+    renderTimer(); save(); updateGate();
+  });
+
+  // ---------- gate ----------
+  function updateGate(){
+    const e = currentElapsed();
+    const p = state.prayers;
+    const habitsDone = p.fajr && p.dhuhr && p.asr && p.maghrib && p.isha && state.quran;
+    const unlocked = e >= DEEP_TARGET && habitsDone;
+    const panel = document.getElementById('gatePanel');
+    const icon = document.getElementById('gateIcon');
+    const status = document.getElementById('gateStatus');
+    if(unlocked){
+      panel.classList.add('unlocked');
+      icon.textContent = '🔓';
+      status.textContent = 'مـفـتـوحـة — حرية كاملة بلا ذنب';
+      status.style.color = 'var(--green)';
+    } else {
+      panel.classList.remove('unlocked');
+      icon.textContent = '🔒';
+      status.textContent = 'مـغـلـقـة — يُمنع الدخول';
+      status.style.color = 'var(--red)';
+    }
+  }
+
+  function renderAll(){
+    renderPipeline();
+    renderTasks();
+    renderRules();
+    renderPrayers();
+    renderExtras();
+    renderTimer();
+    updateGate();
+  }
+
+  load();
+  startTimerLoop();
+
+  setInterval(()=>{ if(state.deepWork.running) save(); }, 15000);
+  window.addEventListener('beforeunload', ()=>{ if(state.deepWork.running){ state.deepWork.elapsed = currentElapsed(); } });
+})();
+</script>
+
+
+</body></html>
