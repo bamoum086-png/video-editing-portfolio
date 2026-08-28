@@ -531,18 +531,8 @@
             
             const [showWorkflow, setShowWorkflow] = useState(false);
             const [hoveredNode, setHoveredNode] = useState(null);
-            const [activeVariant, setActiveVariant] = useState(null);
-            const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
             const [playStatsAnim, setPlayStatsAnim] = useState(false); 
             const [activeQuarter, setActiveQuarter] = useState('Q1'); 
-
-            // قمنا بإضافة خاصية thumbnail لتضع فيها رابط الصورة الخاصة باللقطة لكل فيديو
-            const outputVariants = [
-                { id: 'v1', title: "Variant 01", vimeoId: "1178041937", thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop", hook: "71%", retention: "Steady", ctr: "4.2%", roas: "3.1x", color: "cyan" },
-                { id: 'v2', title: "Variant 02", vimeoId: "1178041915", thumbnail: "https://images.unsplash.com/photo-1600861194942-f883de0dfe96?q=80&w=400&auto=format&fit=crop", hook: "65%", retention: "Spike", ctr: "5.1%", roas: "3.8x", color: "emerald" },
-                { id: 'v3', title: "Variant 03", vimeoId: "1178041887", thumbnail: "https://images.unsplash.com/photo-1622737133809-d95047b9e673?q=80&w=400&auto=format&fit=crop", hook: "78%", retention: "High", ctr: "6.4%", roas: "4.5x", color: "purple" },
-                { id: 'v4', title: "Variant 04", vimeoId: "1178041859", thumbnail: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop", hook: "82%", retention: "Viral", ctr: "7.1%", roas: "5.2x", color: "pink" }
-            ];
 
             useEffect(() => {
                 const revealElements = document.querySelectorAll('.reveal');
@@ -576,14 +566,14 @@
                 return () => observer.disconnect();
             }, []);
 
-            const workflowSteps = [
-                { id: 1, title: "Product & Scripting", icon: "fa-pen-nib", color: "cyan", bg: "bg-cyan-500/10", dotBg: "bg-cyan-400", text: "text-cyan-400", border: "border-cyan-500/30", hoverBorder: "hover:border-cyan-500", glow: "shadow-[0_0_30px_rgba(6,182,212,0.4)]", desc: "Analyzing the brand's product and crafting conversion-focused scripts engineered specifically for short-form retention." },
-                { id: 2, title: "Base Avatar Creation", icon: "fa-user-astronaut", color: "blue", bg: "bg-blue-500/10", dotBg: "bg-blue-400", text: "text-blue-400", border: "border-blue-500/30", hoverBorder: "hover:border-blue-500", glow: "shadow-[0_0_30px_rgba(59,130,246,0.4)]", desc: "Designing the foundational look of the AI Influencer tailored perfectly to the target demographic's preferences." },
-                { id: 3, title: "Hyper-Realistic Variant", icon: "fa-wand-magic-sparkles", color: "purple", bg: "bg-purple-500/10", dotBg: "bg-purple-400", text: "text-purple-400", border: "border-purple-500/30", hoverBorder: "hover:border-purple-500", glow: "shadow-[0_0_30px_rgba(168,85,247,0.4)]", desc: "Enhancing the base avatar with skin textures, micro-expressions, and ultra-realistic 4K details using Midjourney & Freepik assets." },
-                { id: 4, title: "Voice & Audio Cloning", icon: "fa-microphone-lines", color: "pink", bg: "bg-pink-500/10", dotBg: "bg-pink-400", text: "text-pink-400", border: "border-pink-500/30", hoverBorder: "hover:border-pink-500", glow: "shadow-[0_0_30px_rgba(236,72,153,0.4)]", desc: "Generating emotional, human-like voiceovers using ElevenLabs and mapping exact audio frequencies for flawless delivery." },
-                { id: 5, title: "Environment & Lighting", icon: "fa-lightbulb", color: "rose", bg: "bg-rose-500/10", dotBg: "bg-rose-400", text: "text-rose-400", border: "border-rose-500/30", hoverBorder: "hover:border-rose-500", glow: "shadow-[0_0_30px_rgba(244,63,94,0.4)]", desc: "Standardizing the scenarios, studio lighting, and backgrounds to ensure a premium, cohesive brand aesthetic across all content." },
-                { id: 6, title: "Avatar Consistency", icon: "fa-user-shield", color: "emerald", bg: "bg-emerald-500/10", dotBg: "bg-emerald-400", text: "text-emerald-400", border: "border-emerald-500/30", hoverBorder: "hover:border-emerald-500", glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]", desc: "Locking facial features using Colab Pro+ and Reactor Nodes so the influencer never 'morphs' or changes between scenes." },
-                { id: 7, title: "High-Volume Output", icon: "fa-layer-group", color: "amber", bg: "bg-amber-500/10", dotBg: "bg-amber-400", text: "text-amber-400", border: "border-amber-500/30", hoverBorder: "hover:border-amber-500", glow: "shadow-[0_0_30px_rgba(245,158,11,0.4)]", desc: "Scaling the production pipeline to deliver a massive volume of perfectly synced, ready-to-post clips every single month." }
+            // DRAFT — عدّل العناوين والوصف والترتيب حسب أعمالك الفعلية (الأفضل أولاً)
+            const styleCards = [
+                { id: 1, title: "Hyper-Realistic Face Swap", icon: "fa-masks-theater", color: "blue", bg: "bg-blue-500/10", dotBg: "bg-blue-400", text: "text-blue-400", border: "border-blue-500/30", hoverBorder: "hover:border-blue-500", glow: "shadow-[0_0_30px_rgba(59,130,246,0.4)]", desc: "1:1 facial motion-matching onto any avatar, even under extreme expressions — the Putin demo above is a live example of this style." },
+                { id: 2, title: "UGC Beauty & Cosmetics", icon: "fa-face-smile-beam", color: "pink", bg: "bg-pink-500/10", dotBg: "bg-pink-400", text: "text-pink-400", border: "border-pink-500/30", hoverBorder: "hover:border-pink-500", glow: "shadow-[0_0_30px_rgba(236,72,153,0.4)]", desc: "Authentic, hand-held-feel UGC ads for beauty and cosmetic brands, with flawless skin texture and micro-expression tracking." },
+                { id: 3, title: "Fitness Transformation", icon: "fa-dumbbell", color: "emerald", bg: "bg-emerald-500/10", dotBg: "bg-emerald-400", text: "text-emerald-400", border: "border-emerald-500/30", hoverBorder: "hover:border-emerald-500", glow: "shadow-[0_0_30px_rgba(16,185,129,0.4)]", desc: "Dramatic before/after transformation content — the style behind the 5.45M-view case study further down this page." },
+                { id: 4, title: "Tech & High-Ticket Gadgets", icon: "fa-microchip", color: "purple", bg: "bg-purple-500/10", dotBg: "bg-purple-400", text: "text-purple-400", border: "border-purple-500/30", hoverBorder: "hover:border-purple-500", glow: "shadow-[0_0_30px_rgba(168,85,247,0.4)]", desc: "Hard-to-film or expensive gadgets rendered with hyper-realistic product handling and premium sales appeal." },
+                { id: 5, title: "Medical & E-Com Mixed Reality", icon: "fa-house-medical", color: "rose", bg: "bg-rose-500/10", dotBg: "bg-rose-400", text: "text-rose-400", border: "border-rose-500/30", hoverBorder: "hover:border-rose-500", glow: "shadow-[0_0_30px_rgba(244,63,94,0.4)]", desc: "Blending real physical or medical products with AI-generated environments for a clean, trustworthy commercial look." },
+                { id: 6, title: "Emotional App & Brand Promos", icon: "fa-heart-pulse", color: "amber", bg: "bg-amber-500/10", dotBg: "bg-amber-400", text: "text-amber-400", border: "border-amber-500/30", hoverBorder: "hover:border-amber-500", glow: "shadow-[0_0_30px_rgba(245,158,11,0.4)]", desc: "AI-generated performances with strong, believable emotional reactions, built to sell an app or brand moment." }
             ];
 
             const handleWorkflowClick = (e) => {
@@ -594,19 +584,6 @@
                         document.getElementById('interactive-pipeline-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
                 }
-            };
-
-            const handleAnalyzeVariant = (variant, e) => {
-                e.preventDefault();
-                setActiveVariant(variant);
-                setIsAnalyticsOpen(true);
-                setTimeout(() => {
-                    const engine = document.getElementById('analytics-wrapper');
-                    if(engine) {
-                        const offset = engine.getBoundingClientRect().top + window.scrollY - (window.innerHeight * 0.15);
-                        window.scrollTo({ top: offset, behavior: 'smooth' });
-                    }
-                }, 50); 
             };
 
             return (
@@ -718,36 +695,12 @@
                             <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pb-8 md:pb-0 snap-x snap-mandatory hide-scrollbar px-6 md:px-0">
                                 
                                 <InteractiveVideoCard 
-                                    vimeoId="1177969101"
-                                    title="Cosmetics UGC"
-                                    subtitle="Women's cosmetic product integrating authentic UGC feel."
-                                    badge="Beauty"
-                                    badgeColor="bg-[#c5a880]"
-                                    colorTheme="cyan"
-                                    activeVideoId={activeVideoId}
-                                    onActivate={setActiveVideoId}
-                                />
-
-                                <InteractiveVideoCard 
-                                    vimeoId="1177969028"
-                                    title="App Promo (Emotion)"
-                                    subtitle="Betting app ad demonstrating strong AI-generated emotional reactions."
-                                    badge="App Promo"
-                                    badgeColor="bg-[#9b8df0]"
-                                    colorTheme="emerald"
-                                    delayClass="md:delay-100"
-                                    activeVideoId={activeVideoId}
-                                    onActivate={setActiveVideoId}
-                                />
-
-                                <InteractiveVideoCard 
                                     vimeoId="1177963191"
                                     title="High-Ticket Gadget"
                                     subtitle="Hard-to-film gadgets rendered with hyper-realistic sales appeal."
                                     badge="Tech"
                                     badgeColor="bg-[#64748b]"
                                     colorTheme="purple"
-                                    delayClass="md:delay-200"
                                     activeVideoId={activeVideoId}
                                     onActivate={setActiveVideoId}
                                 />
@@ -759,10 +712,12 @@
                                     badge="Medical & E-Com"
                                     badgeColor="bg-[#d2a3a9]"
                                     colorTheme="pink"
-                                    delayClass="md:delay-300"
+                                    delayClass="md:delay-100"
                                     activeVideoId={activeVideoId}
                                     onActivate={setActiveVideoId}
                                 />
+
+                                {/* 🔽 NEW VIDEOS GO HERE — أرسل لي رابط/ID فيميو + عنوان + وصف قصير + Badge لكل فيديو جديد وسأضيفه هنا بنفس الأسلوب */}
 
                                 <div className="w-1 md:hidden shrink-0"></div>
                             </div>
@@ -821,11 +776,11 @@
                                 onClick={handleWorkflowClick}
                                 className={`flex items-center justify-center gap-3 px-6 md:px-8 py-4 md:py-5 w-full rounded-full transition-all duration-300 relative overflow-hidden group btn-glare ${showWorkflow ? 'bg-slate-800 shadow-[0_0_20px_rgba(255,255,255,0.1)] text-white' : 'bg-gradient-to-r from-red-600 to-rose-600 animate-red-glow text-white font-black text-sm md:text-lg tracking-wide uppercase'}`}
                             >
-                                <i className={`fas ${showWorkflow ? 'fa-chevron-up' : 'fa-project-diagram'} text-lg md:text-xl relative z-10 transition-transform duration-500 group-hover:rotate-180`}></i> 
+                                <i className={`fas ${showWorkflow ? 'fa-chevron-up' : 'fa-shapes'} text-lg md:text-xl relative z-10 transition-transform duration-500 group-hover:rotate-180`}></i> 
                                 <span className={`relative z-10 flex items-center flex-wrap justify-center gap-2 ${showWorkflow ? 'font-bold' : 'font-black'}`}>
-                                    {showWorkflow ? 'Close Workflow Details' : (
+                                    {showWorkflow ? 'Close Style Gallery' : (
                                         <>
-                                            EXPLORE MY FULL PIPELINE
+                                            EXPLORE MY STYLE GALLERY
                                             <span className="bg-black/30 px-3 py-1 rounded-lg text-[10px] md:text-xs border border-white/20 font-bold normal-case tracking-normal whitespace-nowrap shadow-inner text-red-100">
                                                 In 5 Seconds 🚀
                                             </span>
@@ -841,213 +796,49 @@
                         <section className="pt-16 md:pt-24 pb-12 px-4 md:px-6 relative bg-[#070b14] border-t border-white/5 rounded-t-[2rem] md:rounded-t-[3rem]">
                             <div className="max-w-5xl mx-auto">
                                 <div className="text-center mb-12 md:mb-16">
-                                    <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">The Production Pipeline</h2>
-                                    <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-lg">Tap or hover over nodes to explore the master plan for generating content at scale.</p>
+                                    <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">The Style Gallery</h2>
+                                    <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-lg">Tap or hover to explore the range of AI styles, tones, and niches I can bring to your brand — arranged best work first.</p>
                                 </div>
 
                                 <div className="relative max-w-4xl mx-auto py-6 md:py-10">
                                     <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-500 via-purple-500 to-amber-500 rounded-full opacity-30 shadow-[0_0_15px_rgba(6,182,212,0.8)] flow-line"></div>
-                                    
-                                    {workflowSteps.map((step, idx) => (
-                                        <div key={step.id} className={`relative flex items-center mb-12 md:mb-24 ${idx % 2 === 0 ? 'md:justify-start' : 'md:justify-end'}`}>
-                                            <div className={`absolute left-6 md:left-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#050505] border-4 ${step.border} -translate-x-1/2 flex items-center justify-center z-20 transition-all duration-300 ${hoveredNode === step.id ? step.glow : 'shadow-[0_0_20px_rgba(0,0,0,1)]'}`}>
-                                                <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${step.dotBg} animate-pulse`}></div>
+
+                                    {styleCards.map((card, idx) => (
+                                        <div key={card.id} className={`relative flex items-center mb-12 md:mb-24 last:mb-0 ${idx % 2 === 0 ? 'md:justify-start' : 'md:justify-end'}`}>
+                                            <div className={`absolute left-6 md:left-1/2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#050505] border-4 ${card.border} -translate-x-1/2 flex items-center justify-center z-20 transition-all duration-300 ${hoveredNode === card.id ? card.glow : 'shadow-[0_0_20px_rgba(0,0,0,1)]'}`}>
+                                                <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${card.dotBg} animate-pulse`}></div>
                                             </div>
-                                            
+
                                             <div className={`w-full flex pl-16 pr-4 ${idx % 2 === 0 ? 'md:w-1/2 md:pl-4 md:pr-12' : 'md:w-1/2 md:pl-12 md:pr-4'}`}>
-                                                <div 
-                                                    className={`w-full glass-card rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 cursor-pointer transition-all duration-500 border ${hoveredNode === step.id ? `${step.hoverBorder} ${step.glow} scale-[1.02] md:scale-105 -translate-y-1 md:-translate-y-2` : 'border-white/10 hover:border-white/30'} ${hoveredNode && hoveredNode !== step.id ? 'opacity-40 blur-[2px]' : 'opacity-100 z-30'}`}
-                                                    onMouseEnter={() => setHoveredNode(step.id)}
+                                                <div
+                                                    className={`w-full glass-card rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 cursor-pointer transition-all duration-500 border ${hoveredNode === card.id ? `${card.hoverBorder} ${card.glow} scale-[1.02] md:scale-105 -translate-y-1 md:-translate-y-2` : 'border-white/10 hover:border-white/30'} ${hoveredNode && hoveredNode !== card.id ? 'opacity-40 blur-[2px]' : 'opacity-100 z-30'}`}
+                                                    onMouseEnter={() => setHoveredNode(card.id)}
                                                     onMouseLeave={() => setHoveredNode(null)}
-                                                    onClick={() => setHoveredNode(hoveredNode === step.id ? null : step.id)}
+                                                    onClick={() => setHoveredNode(hoveredNode === card.id ? null : card.id)}
                                                 >
                                                     <div className="flex items-center gap-3 md:gap-4 mb-1 md:mb-2">
-                                                        <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl ${step.bg} ${step.border} border flex items-center justify-center shrink-0 shadow-inner transition-transform duration-300 ${hoveredNode === step.id ? 'rotate-12 scale-110' : ''}`}>
-                                                            <i className={`fas ${step.icon} text-lg md:text-2xl ${step.text}`}></i>
+                                                        <div className={`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl ${card.bg} ${card.border} border flex items-center justify-center shrink-0 shadow-inner transition-transform duration-300 ${hoveredNode === card.id ? 'rotate-12 scale-110' : ''}`}>
+                                                            <i className={`fas ${card.icon} text-lg md:text-2xl ${card.text}`}></i>
                                                         </div>
                                                         <div>
-                                                            <div className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${step.text} mb-0.5 md:mb-1`}>Phase {step.id}</div>
-                                                            <h3 className="text-base md:text-xl font-bold text-white leading-tight">{step.title}</h3>
+                                                            <div className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${card.text} mb-0.5 md:mb-1`}>Style {String(card.id).padStart(2, '0')}</div>
+                                                            <h3 className="text-base md:text-xl font-bold text-white leading-tight">{card.title}</h3>
                                                         </div>
                                                     </div>
-                                                    
-                                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${hoveredNode === step.id ? 'max-h-[200px] opacity-100 mt-3 md:mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
+
+                                                    <div className={`transition-all duration-500 ease-in-out overflow-hidden ${hoveredNode === card.id ? 'max-h-[200px] opacity-100 mt-3 md:mt-4' : 'max-h-0 opacity-0 mt-0'}`}>
                                                         <p className="text-slate-300 leading-relaxed text-xs md:text-sm pt-3 md:pt-4 border-t border-white/10">
-                                                            {step.desc}
+                                                            {card.desc}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
-
-                                    <div className="relative mt-24 pt-12 text-center border-t border-dashed border-white/20">
-                                        <div className="absolute top-[-2px] left-6 md:left-1/2 w-1 h-12 bg-gradient-to-b from-amber-500 to-transparent -translate-x-1/2"></div>
-                                        
-                                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase mb-8 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-                                            <i className="fas fa-code-branch"></i> Rendered Output Variants
-                                        </div>
-
-                                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 px-4 md:px-0">
-                                            {outputVariants.map((variant, idx) => (
-                                                <div 
-                                                    key={variant.id} 
-                                                    className="glass-card p-2 md:p-3 rounded-2xl md:rounded-[2rem] relative group border border-white/10 hover:border-white/40 transition-all duration-300 flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:z-20"
-                                                >
-                                                    {/* تأثير وميض البرق عند الإشارة */}
-                                                    <div className="hover-lightning absolute inset-0 rounded-[2rem] pointer-events-none z-30"></div>
-
-                                                    {/* صورة مصغرة (Thumbnail) بدلاً من زر التشغيل أو الفيديو لتقليل الضغط والتركيز على زر التحليل */}
-                                                    <div className={`aspect-[9/16] w-full rounded-xl overflow-hidden relative z-10 border border-slate-800 flex flex-col items-center justify-center transition-all duration-500 group-hover:border-${variant.color}-500/50 bg-slate-900`}>
-                                                        {/* صورة اللقطة من الفيديو */}
-                                                        <img 
-                                                            src={variant.thumbnail} 
-                                                            alt={variant.title} 
-                                                            className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105" 
-                                                            loading="lazy" 
-                                                        />
-                                                        
-                                                        {/* تأثير التدرج اللوني فوق الصورة لجعل النص والزر واضحين */}
-                                                        <div className={`absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-${variant.color}-500/20 opacity-80 group-hover:opacity-60 transition-opacity duration-500`}></div>
-                                                    </div>
-
-                                                    <div className="mt-4 flex flex-col flex-grow text-left relative z-40">
-                                                        <h4 className="text-white font-bold text-[11px] md:text-xs mb-1.5 pl-1">{variant.title}</h4>
-                                                        
-                                                        {/* رسالة السوشيال ميديا وإصبع البرق (تظهر عند الإشارة فقط لتوجيه المستخدم لزر التحليل) */}
-                                                        <div className="absolute -top-16 left-1/2 -translate-x-1/2 flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none hidden group-hover:flex">
-                                                            {/* Tooltip */}
-                                                            <div className={`bg-white text-slate-900 text-[10px] md:text-xs font-black px-3 py-1.5 rounded-xl mb-1 shadow-[0_0_20px_rgba(255,255,255,0.4)] whitespace-nowrap animate-tooltip border-b-2 border-${variant.color}-500`}>
-                                                                Check the Analytics!
-                                                                <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white rotate-45"></div>
-                                                            </div>
-                                                            {/* Finger & Lightning */}
-                                                            <div className={`text-${variant.color}-400 text-3xl md:text-4xl drop-shadow-[0_0_15px_currentColor] animate-finger relative mt-1`}>
-                                                                <i className="fas fa-hand-point-down"></i>
-                                                                <i className="fas fa-bolt absolute -top-1 -right-3 text-yellow-300 text-base animate-pulse drop-shadow-[0_0_10px_rgba(253,224,71,0.8)]"></i>
-                                                            </div>
-                                                        </div>
-
-                                                        <button 
-                                                            onClick={(e) => handleAnalyzeVariant(variant, e)}
-                                                            className={`mt-auto w-full py-2.5 rounded-lg bg-${variant.color}-500/10 border border-${variant.color}-500/50 text-${variant.color}-300 text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-${variant.color}-500 hover:text-white transition-all duration-300 shadow-inner group-hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 relative overflow-hidden group/btn`}
-                                                        >
-                                                            <i className="fas fa-bolt text-[10px] opacity-0 group-hover/btn:opacity-100 transition-opacity text-yellow-300 absolute left-4"></i>
-                                                            <i className="fas fa-microchip relative z-10"></i> 
-                                                            <span className="relative z-10">Analyze</span>
-                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-[150%] group-hover/btn:animate-[glare_1.5s_infinite]"></div>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </section>
 
-                        <div id="analytics-wrapper" className={`transition-all duration-1000 ease-in-out overflow-hidden ${isAnalyticsOpen ? 'max-h-[1500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                            <section id="live-analytics-engine" className="pt-16 pb-20 px-4 md:px-6 relative bg-[#050505] shadow-[inset_0_20px_50px_rgba(0,0,0,0.8)] border-b border-white/5">
-                                <div className="max-w-6xl mx-auto">
-                                    <div className="text-center mb-12">
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4">
-                                            <i className="fas fa-satellite-dish animate-pulse"></i> Live Analytics Engine
-                                        </div>
-                                        <h2 className="text-2xl md:text-5xl font-black text-white">AI Performance Analytics</h2>
-                                        <p className="text-slate-400 mt-2 text-sm">Real-time breakdown of e-commerce metrics and video retention.</p>
-                                    </div>
-
-                                    {activeVariant && (
-                                        <div className="glass-card border border-emerald-500/30 rounded-[2rem] p-6 md:p-10 flex flex-col md:flex-row gap-8 relative overflow-hidden shadow-[0_0_50px_rgba(16,185,129,0.1)]">
-                                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none"></div>
-
-                                            <div className="w-full md:w-1/3 flex flex-col items-center relative z-10">
-                                                <h3 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
-                                                    <i className="fas fa-video text-emerald-400"></i> {activeVariant.title}
-                                                </h3>
-                                                <div className="relative w-[220px] rounded-[2rem] border-[6px] border-slate-800 bg-slate-900 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,1)]">
-                                                    <div className="absolute inset-0 bg-slate-800 animate-pulse flex items-center justify-center z-0">
-                                                        <i className="fas fa-satellite-dish text-emerald-500/30 text-2xl animate-ping"></i>
-                                                    </div>
-                                                    <div className="absolute left-0 w-full h-[2px] bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,1)] z-20 animate-scan"></div>
-                                                    <div className="absolute top-2 right-2 px-2 py-1 bg-black/50 text-emerald-400 text-[9px] font-mono rounded z-20 flex items-center gap-1">
-                                                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></div> REC
-                                                    </div>
-                                                    {/* إضافة loading="lazy" للفيديو الخاص بالتحليلات */}
-                                                    <iframe src={`https://player.vimeo.com/video/${activeVariant.vimeoId}?autoplay=1&loop=1&muted=1`} loading="lazy" className="w-full aspect-[9/16] border-0 relative z-10" allow="autoplay; fullscreen" allowFullScreen></iframe>
-                                                </div>
-                                                <div className="mt-4 text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded border border-emerald-500/20 flex items-center gap-2">
-                                                    <i className="fas fa-spinner fa-spin"></i> Analyzing Facial Fidelity
-                                                </div>
-                                            </div>
-
-                                            <div className="w-full md:w-2/3 relative z-10 flex flex-col justify-center">
-                                                <div className="absolute top-0 left-0 z-50 text-white text-3xl animate-pointer pointer-events-none">
-                                                    <i className="fas fa-hand-pointer text-cyan-400 drop-shadow-md"></i>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5 relative highlight-1 transition-all">
-                                                        <div className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-1 flex justify-between">
-                                                            <span><i className="fas fa-fish text-emerald-400"></i> Hook Rate (3s)</span>
-                                                            <span className="text-emerald-400">Top 1%</span>
-                                                        </div>
-                                                        <div className="text-4xl font-black text-white">{activeVariant.hook}</div>
-                                                        <p className="text-xs text-slate-500 mt-2">Viewers staying past the first 3 seconds. (Industry avg is 22%).</p>
-                                                    </div>
-
-                                                    <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5 relative highlight-2 transition-all">
-                                                        <div className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-1 flex justify-between">
-                                                            <span><i className="fas fa-mouse-pointer text-purple-400"></i> Click-Through (CTR)</span>
-                                                            <span className="text-purple-400">High Intent</span>
-                                                        </div>
-                                                        <div className="text-4xl font-black text-white">{activeVariant.ctr}</div>
-                                                        <p className="text-xs text-slate-500 mt-2">Traffic driven directly to landing page from organic reach.</p>
-                                                    </div>
-
-                                                    <div className="bg-slate-900/50 p-6 rounded-2xl border border-white/5 md:col-span-2 relative">
-                                                        <div className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-4">
-                                                            <i className="fas fa-chart-area text-cyan-400"></i> Audience Retention Curve
-                                                        </div>
-                                                        <div className="h-24 w-full relative">
-                                                            <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
-                                                                <line x1="0" y1="25" x2="100" y2="25" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-                                                                <line x1="0" y1="50" x2="100" y2="50" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-                                                                <line x1="0" y1="75" x2="100" y2="75" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-                                                                <path 
-                                                                    d="M 0,10 Q 20,15 40,30 T 80,40 L 100,50" 
-                                                                    fill="none" 
-                                                                    stroke="url(#gradient)" 
-                                                                    strokeWidth="4"
-                                                                    strokeLinecap="round"
-                                                                    className="animate-graph"
-                                                                />
-                                                                <defs>
-                                                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                                        <stop offset="0%" stopColor="#00f2fe" />
-                                                                        <stop offset="100%" stopColor="#4facfe" />
-                                                                    </linearGradient>
-                                                                </defs>
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="bg-amber-500/10 p-6 rounded-2xl border border-amber-500/20 md:col-span-2 relative highlight-3 transition-all flex items-center justify-between">
-                                                        <div>
-                                                            <div className="text-xs text-amber-400 uppercase font-black tracking-widest mb-1 flex items-center gap-2">
-                                                                <i className="fas fa-sack-dollar"></i> Est. ROAS
-                                                            </div>
-                                                            <p className="text-xs text-amber-200/60 max-w-xs">Return on Ad Spend based on conversion tracking.</p>
-                                                        </div>
-                                                        <div className="text-5xl font-black text-white text-shadow">{activeVariant.roas}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </section>
-                        </div>
 
                         <section id="portfolio-metrics-section" className="pt-16 pb-24 px-4 md:px-6 relative bg-gradient-to-b from-[#0a0f1d] to-[#050505] rounded-b-[2rem] md:rounded-b-[3rem] shadow-2xl mb-12 overflow-hidden min-h-[600px]">
                             <div className="max-w-7xl mx-auto relative z-10">
