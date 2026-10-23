@@ -1,196 +1,218 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Mohamed Bamou | DTC Ad Editor &amp; AI Video Architect</title>
-    <meta name="description" content="Direct-response video ads for e-commerce brands. Real footage × AI. Watch the work and hire me on Upwork.">
-    <meta property="og:title" content="Mohamed Bamou | DTC Ad Editor &amp; AI Video Architect">
-    <meta property="og:description" content="You have the traffic and the vision. I am the execution engine.">
+    <title>Mohamed Bamou | AI Video Ads for DTC Brands</title>
+    <meta name="description" content="AI-powered direct-response video ads for e-commerce brands. Watch the work and hire me on Upwork.">
+    <meta property="og:title" content="Mohamed Bamou | AI Video Ads for DTC Brands">
+    <meta property="og:description" content="You have the traffic. I'm the execution engine.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bamoum086-png.github.io/video-editing-portfolio/index.html">
+    <meta property="og:url" content="https://bamoum086-png.github.io/video-editing-portfolio/">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://player.vimeo.com/api/player.js"></script>
 
     <style>
-        /* Layout: one column of short sections; the videos carry the page, text stays to one line each. */
+        /* Layout: hero = one featured video; then two swipe rails of the work; one big hire button everywhere. */
         :root {
             color-scheme: dark;
-            --bg: #030712;
-            --panel: #0b1220;
-            --ink: #f1f5f9;
-            --muted: #94a3b8;
+            --bg: #04050a;
+            --panel: rgba(255, 255, 255, 0.035);
+            --panel-solid: #0a0d18;
+            --ink: #eef2ff;
+            --muted: #8b93a7;
             --line: rgba(255, 255, 255, 0.08);
-            --green: #14a800;      /* Upwork */
-            --accent: #10b981;     /* emerald */
-            --accent-2: #06b6d4;   /* cyan */
-            --font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-            --r-card: 28px;
-            --r-media: 20px;
+            --cyan: #22d3ee;
+            --violet: #8b5cf6;
+            --lime: #a3e635;
+            --upwork: #14a800;
+            --display: 'Unbounded', 'Manrope', system-ui, sans-serif;
+            --body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+            --card-w: 280px;
         }
+        @property --spin { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
         *, *::before, *::after { box-sizing: border-box; }
-        html { -webkit-text-size-adjust: 100%; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
         body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--ink);
-            font-family: var(--font);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0; background: var(--bg); color: var(--ink);
+            font-family: var(--body); line-height: 1.6;
+            overflow-x: hidden; -webkit-tap-highlight-color: transparent;
         }
         a { color: inherit; text-decoration: none; }
-        h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+        h1, h2, h3 { margin: 0; font-family: var(--display); font-weight: 600; letter-spacing: -0.03em; text-wrap: balance; }
         p { margin: 0; }
-        [id] { scroll-margin-top: 84px; }
-        :focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; border-radius: 10px; }
+        [id] { scroll-margin-top: 90px; }
+        :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 10px; }
 
         .wrap {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-left: max(16px, env(safe-area-inset-left, 0px));
-            padding-right: max(16px, env(safe-area-inset-right, 0px));
+            width: 100%; max-width: 1220px; margin: 0 auto;
+            padding-left: max(18px, env(safe-area-inset-left, 0px));
+            padding-right: max(18px, env(safe-area-inset-right, 0px));
         }
 
-        /* Ambient light */
-        .glow { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-        .glow::before, .glow::after {
-            content: ""; position: absolute; width: 720px; height: 720px; border-radius: 50%;
-            filter: blur(40px); opacity: .55;
+        /* ---- Ambient sky: aurora + perspective grid ---- */
+        .sky { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+        .sky i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .5; animation: drift 22s ease-in-out infinite alternate; }
+        .sky i:nth-child(1) { width: 60vw; height: 60vw; left: -15vw; top: -25vw; background: radial-gradient(circle, rgba(34,211,238,.45), transparent 60%); }
+        .sky i:nth-child(2) { width: 55vw; height: 55vw; right: -18vw; top: -10vw; background: radial-gradient(circle, rgba(139,92,246,.42), transparent 60%); animation-duration: 28s; }
+        .sky i:nth-child(3) { width: 45vw; height: 45vw; left: 30vw; top: 55vh; background: radial-gradient(circle, rgba(163,230,53,.14), transparent 60%); animation-duration: 34s; }
+        @keyframes drift { to { transform: translate3d(6vw, 4vh, 0) scale(1.12); } }
+        .grid-floor {
+            position: absolute; left: -20%; right: -20%; bottom: -10%; height: 70vh;
+            background-image: linear-gradient(rgba(34,211,238,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,.13) 1px, transparent 1px);
+            background-size: 64px 64px;
+            transform: perspective(600px) rotateX(62deg);
+            transform-origin: bottom;
+            mask-image: linear-gradient(to top, rgba(0,0,0,.9), transparent 75%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,.9), transparent 75%);
+            opacity: .45;
         }
-        .glow::before { top: -320px; left: -260px; background: radial-gradient(circle, rgba(16,185,129,.22), transparent 65%); }
-        .glow::after { top: -200px; right: -300px; background: radial-gradient(circle, rgba(6,182,212,.18), transparent 65%); }
 
-        /* Buttons */
+        /* ---- Buttons ---- */
         .btn {
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-            padding: 15px 26px; border-radius: 16px; font-weight: 800; font-size: 16px;
-            border: 1px solid transparent; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-            white-space: nowrap;
+            padding: 15px 26px; border-radius: 14px; font-weight: 800; font-size: 15.5px; font-family: var(--body);
+            border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+            transition: transform .2s ease, box-shadow .25s ease, background .2s ease, border-color .2s ease;
         }
         .btn:hover { transform: translateY(-2px); }
-        .btn-hire { background: var(--green); color: #fff; box-shadow: 0 10px 30px -10px rgba(20,168,0,.6); }
-        .btn-hire:hover { box-shadow: 0 14px 40px -8px rgba(20,168,0,.75); }
-        .btn-ghost { background: rgba(255,255,255,.06); border-color: var(--line); color: var(--ink); }
-        .btn-ghost:hover { background: rgba(255,255,255,.1); }
-        .btn-sm { padding: 9px 18px; border-radius: 999px; font-size: 14px; }
+        .btn-hire { background: var(--upwork); color: #fff; box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 12px 34px -10px rgba(20,168,0,.75); }
+        .btn-hire:hover { box-shadow: 0 0 0 1px rgba(255,255,255,.2) inset, 0 16px 44px -8px rgba(20,168,0,.9); }
+        .btn-ghost { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); color: var(--ink); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .btn-ghost:hover { border-color: rgba(34,211,238,.5); background: rgba(34,211,238,.08); }
+        .btn-sm { padding: 9px 16px; font-size: 13.5px; border-radius: 999px; }
 
-        /* Nav */
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-            padding-top: env(safe-area-inset-top, 0px);
-            transition: background .25s ease, border-color .25s ease;
-            border-bottom: 1px solid transparent;
-        }
-        .nav.scrolled { background: rgba(3,7,18,.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: var(--line); }
-        .nav-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 68px; }
+        /* ---- Nav ---- */
+        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding-top: env(safe-area-inset-top, 0px); transition: background .25s, border-color .25s; border-bottom: 1px solid transparent; }
+        .nav.scrolled { background: rgba(4,5,10,.72); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4); border-color: var(--line); }
+        .nav-in { height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
         .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
-        .brand img { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(16,185,129,.35); }
-        .brand b { display: block; font-size: 16px; line-height: 1.2; }
-        .brand small { display: block; font-size: 10px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
-        .nav-links { display: flex; align-items: center; gap: 26px; }
+        .brand img { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; box-shadow: 0 0 0 1px rgba(34,211,238,.4), 0 0 22px -4px rgba(34,211,238,.6); }
+        .brand b { display: block; font-size: 15.5px; line-height: 1.2; }
+        .brand small { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--cyan); letter-spacing: .08em; }
+        .nav-links { display: flex; align-items: center; gap: 24px; }
         .nav-links a:not(.btn) { font-size: 14px; font-weight: 600; color: var(--muted); transition: color .2s; }
         .nav-links a:not(.btn):hover { color: var(--ink); }
-        .nav .btn-hire { box-shadow: none; }
         @media (max-width: 760px) { .nav-links a:not(.btn) { display: none; } }
 
-        /* Hero */
-        .hero { position: relative; padding: 140px 0 56px; text-align: center; }
-        .hero .wrap { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 22px; }
-        .pill {
-            display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px;
-            background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.25); color: #6ee7b7;
-            font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-        }
-        .pill i { width: 7px; height: 7px; border-radius: 50%; background: #34d399; animation: blink 1.6s ease-in-out infinite; }
-        @keyframes blink { 50% { opacity: .35; } }
-        .hero h1 { font-size: clamp(34px, 6.4vw, 66px); font-weight: 800; line-height: 1.1; max-width: 15ch; }
-        .hero h1 span {
-            background: linear-gradient(90deg, #10b981, #06b6d4 55%, #3b82f6);
+        /* ---- Hero ---- */
+        .hero { position: relative; padding: 120px 0 40px; }
+        .hero-in { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 48px; align-items: center; }
+        @media (max-width: 900px) { .hero-in { grid-template-columns: minmax(0, 1fr); gap: 40px; text-align: center; } }
+        .hero-copy { display: flex; flex-direction: column; gap: 22px; }
+        @media (max-width: 900px) { .hero-copy { align-items: center; } }
+        .kicker { font-family: var(--mono); font-size: 12.5px; color: var(--cyan); letter-spacing: .06em; }
+        .kicker::after { content: "_"; animation: caret 1s steps(1) infinite; margin-left: 2px; }
+        @keyframes caret { 50% { opacity: 0; } }
+        .hero h1 { font-size: clamp(32px, 5.2vw, 62px); line-height: 1.06; }
+        .hero h1 em {
+            font-style: normal;
+            background: linear-gradient(95deg, var(--cyan), var(--violet) 55%, #e879f9);
             -webkit-background-clip: text; background-clip: text; color: transparent;
         }
-        .hero p { font-size: clamp(16px, 2.1vw, 20px); color: #cbd5e1; max-width: 46ch; }
-        .hero-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 6px; }
-        .trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; color: var(--muted); font-size: 14px; font-weight: 600; }
-        .trust i { color: var(--green); margin-right: 6px; }
+        .hero-copy > p { font-size: clamp(16px, 1.8vw, 19px); color: #c3cad9; max-width: 44ch; }
+        .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+        @media (max-width: 900px) { .hero-ctas { justify-content: center; } }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        @media (max-width: 900px) { .chips { justify-content: center; } }
+        .chip {
+            display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px;
+            background: var(--panel); border: 1px solid var(--line); font-size: 13px; font-weight: 700; color: #dbe1ee;
+            font-variant-numeric: tabular-nums;
+        }
+        .chip i { font-size: 12px; }
+        .chip .g { color: var(--upwork); } .chip .c { color: var(--cyan); } .chip .v { color: #c4b5fd; } .chip .l { color: var(--lime); }
 
-        /* Sections */
-        section { position: relative; padding: 64px 0; }
-        .sec-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 26px; }
-        .sec-head h2 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; }
-        .sec-head p { color: var(--muted); font-size: 15px; }
-        .tag { display: block; font-size: 12px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 8px; }
-        .tag.dtc { color: #fb7185; }
-        .tag.ai { color: #22d3ee; }
-        .hint { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; font-weight: 600; }
-        .hint i { color: var(--accent-2); }
+        /* Featured best video */
+        .feature { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .feature-label {
+            display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border-radius: 999px;
+            font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+            color: #0b0f19; background: linear-gradient(90deg, var(--lime), #67e8f9);
+            box-shadow: 0 10px 30px -8px rgba(163,230,53,.6);
+        }
+        .feature-arrow { color: var(--lime); font-size: 26px; line-height: 1; animation: nudge 1.2s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(163,230,53,.7)); }
+        @keyframes nudge { 50% { transform: translateY(8px); } }
+        .feature .vc { width: min(100%, 350px); }
+        .feature .vc::before, .feature .vc::after {
+            content: ""; position: absolute; inset: -3px; border-radius: 34px; z-index: -1;
+            background: conic-gradient(from var(--spin), var(--cyan), var(--violet), var(--lime), var(--cyan));
+            animation: spin 5s linear infinite;
+        }
+        .feature .vc::after { inset: -14px; filter: blur(28px); opacity: .65; }
+        .feature .vc { isolation: isolate; background: var(--panel-solid); border-color: transparent; }
+        @keyframes spin { to { --spin: 360deg; } }
+        .feature-sub { font-size: 13.5px; font-weight: 700; color: var(--muted); display: inline-flex; gap: 8px; align-items: center; }
+        .feature-sub:hover { color: var(--ink); }
 
-        /* Video rail: grid on desktop, swipe row on phones */
-        .rail { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-        @media (max-width: 1020px) { .rail { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        /* ---- Sections ---- */
+        section { position: relative; padding: 56px 0; }
+        .sec-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; margin-bottom: 22px; }
+        .sec-head .kicker::after { content: none; }
+        .sec-head h2 { font-size: clamp(24px, 3.4vw, 38px); margin-top: 6px; }
+        .rail-nav { display: flex; gap: 8px; }
+        .rail-btn {
+            width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+            background: var(--panel); border: 1px solid var(--line); color: var(--ink); transition: border-color .2s, background .2s, opacity .2s;
+        }
+        .rail-btn:hover { border-color: rgba(34,211,238,.6); background: rgba(34,211,238,.08); }
+        .rail-btn:disabled { opacity: .3; cursor: default; }
+        .hint { font-size: 13.5px; font-weight: 600; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+        .hint i { color: var(--cyan); }
+        .head-right { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+        /* Swipe rail (all widths) */
+        .rail {
+            display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+            padding: 8px 2px 18px; scrollbar-width: none; overscroll-behavior-x: contain;
+        }
+        .rail::-webkit-scrollbar { display: none; }
+        .rail > .vc { flex: 0 0 var(--card-w); scroll-snap-align: start; }
         @media (max-width: 640px) {
-            .rail {
-                display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px;
-                margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
-                padding: 4px max(16px, env(safe-area-inset-left, 0px)) 14px;
-                scrollbar-width: none;
-            }
-            .rail::-webkit-scrollbar { display: none; }
-            .rail > .vc { flex: 0 0 78%; scroll-snap-align: center; }
+            .rail { margin: 0 calc(-1 * max(18px, env(safe-area-inset-left, 0px))); padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-left, 0px)); scroll-padding-left: max(18px, env(safe-area-inset-left, 0px)); }
+            .rail > .vc { flex-basis: 76%; }
+            .rail-nav { display: none; }
         }
 
-        /* ===== The one video card (AI Lab style) ===== */
+        /* ===== The one video card ===== */
         .vc {
-            --c: #06b6d4;
-            position: relative; padding: 10px; border-radius: var(--r-card);
+            --c: #22d3ee;
+            position: relative; padding: 9px; border-radius: 30px;
             background:
-                linear-gradient(var(--panel), var(--panel)) padding-box,
-                linear-gradient(140deg, color-mix(in srgb, var(--c) 75%, transparent), rgba(255,255,255,.06) 45%, color-mix(in srgb, var(--c) 35%, transparent)) border-box;
+                linear-gradient(var(--panel-solid), var(--panel-solid)) padding-box,
+                linear-gradient(150deg, color-mix(in srgb, var(--c) 80%, transparent), rgba(255,255,255,.05) 45%, color-mix(in srgb, var(--c) 30%, transparent)) border-box;
             border: 1.5px solid transparent;
-            transition: transform .3s ease, box-shadow .3s ease;
+            transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
         }
-        .vc:hover { transform: translateY(-4px); box-shadow: 0 24px 50px -24px color-mix(in srgb, var(--c) 70%, transparent); }
-        .vc-media {
-            position: relative; aspect-ratio: 9 / 16; width: 100%; max-width: 100%;
-            border-radius: var(--r-media); overflow: hidden; background: #0f172a;
-            isolation: isolate;
-        }
-        .vc-media iframe {
-            position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
-            opacity: 0; transition: opacity .8s ease;
-        }
+        .vc:hover { transform: translateY(-6px); box-shadow: 0 26px 60px -28px color-mix(in srgb, var(--c) 80%, transparent); }
+        .vc-media { position: relative; aspect-ratio: 9 / 16; width: 100%; max-width: 100%; border-radius: 22px; overflow: hidden; background: #0d1222; isolation: isolate; }
+        .vc-media iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; transition: opacity .8s ease; }
         .vc[data-type="vimeo"] .vc-media iframe { transform: scale(1.04); pointer-events: none; }
-        .vc.loaded .vc-media iframe { opacity: 1; }
+        .vc.loaded .vc-media iframe, .vc[data-type="drive"] .vc-media iframe { opacity: 1; }
         .vc-hit { position: absolute; inset: 0; z-index: 15; cursor: pointer; background: transparent; border: 0; padding: 0; }
         .vc-load {
             position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-            background: rgba(15,23,42,.92); color: rgba(255,255,255,.5);
-            font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
-            transition: opacity .6s ease;
+            background: rgba(13,18,34,.94); color: rgba(255,255,255,.5);
+            font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; transition: opacity .6s ease;
         }
-        .vc-load span {
-            width: 36px; height: 36px; border-radius: 50%;
-            border: 4px solid color-mix(in srgb, var(--c) 30%, transparent); border-top-color: var(--c);
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .vc-load span { width: 34px; height: 34px; border-radius: 50%; border: 3px solid color-mix(in srgb, var(--c) 25%, transparent); border-top-color: var(--c); animation: rot 1s linear infinite; }
+        @keyframes rot { to { transform: rotate(360deg); } }
         .vc.loaded .vc-load { opacity: 0; pointer-events: none; }
         .vc-badge {
             position: absolute; top: 14px; left: 14px; z-index: 20; max-width: calc(100% - 84px);
             padding: 5px 12px; border-radius: 999px; background: var(--c); color: #fff;
-            font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            box-shadow: 0 6px 18px -6px rgba(0,0,0,.6); pointer-events: none;
+            font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+            box-shadow: 0 6px 18px -6px rgba(0,0,0,.6);
         }
         .vc-ctrls { position: absolute; top: 14px; right: 14px; z-index: 30; display: flex; flex-direction: column; gap: 10px; }
         .vc-btn {
-            width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
-            color: #fff; font-size: 14px;
+            width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; color: #fff; font-size: 14px;
             background: color-mix(in srgb, var(--c) 32%, rgba(0,0,0,.25));
             border: 1px solid color-mix(in srgb, var(--c) 60%, transparent);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -200,79 +222,67 @@
         .vc-btn:hover { transform: scale(1.1); background: color-mix(in srgb, var(--c) 80%, transparent); }
         .vc-btn[data-act="play"] i { transform: translateX(1px); }
         .vc:not(.playing) .vc-btn[data-act="play"] { animation: pulse 2s ease-in-out infinite; }
-        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 55%, transparent); } 50% { box-shadow: 0 0 0 10px transparent; } }
+        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 60%, transparent); } 50% { box-shadow: 0 0 0 11px transparent; } }
         .vc-cap {
-            position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; padding: 46px 18px 18px;
-            background: linear-gradient(to top, rgba(0,0,0,.92), rgba(0,0,0,.55) 55%, transparent);
+            position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; padding: 48px 18px 18px;
+            background: linear-gradient(to top, rgba(0,0,0,.92), rgba(0,0,0,.5) 55%, transparent);
             pointer-events: none; transition: opacity .4s ease;
         }
-        .vc-cap b { display: block; font-size: 16px; font-weight: 800; line-height: 1.3; }
+        .vc-cap b { display: block; font-size: 15.5px; font-weight: 800; line-height: 1.3; }
         .vc-cap small { display: block; margin-top: 4px; font-size: 12.5px; color: #cbd5e1; font-style: italic; line-height: 1.45; }
         .vc.playing .vc-cap, .vc.touched .vc-cap { opacity: 0; }
-        /* Drive videos use Google's own player: show its controls, keep our frame + caption */
-        .vc[data-type="drive"] .vc-media iframe { opacity: 1; }
         .vc[data-type="drive"] .vc-cap { padding-bottom: 54px; }
-
-        .below { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 26px; }
 
         /* AI case strip */
         .case {
-            margin-top: 26px; border-radius: 24px; padding: 22px 24px;
-            background: linear-gradient(120deg, rgba(16,185,129,.12), rgba(6,182,212,.06));
-            border: 1px solid rgba(16,185,129,.22);
-            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 28px;
+            margin-top: 18px; border-radius: 24px; padding: 20px 22px;
+            background: linear-gradient(110deg, rgba(34,211,238,.10), rgba(139,92,246,.08));
+            border: 1px solid rgba(34,211,238,.22);
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 26px;
         }
-        .case-nums { display: flex; flex-wrap: wrap; gap: 14px 34px; }
-        .case-nums div b { display: block; font-size: clamp(26px, 3.4vw, 34px); font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
-        .case-nums div span { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #6ee7b7; }
-        .case p { color: var(--muted); font-size: 14px; max-width: 32ch; }
+        .case-nums { display: flex; flex-wrap: wrap; gap: 12px 32px; }
+        .case-nums b { display: block; font-family: var(--display); font-size: clamp(22px, 3vw, 30px); font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+        .case-nums span { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--cyan); }
 
-        /* How I work */
-        .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+        /* Steps */
+        .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
         @media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
-        .step { padding: 22px; border-radius: 22px; background: rgba(255,255,255,.03); border: 1px solid var(--line); display: flex; gap: 16px; align-items: flex-start; }
-        .step em { font-style: normal; flex: 0 0 auto; width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; font-weight: 800; color: var(--bg); background: var(--accent); }
-        .step:nth-child(2) em { background: var(--accent-2); }
-        .step:nth-child(3) em { background: #a3e635; }
-        .step b { display: block; font-size: 16px; margin-bottom: 4px; }
+        .step { position: relative; padding: 20px 20px 20px 66px; border-radius: 20px; background: var(--panel); border: 1px solid var(--line); }
+        .step em { position: absolute; left: 18px; top: 18px; font-style: normal; font-family: var(--mono); font-weight: 700; font-size: 13px; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #04050a; background: var(--cyan); }
+        .step:nth-child(2) em { background: var(--violet); color: #fff; }
+        .step:nth-child(3) em { background: var(--lime); }
+        .step b { display: block; font-size: 15.5px; }
         .step span { color: var(--muted); font-size: 14px; }
 
-        /* Results */
-        .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-        @media (max-width: 760px) { .stats { grid-template-columns: minmax(0, 1fr); } }
-        .stat { padding: 24px; border-radius: 22px; background: var(--panel); border: 1px solid var(--line); }
-        .stat b { display: block; font-size: clamp(32px, 4.4vw, 44px); font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums; }
-        .stat span { display: block; margin-top: 8px; color: var(--muted); font-size: 14px; }
-        .stat .up { color: #34d399; }
-        .stat .top { color: var(--green); }
-
         /* CTA */
-        .cta { text-align: center; padding: 72px 0 96px; }
+        .cta { padding: 64px 0 110px; }
         .cta-box {
-            border-radius: 32px; padding: 48px 24px;
-            background: radial-gradient(120% 140% at 50% 0%, rgba(16,185,129,.16), transparent 60%), var(--panel);
-            border: 1px solid rgba(16,185,129,.22);
+            position: relative; overflow: hidden; border-radius: 32px; padding: 52px 24px; text-align: center;
+            background: radial-gradient(110% 140% at 50% 0%, rgba(34,211,238,.16), transparent 55%), radial-gradient(90% 120% at 50% 100%, rgba(139,92,246,.16), transparent 60%), var(--panel-solid);
+            border: 1px solid rgba(255,255,255,.1);
             display: flex; flex-direction: column; align-items: center; gap: 18px;
         }
-        .cta h2 { font-size: clamp(28px, 4.2vw, 46px); font-weight: 800; }
-        .cta p { color: var(--muted); font-size: 16px; max-width: 44ch; }
-        .cta-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
-        .btn-wa { background: #10b981; color: #fff; }
-        .foot { margin-top: 34px; color: #64748b; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+        .cta h2 { font-size: clamp(26px, 4vw, 44px); }
+        .cta p { color: var(--muted); max-width: 42ch; }
+        .cta-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 6px; }
+        .btn-hire.big { padding: 18px 34px; font-size: 17px; border-radius: 16px; }
+        .contact-alt { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; font-size: 14px; color: var(--muted); font-weight: 600; }
+        .contact-alt a:hover { color: var(--ink); }
+        .contact-alt i { margin-right: 6px; }
+        .contact-alt .wa { color: #34d399; }
+        .foot { margin-top: 28px; text-align: center; font-family: var(--mono); color: #4b5468; font-size: 11.5px; letter-spacing: .08em; }
 
-        /* Sticky hire bar on phones */
-        .sticky-hire {
-            position: fixed; z-index: 60; left: 0; right: 0; bottom: 0;
-            padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
-            background: linear-gradient(to top, rgba(3,7,18,.96), rgba(3,7,18,.75));
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-top: 1px solid var(--line);
-            transform: translateY(110%); transition: transform .3s ease;
-            display: none;
+        /* Floating hire button */
+        .float-hire {
+            position: fixed; z-index: 60;
+            right: max(18px, env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+            opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .3s, transform .3s;
         }
-        .sticky-hire .btn { width: 100%; }
-        .sticky-hire.show { transform: none; }
-        @media (max-width: 760px) { .sticky-hire { display: block; } .cta { padding-bottom: 120px; } }
+        .float-hire.show { opacity: 1; transform: none; pointer-events: auto; }
+        @media (max-width: 640px) {
+            .float-hire { left: max(14px, env(safe-area-inset-left, 0px)); right: max(14px, env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+            .float-hire .btn { width: 100%; }
+        }
 
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -281,36 +291,46 @@
     </style>
 </head>
 <body>
+    <div class="sky" aria-hidden="true"><i></i><i></i><i></i><div class="grid-floor"></div></div>
 
     <nav class="nav" id="nav">
         <div class="wrap nav-in">
             <a class="brand" href="#top" aria-label="Back to top">
-                <img src="https://www.upwork.com/profile-portraits/c1THF4gBsqOlPFKbSLIsTFYzEu9SSy5aZUukDa3go4_jNtzVy5qU2k4PJtZM_lVLbC" alt="Mohamed Bamou" onerror="this.src='https://ui-avatars.com/api/?name=Mohamed+Bamou&background=030712&color=10b981'">
-                <span><b>Mohamed Bamou</b><small>DTC Ad Architect</small></span>
+                <img src="https://www.upwork.com/profile-portraits/c1THF4gBsqOlPFKbSLIsTFYzEu9SSy5aZUukDa3go4_jNtzVy5qU2k4PJtZM_lVLbC" alt="Mohamed Bamou" onerror="this.src='https://ui-avatars.com/api/?name=Mohamed+Bamou&background=04050a&color=22d3ee'">
+                <span><b>Mohamed Bamou</b><small>AI Video · DTC Ads</small></span>
             </a>
             <div class="nav-links">
                 <a href="#dtc">DTC Ads</a>
                 <a href="#ailab">AI Lab</a>
-                <a href="#results">Results</a>
+                <a href="#process">How it works</a>
                 <a class="btn btn-hire btn-sm" href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?p=2024825438540349440" target="_blank" rel="noopener"><i class="fas fa-bolt"></i> Hire Me</a>
             </div>
         </div>
     </nav>
 
     <header class="hero" id="top">
-        <div class="glow" aria-hidden="true"></div>
-        <div class="wrap">
-            <span class="pill"><i></i> Available · DTC &amp; E-com Ads</span>
-            <h1>You have the traffic &amp; the vision. I'm the <span>execution engine</span>.</h1>
-            <p>Direct-response video ads for e-commerce brands. Real footage × AI. Fast, no hand-holding.</p>
-            <div class="hero-ctas">
-                <a class="btn btn-ghost" href="#dtc"><i class="fas fa-play"></i> Watch the work</a>
-                <a class="btn btn-hire" href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" rel="noopener"><i class="fas fa-handshake"></i> Hire me on Upwork</a>
+        <div class="wrap hero-in">
+            <div class="hero-copy">
+                <span class="kicker">// AI video ads for DTC brands</span>
+                <h1>You have the traffic. I'm the <em>execution engine</em>.</h1>
+                <p>Scroll-stopping ads from real footage and AI. Fast turnaround, zero hand-holding.</p>
+                <div class="hero-ctas">
+                    <a class="btn btn-hire" href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" rel="noopener"><i class="fas fa-handshake"></i> Hire me on Upwork</a>
+                    <a class="btn btn-ghost" href="#featured"><i class="fas fa-play"></i> Watch my best ad</a>
+                </div>
+                <div class="chips" id="results">
+                    <span class="chip"><i class="fas fa-certificate g"></i> Top Rated · 100% satisfaction</span>
+                    <span class="chip"><i class="fas fa-eye c"></i> 15M+ reach</span>
+                    <span class="chip"><i class="fas fa-chart-line l"></i> $80K+ client ROI</span>
+                    <span class="chip"><i class="fas fa-bolt v"></i> 4+ years</span>
+                </div>
             </div>
-            <div class="trust">
-                <span><i class="fas fa-certificate"></i>Top Rated on Upwork</span>
-                <span><i class="fas fa-circle-check"></i>100% client satisfaction</span>
-                <span><i class="fas fa-bolt"></i>4+ years</span>
+
+            <div class="feature" id="featured">
+                <span class="feature-label"><i class="fas fa-star"></i> Best work · Watch this first</span>
+                <i class="fas fa-arrow-down feature-arrow" aria-hidden="true"></i>
+                <div data-slot="featured"></div>
+                <a class="feature-sub" href="https://docs.google.com/document/d/1mcC5qSS4eHDuEG8kjdNJc6wdVad5Gwvn/edit?usp=drive_link&amp;ouid=116729125928632036741&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener"><i class="fas fa-file-lines"></i> See how it was built <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </header>
@@ -320,15 +340,15 @@
             <div class="wrap">
                 <div class="sec-head">
                     <div>
-                        <span class="tag dtc">01 · DTC &amp; E-com Ads</span>
+                        <span class="kicker">// 01 · DTC &amp; e-com ads</span>
                         <h2>Ads built to sell</h2>
                     </div>
-                    <span class="hint"><i class="fas fa-volume-high"></i> Press ▶ to watch with sound</span>
+                    <div class="head-right">
+                        <span class="hint"><i class="fas fa-volume-high"></i> Press ▶ for sound</span>
+                        <div class="rail-nav"><button class="rail-btn" type="button" data-dir="-1" data-for="dtc" aria-label="Previous"><i class="fas fa-arrow-left"></i></button><button class="rail-btn" type="button" data-dir="1" data-for="dtc" aria-label="Next"><i class="fas fa-arrow-right"></i></button></div>
+                    </div>
                 </div>
                 <div class="rail" data-rail="dtc"></div>
-                <div class="below">
-                    <a class="btn btn-ghost btn-sm" href="https://docs.google.com/document/d/1cxxoMziAx2kjpbZUh-sbCVrFmZVPOy7U/edit?usp=drive_link&amp;ouid=116729125928632036741&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener"><i class="fas fa-file-lines"></i> Read the edit breakdown</a>
-                </div>
             </div>
         </section>
 
@@ -336,10 +356,13 @@
             <div class="wrap">
                 <div class="sec-head">
                     <div>
-                        <span class="tag ai">02 · AI Lab</span>
+                        <span class="kicker">// 02 · AI lab</span>
                         <h2>AI creators that stay consistent</h2>
                     </div>
-                    <span class="hint"><i class="fas fa-volume-high"></i> Press ▶ to watch with sound</span>
+                    <div class="head-right">
+                        <span class="hint"><i class="fas fa-volume-high"></i> Press ▶ for sound</span>
+                        <div class="rail-nav"><button class="rail-btn" type="button" data-dir="-1" data-for="ai" aria-label="Previous"><i class="fas fa-arrow-left"></i></button><button class="rail-btn" type="button" data-dir="1" data-for="ai" aria-label="Next"><i class="fas fa-arrow-right"></i></button></div>
+                    </div>
                 </div>
                 <div class="rail" data-rail="ai"></div>
                 <div class="case">
@@ -348,8 +371,7 @@
                         <div><b>15</b><span>Posts</span></div>
                         <div><b>7,000+</b><span>Followers</span></div>
                     </div>
-                    <p>A faceless AI fitness creator I built, end to end.</p>
-                    <a class="btn btn-ghost btn-sm" href="https://www.instagram.com/sterlingfitness__/reels/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> See the account</a>
+                    <a class="btn btn-ghost btn-sm" href="https://www.instagram.com/sterlingfitness__/reels/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> My faceless AI fitness account</a>
                 </div>
             </div>
         </section>
@@ -358,30 +380,14 @@
             <div class="wrap">
                 <div class="sec-head">
                     <div>
-                        <span class="tag dtc" style="color:#a3e635">How it works</span>
-                        <h2>Three steps, no babysitting</h2>
+                        <span class="kicker">// how it works</span>
+                        <h2>Three steps. No babysitting.</h2>
                     </div>
                 </div>
                 <div class="steps">
-                    <div class="step"><em>1</em><div><b>Send footage or a product link</b><span>Plus your angle. I script the hooks.</span></div></div>
-                    <div class="step"><em>2</em><div><b>I build the ad + 3–5 hooks</b><span>First video in 24–72h. Unlimited revisions on video one.</span></div></div>
-                    <div class="step"><em>3</em><div><b>You test, we scale the winner</b><span>Delivered ready for Ads Manager.</span></div></div>
-                </div>
-            </div>
-        </section>
-
-        <section id="results">
-            <div class="wrap">
-                <div class="sec-head">
-                    <div>
-                        <span class="tag ai" style="color:#34d399">Results</span>
-                        <h2>The numbers</h2>
-                    </div>
-                </div>
-                <div class="stats">
-                    <div class="stat"><b>15M+</b><span>Reach generated across TikTok, Instagram &amp; Facebook</span></div>
-                    <div class="stat"><b>$80K+</b><span>Client ROI · <span class="up">+120%</span> conversion rate</span></div>
-                    <div class="stat"><b class="top">Top Rated</b><span>100% client satisfaction on Upwork</span></div>
+                    <div class="step"><em>01</em><b>Send footage or a product link</b><span>I script the hooks.</span></div>
+                    <div class="step"><em>02</em><b>Get the ad + 3–5 hook versions</b><span>First video in 24–72h. Unlimited revisions on it.</span></div>
+                    <div class="step"><em>03</em><b>Test, then scale the winner</b><span>Delivered ready for Ads Manager.</span></div>
                 </div>
             </div>
         </section>
@@ -389,12 +395,15 @@
         <section class="cta" id="contact">
             <div class="wrap">
                 <div class="cta-box">
+                    <span class="kicker">// next step</span>
                     <h2>Let's build your next winning ad.</h2>
-                    <p>Send me your product. I'll handle the creative heavy lifting; you scale the traffic.</p>
+                    <p>Send me your product. I handle the creative, you scale the traffic.</p>
                     <div class="cta-btns">
-                        <a class="btn btn-hire" href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" rel="noopener"><i class="fas fa-handshake"></i> Hire me on Upwork</a>
-                        <a class="btn btn-wa" href="https://wa.me/212631260192?text=Hello!%20I%20saw%20your%20portfolio%20and%20I%20would%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a class="btn btn-ghost" href="mailto:bamoum086@gmail.com?subject=Project%20inquiry"><i class="fas fa-envelope"></i> bamoum086@gmail.com</a>
+                        <a class="btn btn-hire big" href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" rel="noopener"><i class="fas fa-handshake"></i> Hire me on Upwork</a>
+                    </div>
+                    <div class="contact-alt">
+                        <a class="wa" href="https://wa.me/212631260192?text=Hello!%20I%20saw%20your%20portfolio%20and%20I%20would%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i>WhatsApp</a>
+                        <a href="mailto:bamoum086@gmail.com?subject=Project%20inquiry"><i class="fas fa-envelope"></i>bamoum086@gmail.com</a>
                     </div>
                 </div>
                 <div class="foot">© 2026 Mohamed Bamou · Errachidia, Morocco</div>
@@ -402,36 +411,35 @@
         </section>
     </main>
 
-    <div class="sticky-hire" id="stickyHire">
+    <div class="float-hire" id="floatHire">
         <a class="btn btn-hire" href="https://www.upwork.com/freelancers/~0182de24aaaf87d777?mp_source=share" target="_blank" rel="noopener"><i class="fas fa-handshake"></i> Hire me on Upwork</a>
     </div>
 
     <script>
     (function () {
         // ---- All portfolio videos. Add a video = add one line. ----
-        // type: "vimeo" (unified player with sound on ▶) or "drive" (Google's player)
+        // type "vimeo": unified player, sound starts with ▶ · type "drive": Google's player inside the same frame
         var VIDEOS = {
+            featured: [
+                { type: "drive", id: "1vNvfThkLKFB1Z-0U3E9ufYS0CXp_RG9m", badge: "Featured · Deep Dive", color: "#65a30d", title: "Real Footage × AI B-Roll", line: "My best ad: every creative decision mapped" }
+            ],
             dtc: [
-                { type: "vimeo", id: "1177963191", badge: "Tech · High AOV",  color: "#c026d3", title: "High-Ticket Gadget",      line: "Hard-to-film tech with premium sales appeal" },
-                { type: "vimeo", id: "1177969846", badge: "Medical · E-com",   color: "#e11d48", title: "Medical Mixed Reality",   line: "Real product × AI environment" },
-                { type: "vimeo", id: "1177665492", badge: "Luxury E-com",      color: "#d97706", title: "Global Luxury Watches",   line: "Hard hook, sleek pacing, premium VFX" },
-                { type: "vimeo", id: "1177665423", badge: "Hybrid Ad",         color: "#db2777", title: "Women's Medical Product", line: "Native TikTok feel with AI elements" },
+                { type: "vimeo", id: "1177963191", badge: "Tech · High AOV", color: "#c026d3", title: "High-Ticket Gadget",      line: "Hard-to-film tech with premium sales appeal" },
+                { type: "vimeo", id: "1177665423", badge: "Medical · E-com",  color: "#e11d48", title: "Women's Medical Product", line: "Native TikTok feel × AI environment" },
+                { type: "vimeo", id: "1177665492", badge: "Luxury E-com",     color: "#d97706", title: "Global Luxury Watches",   line: "Hard hook, sleek pacing, premium VFX" },
                 { type: "drive", id: "1LWDkdNlHUcFxzzyuI31KfYdISmsGyrM9", badge: "FOMO · Urgency", color: "#dc2626", title: "Pain & Urgency", line: "The problem gets worse, the click gets easier" },
-                { type: "drive", id: "1vNvfThkLKFB1Z-0U3E9ufYS0CXp_RG9m", badge: "Deep Dive",      color: "#4f46e5", title: "Real Footage × AI B-Roll", line: "Every decision mapped in the breakdown" },
                 { type: "drive", id: "158QsRZrKmc8ulZJSlPT-RUegU7TjWsJ3", badge: "Deep Dive",      color: "#4f46e5", title: "Real Footage × AI B-Roll 2", line: "Same framework, second product" },
-                { type: "vimeo", id: "1177665327", badge: "App Promo",         color: "#9333ea", title: "GCC Fitness App",         line: "High-energy cuts that drive installs" }
+                { type: "vimeo", id: "1177665327", badge: "App Promo",        color: "#9333ea", title: "GCC Fitness App",         line: "High-energy cuts that drive installs" }
             ],
             ai: [
                 { type: "vimeo", id: "1178509950", badge: "Precision Face Lock", color: "#2563eb", title: "Me into Putin Avatar",       line: "1:1 structural motion matching during extreme expressions" },
                 { type: "vimeo", id: "1178505128", badge: "UGC Beauty",          color: "#db2777", title: "Me into Pink UGC Character", line: "Flawless tongue and facial micro-movement tracking" },
                 { type: "vimeo", id: "1177662721", badge: "AI × Product",        color: "#0891b2", title: "AI to Reality",              line: "AI model with a physical product, in 4K" },
-                { type: "vimeo", id: "1177662687", badge: "AI Influencer",       color: "#3b82f6", title: "Hyper-Realistic Avatar",     line: "Same face every video, under 24h" }
+                { type: "vimeo", id: "1177662687", badge: "AI Influencer",       color: "#7c3aed", title: "Hyper-Realistic Avatar",     line: "Same face every video, under 24h" }
             ]
         };
 
-        var cards = [];
-        var active = null;
-
+        var cards = [], active = null;
         function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
 
         function buildCard(v) {
@@ -449,14 +457,12 @@
             el.innerHTML =
                 '<div class="vc-media">' +
                 '<div class="vc-load"><span></span>Loading...</div>' +
-                '<span class="vc-badge">' + esc(v.badge) + '</span>' +
-                ctrls +
+                '<span class="vc-badge">' + esc(v.badge) + '</span>' + ctrls +
                 '<div class="vc-cap"><b>' + esc(v.title) + '</b><small>' + esc(v.line) + '</small></div>' +
                 '</div>';
             el._v = v;
             return el;
         }
-
         function setPlaying(card, on) {
             card.classList.toggle("playing", on);
             var i = card.querySelector('.vc-btn[data-act="play"] i');
@@ -467,7 +473,6 @@
             var i = card.querySelector('.vc-btn[data-act="mute"] i');
             if (i) i.className = on ? "fas fa-volume-xmark" : "fas fa-volume-high";
         }
-
         function mount(card) {
             if (card._mounted) return;
             card._mounted = true;
@@ -480,7 +485,6 @@
                 f.src = "https://drive.google.com/file/d/" + v.id + "/preview";
                 f.addEventListener("load", function () { card.classList.add("loaded"); });
                 media.appendChild(f);
-                card._iframe = f;
                 return;
             }
             f.src = "https://player.vimeo.com/video/" + v.id + "?background=1&autoplay=1&loop=1&muted=1&playsinline=1&autopause=0&dnt=1";
@@ -494,14 +498,12 @@
                 if (active !== card) p.pause().catch(function () {});
             }).catch(function () { card.classList.add("loaded"); });
             p.on("play", function () {
-                // background mode autoplays: only the card the viewer chose may play
-                if (active !== card) { p.pause().catch(function () {}); return; }
+                if (active !== card) { p.pause().catch(function () {}); return; }  // background mode autoplays; only the chosen card may play
                 card.classList.add("loaded");
                 setPlaying(card, true);
             });
             p.on("pause", function () { setPlaying(card, false); });
         }
-
         function stopOthers(card) {
             cards.forEach(function (c) {
                 if (c !== card && c._p && c.classList.contains("playing")) {
@@ -511,25 +513,21 @@
                 }
             });
         }
-
         function play(card) {
             var p = card._p;
             if (!p) { mount(card); p = card._p; if (!p) return; }
             if (card.classList.contains("playing")) { p.pause().catch(function () {}); return; }
             stopOthers(card);
             active = card;
-            // same tap: unmute + volume + play, so sound starts with the video
-            p.setVolume(1).catch(function () {});
+            p.setVolume(1).catch(function () {});                 // same tap: sound on + play
             if (p.setMuted) p.setMuted(false).catch(function () {});
             setMuted(card, false);
             p.play().catch(function () {
-                // a browser that refuses sound still plays it muted; the speaker button turns sound on
-                p.setVolume(0).catch(function () {});
+                p.setVolume(0).catch(function () {});              // a browser that blocks sound still plays; the speaker button turns it on
                 setMuted(card, true);
                 p.play().catch(function () {});
             });
         }
-
         function toggleMute(card) {
             var p = card._p;
             if (!p) return;
@@ -541,53 +539,72 @@
         }
 
         Object.keys(VIDEOS).forEach(function (key) {
-            var rail = document.querySelector('[data-rail="' + key + '"]');
-            if (!rail) return;
+            var host = document.querySelector('[data-rail="' + key + '"]') || document.querySelector('[data-slot="' + key + '"]');
+            if (!host) return;
             VIDEOS[key].forEach(function (v) {
                 var c = buildCard(v);
-                rail.appendChild(c);
+                if (key === "featured") host.replaceWith(c); else host.appendChild(c);
                 cards.push(c);
             });
         });
 
         document.addEventListener("click", function (e) {
             var b = e.target.closest && e.target.closest(".vc [data-act]");
-            if (!b) return;
-            e.preventDefault();
-            var card = b.closest(".vc");
-            if (b.dataset.act === "mute") toggleMute(card); else play(card);
+            if (b) {
+                e.preventDefault();
+                var card = b.closest(".vc");
+                if (b.dataset.act === "mute") toggleMute(card); else play(card);
+                return;
+            }
+            var r = e.target.closest && e.target.closest(".rail-btn");
+            if (r) {
+                var rail = document.querySelector('[data-rail="' + r.dataset.for + '"]');
+                var step = (rail.firstElementChild ? rail.firstElementChild.getBoundingClientRect().width + 18 : 300) * (window.innerWidth > 1000 ? 2 : 1);
+                rail.scrollBy({ left: step * Number(r.dataset.dir), behavior: "smooth" });
+            }
+        });
+
+        // Arrow buttons dim at the ends of each rail
+        document.querySelectorAll(".rail").forEach(function (rail) {
+            var key = rail.dataset.rail;
+            function upd() {
+                var max = rail.scrollWidth - rail.clientWidth - 4;
+                document.querySelectorAll('.rail-btn[data-for="' + key + '"]').forEach(function (btn) {
+                    btn.disabled = btn.dataset.dir === "-1" ? rail.scrollLeft <= 4 : rail.scrollLeft >= max;
+                });
+                var nav = document.querySelector('.rail-btn[data-for="' + key + '"]');
+                if (nav) nav.parentElement.style.visibility = max <= 0 ? "hidden" : "visible";
+            }
+            rail.addEventListener("scroll", upd, { passive: true });
+            window.addEventListener("resize", upd);
+            upd();
         });
 
         // Load each video shortly before it scrolls into view
         if ("IntersectionObserver" in window) {
             var io = new IntersectionObserver(function (entries) {
                 entries.forEach(function (en) { if (en.isIntersecting) { mount(en.target); io.unobserve(en.target); } });
-            }, { rootMargin: "600px 600px" });
+            }, { rootMargin: "600px 900px" });
             cards.forEach(function (c) { io.observe(c); });
-        } else {
-            cards.forEach(mount);
-        }
+        } else { cards.forEach(mount); }
 
-        // Tapping into a Google Drive player: hide its caption and stop any playing Vimeo card
+        // Tapping into a Google Drive player: hide its caption and stop any playing card
         window.addEventListener("blur", function () {
             setTimeout(function () {
                 var f = document.activeElement;
                 if (!f || f.tagName !== "IFRAME") return;
                 var card = f.closest(".vc");
-                if (card && card.dataset.type === "drive") {
-                    card.classList.add("touched");
-                    stopOthers(card);
-                    active = card;
-                }
+                if (card && card.dataset.type === "drive") { card.classList.add("touched"); stopOthers(card); active = card; }
             }, 0);
         });
 
-        // Nav background + sticky hire bar
-        var nav = document.getElementById("nav"), sticky = document.getElementById("stickyHire"), hero = document.getElementById("top");
+        // Nav background + floating hire button
+        var nav = document.getElementById("nav"), fh = document.getElementById("floatHire"), hero = document.getElementById("top"), cta = document.getElementById("contact");
         function onScroll() {
             var y = window.scrollY;
-            nav.classList.toggle("scrolled", y > 40);
-            sticky.classList.toggle("show", y > hero.offsetHeight - 120);
+            nav.classList.toggle("scrolled", y > 30);
+            var ctaTop = cta.getBoundingClientRect().top;
+            fh.classList.toggle("show", y > hero.offsetHeight * 0.6 && ctaTop > window.innerHeight * 0.85);
         }
         window.addEventListener("scroll", onScroll, { passive: true });
         onScroll();
